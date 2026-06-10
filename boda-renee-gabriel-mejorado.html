@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html class="light" lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Boda Renée & Gabriel</title>
+
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            background: "#fff8f5",
+            surface: "#fff8f5",
+            "surface-soft": "#fff1e8",
+            "surface-warm": "#ffeadb",
+            primary: "#512301",
+            secondary: "#825423",
+            muted: "#6f5b50",
+            outline: "#d7c2b7",
+            gold: "#c9872d",
+            cream: "#fffaf7"
+          },
+          fontFamily: {
+            serif: ["Libre Caslon Text", "serif"],
+            sans: ["Work Sans", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    html { scroll-behavior: smooth; }
+    body {
+      background:
+        radial-gradient(circle at top left, rgba(248,186,128,.18), transparent 34rem),
+        linear-gradient(180deg, #fff8f5 0%, #fffaf7 45%, #fff1e8 100%);
+      color: #2e1600;
+      overflow-x: hidden;
+    }
+
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 350, 'GRAD' 0, 'opsz' 24;
+    }
+
+    .page-shell {
+      width: min(100% - 32px, 1560px);
+      margin-inline: auto;
+    }
+
+    .soft-shadow {
+      box-shadow: 0 24px 70px -52px rgba(81, 35, 1, .55);
+    }
+
+    .glass {
+      background: rgba(255, 248, 245, .82);
+      backdrop-filter: blur(18px);
+      border: 1px solid rgba(215, 194, 183, .55);
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-family: "Work Sans", sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: #825423;
+    }
+
+    .kicker::before,
+    .kicker::after {
+      content: "";
+      width: 30px;
+      height: 1px;
+      background: rgba(130, 84, 35, .32);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.75fr) minmax(390px, .75fr);
+      gap: 20px;
+      min-height: clamp(560px, 68vh, 700px);
+    }
+
+    .hero-media,
+    .hero-card {
+      border-radius: 24px;
+      overflow: hidden;
+    }
+
+    .hero-media {
+      position: relative;
+      min-height: clamp(520px, 68vh, 700px);
+      background: #f2dfd2;
+    }
+
+    .hero-slide {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 1000ms ease;
+      overflow: hidden;
+    }
+
+    .hero-slide.is-active {
+      opacity: 1;
+    }
+
+    .hero-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scale(1.02);
+      transition: transform 7000ms ease;
+    }
+
+    .hero-slide.is-active img {
+      transform: scale(1.075);
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, rgba(46, 22, 0, .18), transparent 45%),
+        linear-gradient(0deg, rgba(255, 248, 245, .96) 0%, rgba(255, 248, 245, .28) 34%, rgba(46, 22, 0, .12) 100%);
+    }
+
+    .carousel-control {
+      width: 46px;
+      height: 46px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 250, 247, .78);
+      border: 1px solid rgba(215, 194, 183, .8);
+      color: #512301;
+      backdrop-filter: blur(10px);
+      transition: transform 180ms ease, background 180ms ease;
+    }
+
+    .carousel-control:hover {
+      background: rgba(255, 250, 247, .96);
+      transform: translateY(-50%) scale(1.04);
+    }
+
+    .carousel-dot {
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(81, 35, 1, .28);
+      transition: width 260ms ease, background 260ms ease;
+    }
+
+    .hero-card {
+      min-height: clamp(520px, 68vh, 700px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: clamp(28px, 4vw, 52px);
+      background:
+        radial-gradient(circle at 50% 0%, rgba(255,255,255,.8), transparent 22rem),
+        linear-gradient(145deg, #fffaf7 0%, #fff1e8 58%, #ffeadb 100%);
+      border: 1px solid rgba(215, 194, 183, .65);
+    }
+
+    .hero-logo,
+    .brand-logo {
+      object-fit: contain;
+      border-radius: 999px;
+      background: rgba(255, 250, 247, .92);
+      border: 1px solid rgba(215, 194, 183, .75);
+    }
+
+    .brand-logo {
+      width: 44px;
+      height: 44px;
+      padding: 5px;
+    }
+
+    .hero-logo {
+      width: 150px;
+      height: 150px;
+      padding: 12px;
+      box-shadow: 0 24px 70px -44px rgba(81, 35, 1, .75);
+    }
+
+    .info-chip {
+      background: rgba(255, 250, 247, .72);
+      border: 1px solid rgba(215, 194, 183, .7);
+      border-radius: 16px;
+      padding: 16px;
+    }
+
+    .timeline-line {
+      width: 1px;
+      background: linear-gradient(to bottom, transparent, rgba(201, 135, 45, .78), transparent);
+    }
+
+    .timeline-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      background: #f8ba80;
+      border: 4px solid #fff8f5;
+      box-shadow: 0 0 0 1px rgba(215, 194, 183, .75);
+    }
+
+    @media (max-width: 900px) {
+      .page-shell { width: min(100% - 24px, 760px); }
+
+      .hero {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+
+      .hero-media {
+        min-height: 390px;
+      }
+
+      .hero-card {
+        min-height: auto;
+      }
+
+      .hero-logo {
+        width: 128px;
+        height: 128px;
+      }
+
+      .kicker::before,
+      .kicker::after {
+        width: 18px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .hero-media {
+        min-height: 330px;
+      }
+
+      .bottom-pill {
+        width: calc(100vw - 24px);
+        justify-content: space-between;
+      }
+
+      .bottom-pill a {
+        padding-inline: 10px;
+      }
+    }
+  </style>
+</head>
+
+<body class="font-sans text-[16px] leading-6 selection:bg-[#ffdbc8] selection:text-primary">
+  <header class="fixed top-0 left-0 z-50 w-full border-b border-outline/40 bg-background/85 backdrop-blur-xl">
+    <div class="page-shell h-16 flex items-center justify-between gap-4">
+      <a href="#" class="flex items-center gap-3 min-w-0" aria-label="Inicio">
+        <img class="brand-logo" src="public/logo-boda.png" alt="Logo de la boda" />
+
+        <h1 class=" font-serif italic text-primary text-2xl">
+          Renée & Gabriel
+        </h1>
+      </a>
+
+      <p class="hidden sm:block text-[12px] font-semibold uppercase tracking-[0.22em] text-muted">
+        21 Nov 2026
+      </p>
+    </div>
+  </header>
+
+  <main class="pt-24 pb-32">
+    <section id="inicio" class="hero page-shell">
+      <div class="hero-media soft-shadow">
+        <div id="carousel" class="absolute inset-0">
+          <div class="hero-slide is-active">
+            <img alt="Ceremonia al aire libre" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDedXtefCKNH-Oq75zMTV7W9L2JRKb-ia_kNbzl-UMxD52rwz8zOkjtewqhJiOJAE81Yv5J4NqOJh5OJPR6_3q4soxoRzculFH7aJ_n-8efsy3yq7EGKk_qDORUlKkZGu3ESyHfTBgv5nBXQpsepYv81a2-z1QAlPyqVsyVJw-BptnhSGhOvdrKPvDhm1bpwhZsYiRg30RsGGrUqzupMdsmdcxaRsD5HP7i-kgZ51ds63hIHa9mgXd9YKumUNvQOPBVLiAgFpYSkCc" />
+            <div class="hero-overlay"></div>
+          </div>
+
+          <div class="hero-slide">
+            <img alt="Mesa de boda" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAAT5k4RewcjpY-5UrEe7R3B_ZIpVA01HUkuNCjPvJZXTqyB0kaukekcjgqy9y20Rgwz-xmBkUayERHMQYy-FJtuJ-oZJmG16h2N1g1qhDb8R9myBaXwVett_5VzmHdo0xz1DpBwKVKMkJXKZ20dJ3RR9AWi6DsPGqxJ9CUPeGcPRswDp0BYNO5z4Dz5u8mIIuz2anDPD5A7ygMgpLjSCaZzS7tsv_07Pp4o0M9kSn2Mqs72ljW1evQFoOgJtKiS7-81v3Xu4DJ_mA" />
+            <div class="hero-overlay"></div>
+          </div>
+
+          <div class="hero-slide">
+            <img alt="Montaje de ceremonia" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA1K3unlE66UrEW10JZL4gpWNA44b0gYMO2a-dlSROiR09drFtco1ExP1NENW4Oe-uazPb6rUQxiiFVqqQcco_-x5hSVO4qSlXe85Mwe4EyOmrRd18SNPaKfUVwJYfNcAO90mX8syVrJwn3jlbWQtbjAnMKOfJLC6iwzafMHFoQcqjuEZvEzopsnTvlmdzy6u4Ol3LoF_3Oh9kL__ZSJrA3at_O0Jyu5FN5ST6d16pgzVjQc-yhalNAATWH1uGAT5dKEZd-LQEou3I" />
+            <div class="hero-overlay"></div>
+          </div>
+        </div>
+
+        <button aria-label="Imagen anterior" id="carouselPrev" type="button" class="carousel-control absolute left-5 top-1/2 -translate-y-1/2 z-20">
+          <span class="material-symbols-outlined">chevron_left</span>
+        </button>
+
+        <button aria-label="Imagen siguiente" id="carouselNext" type="button" class="carousel-control absolute right-5 top-1/2 -translate-y-1/2 z-20">
+          <span class="material-symbols-outlined">chevron_right</span>
+        </button>
+
+        <div class="absolute bottom-7 left-1/2 z-30 flex -translate-x-1/2 gap-3" aria-label="Seleccionar imagen">
+          <button aria-label="Imagen 1" type="button" class="carousel-dot w-8"></button>
+          <button aria-label="Imagen 2" type="button" class="carousel-dot w-2"></button>
+          <button aria-label="Imagen 3" type="button" class="carousel-dot w-2"></button>
+        </div>
+
+        <div class="absolute bottom-7 left-7 right-7 z-20 hidden md:block">
+          <p class="max-w-xl font-serif text-[34px] leading-tight text-primary/95">
+            Nos casamos y queremos compartir este día contigo.
+          </p>
+        </div>
+      </div>
+
+      <aside class="hero-card soft-shadow">
+        <img class="hero-logo mb-6" src="public/logo-boda.png" alt="Logo R y G" />
+
+        <span class="kicker">21 de noviembre 2026</span>
+
+        <p class="mt-5 text-[12px] font-semibold uppercase tracking-[0.2em] text-secondary">
+          Hermosillo, Sonora
+        </p>
+
+        <h1 class="mt-4 font-serif italic text-primary text-[52px] leading-[56px] md:text-[76px] md:leading-[78px]">
+          Renée <span class="not-italic">&amp;</span><br class="hidden md:block" /> Gabriel
+        </h1>
+
+
+
+        <div class="mt-8 grid w-full grid-cols-1 gap-3 sm:grid-cols-2">
+          <div class="info-chip text-left">
+            <p class="text-[11px] font-semibold uppercase tracking-[0.16em] text-secondary">Ceremonia</p>
+            <p class="mt-1 font-serif text-xl text-primary">4:00 PM</p>
+          </div>
+
+          <div class="info-chip text-left">
+            <p class="text-[11px] font-semibold uppercase tracking-[0.16em] text-secondary">Lugar</p>
+            <p class="mt-1 font-serif text-xl text-primary">Villa Toscana</p>
+          </div>
+        </div>
+
+        <a href="#rsvp" class="mt-8 inline-flex items-center justify-center rounded-full bg-primary px-8 py-4 text-[12px] font-semibold uppercase tracking-[0.16em] text-white shadow-lg transition hover:bg-primary/90 active:scale-95">
+          Confirmar asistencia
+        </a>
+      </aside>
+    </section>
+
+    <section id="evento" class="page-shell mt-16 md:mt-20">
+      <div class="mx-auto max-w-3xl text-center">
+        <span class="kicker">Evento</span>
+        <h2 class="mt-4 font-serif text-[34px] leading-tight text-primary md:text-[48px]">
+          Detalles del día
+        </h2>
+        <p class="mt-4 text-muted">
+          Primero nos acompañas en la ceremonia religiosa y después continuamos la celebración en Villa Toscana.
+        </p>
+      </div>
+
+      <div class="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-[1.08fr_.92fr]">
+        <div class="rounded-[24px] border border-outline/50 bg-surface/80 p-3 soft-shadow">
+          <iframe
+            title="Mapa de Eventos Villa Toscana"
+            class="aspect-[4/3] w-full rounded-[18px]"
+            loading="lazy"
+            allowfullscreen
+            referrerpolicy="no-referrer-when-downgrade"
+            style="border:0;"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3486.9636703074916!2d-111.009019!3d29.077218499999997!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x86ce83f2b6598fd7%3A0x3193509b3b6d3a7d!2sEventos%20Villa%20Toscana!5e0!3m2!1ses-419!2smx!4v1781115194446!5m2!1ses-419!2smx">
+          </iframe>
+
+          <div class="grid gap-5 p-5 md:grid-cols-2">
+            <div>
+              <p class="text-[11px] font-semibold uppercase tracking-[0.16em] text-secondary">Recepción</p>
+              <h3 class="mt-2 font-serif text-2xl text-primary">Villa Toscana</h3>
+              <p class="mt-2 text-muted">C. Quintero Arce 280, Puerta Grande, 83246 Hermosillo, Son.</p>
+            </div>
+
+            <div>
+              <p class="text-[11px] font-semibold uppercase tracking-[0.16em] text-secondary">Ceremonia religiosa</p>
+              <h3 class="mt-2 font-serif text-2xl text-primary">Iglesia de Nuestro Señor Jesús</h3>
+              <p class="mt-2 text-muted">Nos vemos primero en misa y después seguimos con la celebración.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="rounded-[24px] border border-outline/50 bg-surface/80 px-6 py-8 soft-shadow">
+          <div class="text-center lg:text-left">
+            <span class="kicker">Cronograma</span>
+            <h3 class="mt-4 font-serif text-[32px] leading-tight text-primary">
+              Programa
+            </h3>
+          </div>
+
+          <div class="mt-8 space-y-0">
+            <div class="grid grid-cols-[74px_28px_minmax(0,1fr)] gap-4">
+              <span class="pt-1 text-[13px] font-semibold uppercase tracking-[.08em] text-primary">4:00 PM</span>
+              <div class="relative flex justify-center">
+                <div class="timeline-line absolute top-2 bottom-0"></div>
+                <span class="timeline-dot relative mt-1"></span>
+              </div>
+              <div class="border-b border-outline/40 pb-6">
+                <h4 class="font-serif text-2xl text-primary">Misa</h4>
+                <p class="mt-1 text-muted">Iglesia de Nuestro Señor Jesús.</p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-[74px_28px_minmax(0,1fr)] gap-4">
+              <span class="pt-6 text-[13px] font-semibold uppercase tracking-[.08em] text-primary">7:00 PM</span>
+              <div class="relative flex justify-center">
+                <div class="timeline-line absolute top-0 bottom-0"></div>
+                <span class="timeline-dot relative mt-6"></span>
+              </div>
+              <div class="border-b border-outline/40 py-6">
+                <h4 class="font-serif text-2xl text-primary">Cóctel</h4>
+                <p class="mt-1 text-muted">Bienvenida y primeras copas en Villa Toscana.</p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-[74px_28px_minmax(0,1fr)] gap-4">
+              <span class="pt-6 text-[13px] font-semibold uppercase tracking-[.08em] text-primary">7:45 PM</span>
+              <div class="relative flex justify-center">
+                <div class="timeline-line absolute top-0 bottom-0"></div>
+                <span class="timeline-dot relative mt-6"></span>
+              </div>
+              <div class="border-b border-outline/40 py-6">
+                <h4 class="font-serif text-2xl text-primary">Recepción</h4>
+                <p class="mt-1 text-muted">Entrada, brindis y arranque formal de la celebración.</p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-[74px_28px_minmax(0,1fr)] gap-4">
+              <span class="pt-6 text-[13px] font-semibold uppercase tracking-[.08em] text-primary">8:00 PM</span>
+              <div class="relative flex justify-center">
+                <div class="timeline-line absolute top-0 bottom-0"></div>
+                <span class="timeline-dot relative mt-6"></span>
+              </div>
+              <div class="border-b border-outline/40 py-6">
+                <h4 class="font-serif text-2xl text-primary">Cena</h4>
+                <p class="mt-1 text-muted">Servicio de cena y continuación de la fiesta.</p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-[74px_28px_minmax(0,1fr)] gap-4">
+              <span class="pt-6 text-[13px] font-semibold uppercase tracking-[.08em] text-primary">1:00 AM</span>
+              <div class="relative flex justify-center">
+                <div class="timeline-line absolute top-0 bottom-8"></div>
+                <span class="timeline-dot relative mt-6"></span>
+              </div>
+              <div class="pt-6">
+                <h4 class="font-serif text-2xl text-primary">Final</h4>
+                <p class="mt-1 text-muted">Cierre del evento principal.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="rsvp" class="page-shell mt-16 md:mt-20">
+      <div class="rounded-[28px] border border-outline/50 bg-surface/80 px-6 py-14 text-center soft-shadow md:px-10">
+        <span class="material-symbols-outlined mb-4 text-[48px] text-primary">event_available</span>
+        <p class="text-[11px] font-semibold uppercase tracking-[0.18em] text-secondary">Confirmación</p>
+        <h2 class="mt-3 font-serif text-[34px] leading-tight text-primary md:text-[48px]">
+          Confirma tu asistencia
+        </h2>
+        <p class="mx-auto mt-4 max-w-xl text-muted">
+          Ayúdanos a confirmar tu asistencia
+        </p>
+
+        <div class="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+          <button id="rsvpBtn" class="rounded-full bg-primary px-10 py-4 text-[12px] font-semibold uppercase tracking-[0.16em] text-white shadow-lg transition hover:bg-primary/90 active:scale-95">
+            Confirmar asistencia
+          </button>
+
+          <a class="rounded-full border border-outline/70 px-8 py-4 text-[12px] font-semibold uppercase tracking-[0.16em] text-primary transition hover:bg-surface-soft" href="#evento">
+            Ver cronograma
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section id="info" class="page-shell mt-16 md:mt-20">
+      <div class="grid grid-cols-1 gap-5 md:grid-cols-3">
+        <article class="rounded-[24px] border border-outline/50 bg-surface/80 p-6 soft-shadow">
+          <span class="material-symbols-outlined text-primary">styler</span>
+          <p class="mt-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-secondary">Código de vestimenta</p>
+          <h3 class="mt-2 font-serif text-2xl text-primary">TEXTO </h3>
+          <p class="mt-2 text-muted">TEXTO</p>
+        </article>
+
+        <article class="rounded-[24px] border border-outline/50 bg-surface/80 p-6 soft-shadow">
+          <span class="material-symbols-outlined text-primary">close </span>
+          <p class="mt-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-secondary">TEXTO</p>
+          <h3 class="mt-2 font-serif text-2xl text-primary">TEXTO</h3>
+          <p class="mt-2 text-muted">TEXTO</p>
+        </article>
+
+        <article class="rounded-[24px] border border-outline/50 bg-surface/80 p-6 soft-shadow">
+          <span class="material-symbols-outlined text-primary">favorite</span>
+          <p class="mt-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-secondary">TEXTO</p>
+          <h3 class="mt-2 font-serif text-2xl text-primary">TEXTO</h3>
+          <p class="mt-2 text-muted">TEXTO</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <nav class="fixed bottom-5 left-1/2 z-50 -translate-x-1/2" aria-label="Navegación principal">
+    <div class="bottom-pill glass flex items-center gap-1 rounded-full px-2 py-2 shadow-lg">
+      <a class="nav-link rounded-full px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-primary transition hover:bg-surface-soft" href="#inicio">Inicio</a>
+      <a class="nav-link rounded-full px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-muted transition hover:bg-surface-soft hover:text-primary" href="#evento">Evento</a>
+      <a class="nav-link rounded-full px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-muted transition hover:bg-surface-soft hover:text-primary" href="#rsvp">RSVP</a>
+      <a class="nav-link rounded-full px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-muted transition hover:bg-surface-soft hover:text-primary" href="#info">Info</a>
+    </div>
+  </nav>
+
+  <script>
+    const slides = document.querySelectorAll(".hero-slide");
+    const dots = document.querySelectorAll(".carousel-dot");
+    const prevButton = document.getElementById("carouselPrev");
+    const nextButton = document.getElementById("carouselNext");
+    let currentSlide = 0;
+    let carouselTimer;
+
+    function updateCarousel() {
+      slides.forEach((slide, index) => {
+        slide.classList.toggle("is-active", index === currentSlide);
+      });
+
+      dots.forEach((dot, index) => {
+        dot.style.width = index === currentSlide ? "32px" : "8px";
+        dot.style.background = index === currentSlide ? "#512301" : "rgba(81, 35, 1, .28)";
+        dot.setAttribute("aria-pressed", index === currentSlide ? "true" : "false");
+      });
+    }
+
+    function goToSlide(index) {
+      currentSlide = (index + slides.length) % slides.length;
+      updateCarousel();
+    }
+
+    function nextSlide() {
+      goToSlide(currentSlide + 1);
+    }
+
+    function prevSlide() {
+      goToSlide(currentSlide - 1);
+    }
+
+    function restartTimer() {
+      clearInterval(carouselTimer);
+      carouselTimer = setInterval(nextSlide, 5000);
+    }
+
+    if (slides.length) {
+      updateCarousel();
+      restartTimer();
+
+      nextButton?.addEventListener("click", () => {
+        nextSlide();
+        restartTimer();
+      });
+
+      prevButton?.addEventListener("click", () => {
+        prevSlide();
+        restartTimer();
+      });
+
+      dots.forEach((dot, index) => {
+        dot.addEventListener("click", () => {
+          goToSlide(index);
+          restartTimer();
+        });
+      });
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+      anchor.addEventListener("click", (event) => {
+        const target = document.querySelector(anchor.getAttribute("href"));
+        if (!target) return;
+
+        event.preventDefault();
+        window.scrollTo({
+          top: target.offsetTop - 84,
+          behavior: "smooth"
+        });
+      });
+    });
+
+    const rsvpBtn = document.getElementById("rsvpBtn");
+    rsvpBtn?.addEventListener("click", () => {
+      alert("¡Gracias! Aquí puedes conectar tu formulario de asistencia.");
+    });
+  </script>
+</body>
+</html>
