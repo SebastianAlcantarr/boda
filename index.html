@@ -161,6 +161,81 @@
       transition: width 260ms ease, background 260ms ease;
     }
 
+    .action-button {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 52px;
+      border-radius: 999px;
+      padding: 15px 28px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      transition:
+        transform 180ms ease,
+        box-shadow 180ms ease,
+        border-color 180ms ease,
+        background 180ms ease,
+        color 180ms ease;
+    }
+
+    .action-button:focus-visible {
+      outline: 3px solid rgba(248, 186, 128, .55);
+      outline-offset: 3px;
+    }
+
+    .action-button-primary {
+      color: #fffaf7;
+      background:
+        linear-gradient(135deg, #6d3914 0%, #8a5029 48%, #c9872d 120%);
+      border: 1px solid rgba(255, 219, 200, .42);
+      box-shadow:
+        0 18px 40px -22px rgba(81, 35, 1, .88),
+        inset 0 1px 0 rgba(255, 255, 255, .2);
+    }
+
+    .action-button-primary:hover {
+      transform: translateY(-2px);
+      background:
+        linear-gradient(135deg, #7a421a 0%, #9b5d31 46%, #d79a3c 120%);
+      box-shadow:
+        0 24px 48px -24px rgba(81, 35, 1, .95),
+        inset 0 1px 0 rgba(255, 255, 255, .25);
+    }
+
+    .action-button-secondary {
+      color: #512301;
+      background:
+        linear-gradient(135deg, rgba(255, 250, 247, .84), rgba(255, 234, 219, .74));
+      border: 1px solid rgba(133, 116, 106, .34);
+      box-shadow: 0 14px 34px -28px rgba(81, 35, 1, .55);
+    }
+
+    .action-button-secondary:hover {
+      color: #321300;
+      transform: translateY(-2px);
+      background:
+        linear-gradient(135deg, #fffaf7, #ffdbc8);
+      border-color: rgba(201, 135, 45, .55);
+      box-shadow: 0 18px 38px -28px rgba(81, 35, 1, .72);
+    }
+
+    .action-button:active {
+      transform: translateY(0) scale(.98);
+    }
+
+    .nav-link {
+      border: 1px solid transparent;
+    }
+
+    .nav-link:hover {
+      background: linear-gradient(135deg, rgba(255, 250, 247, .9), rgba(255, 234, 219, .82));
+      border-color: rgba(215, 194, 183, .58);
+      box-shadow: 0 10px 24px -20px rgba(81, 35, 1, .7);
+    }
+
     .hero-card {
       min-height: clamp(520px, 68vh, 700px);
       display: flex;
@@ -346,7 +421,7 @@
           </div>
         </div>
 
-        <a href="#rsvp" class="mt-8 inline-flex items-center justify-center rounded-full bg-primary px-8 py-4 text-[12px] font-semibold uppercase tracking-[0.16em] text-white shadow-lg transition hover:bg-primary/90 active:scale-95">
+        <a href="#rsvp" class="action-button action-button-primary mt-8">
           Confirmar asistencia
         </a>
       </aside>
@@ -475,11 +550,11 @@
         </p>
 
         <div class="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-          <button id="rsvpBtn" class="rounded-full bg-primary px-10 py-4 text-[12px] font-semibold uppercase tracking-[0.16em] text-white shadow-lg transition hover:bg-primary/90 active:scale-95">
+          <button id="rsvpBtn" class="action-button action-button-primary">
             Confirmar asistencia
           </button>
 
-          <a class="rounded-full border border-outline/70 px-8 py-4 text-[12px] font-semibold uppercase tracking-[0.16em] text-primary transition hover:bg-surface-soft" href="#evento">
+          <a class="action-button action-button-secondary" href="#evento">
             Ver cronograma
           </a>
         </div>
