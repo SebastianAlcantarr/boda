@@ -1468,6 +1468,21 @@ main > section.mt-16 {
   box-shadow: 0 24px 50px -30px rgba(81, 35, 1, 0.44);
 }
 
+.invitation-export-host {
+  position: fixed;
+  top: 0;
+  left: -10000px;
+  width: 430px;
+  pointer-events: none;
+}
+
+.personal-invitation.export-capture {
+  width: 430px;
+  height: 558px;
+  aspect-ratio: auto;
+  box-shadow: none;
+}
+
 .invitation-frame {
   position: relative;
   display: flex;
@@ -1595,9 +1610,47 @@ main > section.mt-16 {
   margin-top: 8px;
 }
 
-.personal-invitation[data-guest-count='2'] .invitation-guest {
-  font-size: clamp(21px, 3.25vw, 31px);
+.personal-invitation[data-guest-count='1'] .invitation-guest {
+  max-width: 310px;
+  font-size: clamp(21px, 3.2vw, 30px);
   line-height: 0.94;
+}
+
+.personal-invitation[data-guest-count='1'] .invitation-guests {
+  min-height: 62px;
+  margin-top: 10px;
+}
+
+.personal-invitation[data-guest-count='2'] .invitation-guest {
+  max-width: 310px;
+  font-size: clamp(20px, 3vw, 29px);
+  line-height: 0.9;
+}
+
+.personal-invitation[data-guest-count='2'] .invitation-logo {
+  width: 58px;
+  height: 58px;
+  margin-bottom: 12px;
+}
+
+.personal-invitation[data-guest-count='2'] .invitation-copy {
+  margin-top: 8px;
+  font-size: 16px;
+}
+
+.personal-invitation[data-guest-count='2'] .invitation-couple {
+  margin-top: 14px;
+  font-size: clamp(46px, 6.8vw, 66px);
+}
+
+.personal-invitation[data-guest-count='2'] .invitation-rule {
+  margin: 15px auto 11px;
+}
+
+.personal-invitation[data-guest-count='2'] .invitation-guests {
+  min-height: 78px;
+  gap: 2px;
+  margin-top: 6px;
 }
 
 .personal-invitation[data-guest-count='3'] .invitation-logo {

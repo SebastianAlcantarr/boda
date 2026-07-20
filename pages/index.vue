@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 
 const baseURL = useRuntimeConfig().app.baseURL;
 
@@ -92,6 +92,10 @@ onMounted(() => {
   isMobile.value = mobileQuery.matches;
   mobileQuery.addEventListener('change', updateMobileState);
   restartTimer();
+
+  if (window.location.hash) {
+    nextTick(() => scrollToSection(window.location.hash));
+  }
 });
 
 onBeforeUnmount(() => {
@@ -126,7 +130,9 @@ onBeforeUnmount(() => {
           <a href="#evento" @click.prevent="scrollToSection('#evento')"
             >Evento</a
           >
-          <NuxtLink to="/asistencia">asistencia</NuxtLink>
+          <a href="#asistencia" @click.prevent="scrollToSection('#asistencia')"
+            >asistencia</a
+          >
           <a href="#familia" @click.prevent="scrollToSection('#familia')"
             >Familia</a
           >
@@ -872,10 +878,12 @@ onBeforeUnmount(() => {
           @click.prevent="scrollToSection('#regalos')"
           >Regalos</a
         >
-        <NuxtLink
+        <a
           class="nav-link rounded-full px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-muted transition hover:bg-surface-soft hover:text-primary"
-          to="/asistencia"
-          >asistencia</NuxtLink>
+          href="#asistencia"
+          @click.prevent="scrollToSection('#asistencia')"
+          >asistencia</a
+        >
         <a
           class="nav-link rounded-full px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-muted transition hover:bg-surface-soft hover:text-primary"
           href="#info"
