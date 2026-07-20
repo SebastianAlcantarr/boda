@@ -597,7 +597,7 @@ onBeforeUnmount(() => {
     </main>
 
     <nav
-      class="fixed bottom-[max(9px,env(safe-area-inset-bottom))] left-[10px] right-[10px] z-50 hidden justify-around border border-[rgba(173,147,99,0.42)] bg-[rgba(251,250,246,0.94)] shadow-[0_18px_42px_-24px_rgba(81,35,1,0.45)] backdrop-blur-[14px] max-[900px]:flex max-[600px]:bottom-[max(8px,env(safe-area-inset-bottom))]"
+      class="fixed bottom-0 left-0 right-0 z-50 hidden justify-around border-t border-[rgba(173,147,99,0.42)] bg-[rgba(251,250,246,0.96)] pb-[env(safe-area-inset-bottom)] shadow-[0_-14px_34px_-28px_rgba(81,35,1,0.45)] backdrop-blur-[14px] max-[900px]:flex"
       aria-label="Navegación rápida"
     >
       <a class="flex min-w-[68px] flex-1 flex-col items-center gap-[3px] px-1 pb-[7px] pt-2 text-[#512301] transition-colors duration-[180ms] hover:bg-[#512301] hover:text-[#fbfaf6] max-[600px]:px-1 max-[600px]:py-[7px]" href="#inicio" @click.prevent="scrollToSection('#inicio')"><span class="material-symbols-outlined text-[19px]">home</span><small class="font-sans text-[8px] font-bold tracking-[.08em] uppercase">Inicio</small></a>
