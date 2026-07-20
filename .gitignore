@@ -7,15 +7,30 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
+node_modules/
+dist/
+dist-ssr/
+.nuxt
+.output
+.nitro
+.cache/
+.vercel/
+.netlify/
+
+# Local environment files and secrets
+.env
+.env.*
+!.env.example
 *.local
+
+# Original full-size photos. The deployable optimized assets live in public/images.
+public/FOTOS/
+originales/
 
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
-.idea
+.idea/
 .DS_Store
 *.suo
 *.ntvs*
