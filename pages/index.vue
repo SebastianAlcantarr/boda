@@ -187,37 +187,37 @@ onBeforeUnmount(() => {
           aria-label="Navegación de la invitación"
         >
           <a
-            class="relative py-8 pb-[29px] font-serif text-[19px] font-medium leading-none tracking-normal text-[#512301] transition-colors duration-[180ms] after:absolute after:inset-x-0 after:bottom-[22px] after:h-px after:origin-center after:scale-x-0 after:bg-folio-gold after:content-[''] after:transition-transform after:duration-[180ms] hover:text-folio-gold hover:after:scale-x-100"
+            class="relative py-8 pb-[29px] font-serif text-[19px] font-medium leading-none tracking-normal text-[#512301] transition-[color,transform] duration-[180ms] after:absolute after:inset-x-0 after:bottom-[22px] after:h-px after:origin-center after:scale-x-100 after:bg-folio-gold after:opacity-45 after:content-[''] after:transition-opacity after:duration-[180ms] hover:-translate-y-0.5 hover:text-folio-gold hover:after:opacity-100 active:translate-y-0"
             href="#inicio"
             @click.prevent="scrollToSection('#inicio')"
             >Inicio</a
           >
           <a
-            class="relative py-8 pb-[29px] font-serif text-[19px] font-medium leading-none tracking-normal text-[#512301] transition-colors duration-[180ms] after:absolute after:inset-x-0 after:bottom-[22px] after:h-px after:origin-center after:scale-x-0 after:bg-folio-gold after:content-[''] after:transition-transform after:duration-[180ms] hover:text-folio-gold hover:after:scale-x-100"
+            class="relative py-8 pb-[29px] font-serif text-[19px] font-medium leading-none tracking-normal text-[#512301] transition-[color,transform] duration-[180ms] after:absolute after:inset-x-0 after:bottom-[22px] after:h-px after:origin-center after:scale-x-100 after:bg-folio-gold after:opacity-45 after:content-[''] after:transition-opacity after:duration-[180ms] hover:-translate-y-0.5 hover:text-folio-gold hover:after:opacity-100 active:translate-y-0"
             href="#asistencia"
             @click.prevent="scrollToSection('#asistencia')"
             >Asistencia</a
           >
           <a
-            class="relative py-8 pb-[29px] font-serif text-[19px] font-medium leading-none tracking-normal text-[#512301] transition-colors duration-[180ms] after:absolute after:inset-x-0 after:bottom-[22px] after:h-px after:origin-center after:scale-x-0 after:bg-folio-gold after:content-[''] after:transition-transform after:duration-[180ms] hover:text-folio-gold hover:after:scale-x-100"
+            class="relative py-8 pb-[29px] font-serif text-[19px] font-medium leading-none tracking-normal text-[#512301] transition-[color,transform] duration-[180ms] after:absolute after:inset-x-0 after:bottom-[22px] after:h-px after:origin-center after:scale-x-100 after:bg-folio-gold after:opacity-45 after:content-[''] after:transition-opacity after:duration-[180ms] hover:-translate-y-0.5 hover:text-folio-gold hover:after:opacity-100 active:translate-y-0"
             href="#familia"
             @click.prevent="scrollToSection('#familia')"
             >Familia</a
           >
           <a
-            class="relative py-8 pb-[29px] font-serif text-[19px] font-medium leading-none tracking-normal text-[#512301] transition-colors duration-[180ms] after:absolute after:inset-x-0 after:bottom-[22px] after:h-px after:origin-center after:scale-x-0 after:bg-folio-gold after:content-[''] after:transition-transform after:duration-[180ms] hover:text-folio-gold hover:after:scale-x-100"
+            class="relative py-8 pb-[29px] font-serif text-[19px] font-medium leading-none tracking-normal text-[#512301] transition-[color,transform] duration-[180ms] after:absolute after:inset-x-0 after:bottom-[22px] after:h-px after:origin-center after:scale-x-100 after:bg-folio-gold after:opacity-45 after:content-[''] after:transition-opacity after:duration-[180ms] hover:-translate-y-0.5 hover:text-folio-gold hover:after:opacity-100 active:translate-y-0"
             href="#padrinos"
             @click.prevent="scrollToSection('#padrinos')"
             >Padrinos</a
           >
           <a
-            class="relative py-8 pb-[29px] font-serif text-[19px] font-medium leading-none tracking-normal text-[#512301] transition-colors duration-[180ms] after:absolute after:inset-x-0 after:bottom-[22px] after:h-px after:origin-center after:scale-x-0 after:bg-folio-gold after:content-[''] after:transition-transform after:duration-[180ms] hover:text-folio-gold hover:after:scale-x-100"
+            class="relative py-8 pb-[29px] font-serif text-[19px] font-medium leading-none tracking-normal text-[#512301] transition-[color,transform] duration-[180ms] after:absolute after:inset-x-0 after:bottom-[22px] after:h-px after:origin-center after:scale-x-100 after:bg-folio-gold after:opacity-45 after:content-[''] after:transition-opacity after:duration-[180ms] hover:-translate-y-0.5 hover:text-folio-gold hover:after:opacity-100 active:translate-y-0"
             href="#musica"
             @click.prevent="scrollToSection('#musica')"
             >Nuestra canción</a
           >
           <a
-            class="relative py-8 pb-[29px] font-serif text-[19px] font-medium leading-none tracking-normal text-[#512301] transition-colors duration-[180ms] after:absolute after:inset-x-0 after:bottom-[22px] after:h-px after:origin-center after:scale-x-0 after:bg-folio-gold after:content-[''] after:transition-transform after:duration-[180ms] hover:text-folio-gold hover:after:scale-x-100"
+            class="relative py-8 pb-[29px] font-serif text-[19px] font-medium leading-none tracking-normal text-[#512301] transition-[color,transform] duration-[180ms] after:absolute after:inset-x-0 after:bottom-[22px] after:h-px after:origin-center after:scale-x-100 after:bg-folio-gold after:opacity-45 after:content-[''] after:transition-opacity after:duration-[180ms] hover:-translate-y-0.5 hover:text-folio-gold hover:after:opacity-100 active:translate-y-0"
             href="#info"
             @click.prevent="scrollToSection('#info')"
             >Detalles</a
