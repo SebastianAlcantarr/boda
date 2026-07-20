@@ -290,11 +290,14 @@ onBeforeUnmount(() => {
           class="flex h-[760px] flex-col items-center justify-start border border-[rgba(174,165,151,0.7)] bg-[rgba(251,250,246,0.78)] px-8 pb-[48px] pt-[4px] text-center shadow-[0_28px_70px_-56px_rgba(39,35,30,0.5)] max-[1100px]:h-[700px] max-[1100px]:pt-[34px] max-[900px]:h-auto max-[900px]:py-[42px] max-[600px]:px-6 max-[600px]:py-[34px]"
           aria-label="Resumen de la invitación"
         >
-          <img
-            class=""
-            :src="assetPath('/images/monograma.png')"
-            alt="Monograma de Renée y Gabriel"
-          />
+          <span
+            class="mb-7 block h-[178px] w-[178px] bg-[#a88e5f] opacity-95 [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain] [-webkit-mask-position:center] [-webkit-mask-repeat:no-repeat] [-webkit-mask-size:contain] max-[1100px]:h-[148px] max-[1100px]:w-[148px] max-[600px]:h-[132px] max-[600px]:w-[132px]"
+            :style="{
+              WebkitMaskImage: `url(${assetPath('/images/monograma.png')})`,
+              maskImage: `url(${assetPath('/images/monograma.png')})`,
+            }"
+            aria-label="Monograma de Renée y Gabriel"
+          ></span>
           <div
             class="grid w-full grid-cols-[1fr_auto_1fr] items-center gap-[18px] font-sans text-[8px] font-bold tracking-[.22em] text-folio-overline uppercase max-[600px]:gap-3"
           >

@@ -23,9 +23,9 @@ const submittedCompanions = ref([]);
 const nameError = ref('');
 const companionError = ref('');
 const isExporting = ref(false);
+const exportProgress = ref(0);
 const invitationCard = ref(null);
 const exportCardWidth = 430;
-const exportImageCanvasScale = 3;
 const exportPdfCanvasScale = 2.4;
 const exportPdfImageQuality = 0.9;
 const cssPixelToMm = 25.4 / 96;
@@ -205,7 +205,7 @@ async function waitForExportAssets(exportCard) {
   await document.fonts?.ready;
 }
 
-async function getInvitationCanvas(scale = exportImageCanvasScale) {
+async function getInvitationCanvas(scale = exportPdfCanvasScale) {
   if (!invitationCard.value) return null;
 
   await document.fonts?.ready;
@@ -252,24 +252,9 @@ function addPdfPageLinks(pdf, pageElement, pageWidthMm) {
   });
 }
 
-async function exportAsImage() {
-  isExporting.value = true;
-
-  try {
-    const canvas = await getInvitationCanvas(exportImageCanvasScale);
-    if (!canvas) return;
-
-    const link = document.createElement('a');
-    link.download = `invitacion-renee-gabriel-${normalizeName(submittedName.value).toLowerCase().replace(/\s+/g, '-')}.png`;
-    link.href = canvas.toDataURL('image/png');
-    link.click();
-  } finally {
-    isExporting.value = false;
-  }
-}
-
 async function exportAsPdf() {
   isExporting.value = true;
+  exportProgress.value = 4;
 
   try {
     if (!invitationCard.value) return;
@@ -280,10 +265,12 @@ async function exportAsPdf() {
     const { exportCard, exportHost } = createExportCard();
 
     try {
+      exportProgress.value = 12;
       await waitForExportAssets(exportCard);
 
       const pages = [...exportCard.querySelectorAll('.preview-invitation__page')];
       if (!pages.length) return;
+      exportProgress.value = 18;
 
       const firstPageHeight = Math.ceil(pages[0].getBoundingClientRect().height);
       const pdfWidth = exportCardWidth * cssPixelToMm;
@@ -296,6 +283,7 @@ async function exportAsPdf() {
       });
 
       for (const [index, page] of pages.entries()) {
+        exportProgress.value = Math.round(18 + (index / pages.length) * 72);
         const pageHeight = Math.ceil(page.getBoundingClientRect().height);
         const pdfHeight = pageHeight * cssPixelToMm;
 
@@ -319,14 +307,20 @@ async function exportAsPdf() {
 
         pdf.addImage(imageData, 'JPEG', 0, 0, pdfWidth, pdfHeight, undefined, 'SLOW');
         addPdfPageLinks(pdf, page, pdfWidth);
+        exportProgress.value = Math.round(18 + ((index + 1) / pages.length) * 72);
       }
 
+      exportProgress.value = 96;
       pdf.save(`invitacion-renee-gabriel-${normalizeName(submittedName.value).toLowerCase().replace(/\s+/g, '-')}.pdf`);
+      exportProgress.value = 100;
     } finally {
       exportHost.remove();
     }
   } finally {
-    isExporting.value = false;
+    window.setTimeout(() => {
+      isExporting.value = false;
+      exportProgress.value = 0;
+    }, 450);
   }
 }
 </script>
@@ -493,7 +487,7 @@ async function exportAsPdf() {
                 <div class="preview-invitation__frame" aria-hidden="true"></div>
                 <div class="preview-invitation__cover-content">
                   <span class="preview-invitation__eyebrow">Renée &amp; Gabriel</span>
-                  <img class="preview-invitation__monogram" :src="assetPath('/images/monograma.png')" alt="Monograma de Renée y Gabriel" />
+                  <img class="preview-invitation__monogram" :src="assetPath('/images/monograma-white.png')" alt="Monograma de Renée y Gabriel" />
                   <p class="preview-invitation__cover-kicker">Siempre tuyo, siempre mío,<br />siempre nuestro.</p>
                   <h3>Renée <i>&amp;</i> Gabriel</h3>
                   <div class="preview-invitation__cover-date">
@@ -644,16 +638,20 @@ async function exportAsPdf() {
           <div v-if="submittedName" class="mt-7 flex items-center justify-between gap-[18px] border-t border-folio-line pt-[18px] max-[520px]:items-start max-[520px]:flex-col">
             <div>
               <p class="text-sm font-semibold text-[#512301]">Descarga tu invitación</p>
-              <p class="mt-1 text-xs text-[#6f5b50]">Elige el formato que prefieras.</p>
+              <p class="mt-1 text-xs text-[#6f5b50]">
+                {{ isExporting ? `Preparando PDF · ${exportProgress}%` : 'Se generará en PDF con tus enlaces incluidos.' }}
+              </p>
+              <div v-if="isExporting" class="mt-3 h-1.5 w-[min(260px,70vw)] overflow-hidden rounded-full bg-[rgba(168,142,95,0.22)]">
+                <span
+                  class="block h-full rounded-full bg-[#512301] transition-[width] duration-300"
+                  :style="{ width: `${exportProgress}%` }"
+                ></span>
+              </div>
             </div>
             <div class="flex flex-wrap gap-2">
-              <button class="inline-flex min-h-[38px] items-center gap-1.5 rounded-sm border border-[#bdb4a5] bg-transparent px-3 py-[9px] font-sans text-[9px] font-extrabold tracking-[.12em] text-[#512301] uppercase transition-colors duration-[180ms] hover:border-folio-gold hover:bg-[#ebe7df] disabled:cursor-wait disabled:opacity-55 [&_.material-symbols-outlined]:text-[17px]" type="button" :disabled="isExporting" @click="exportAsImage">
-                <span class="material-symbols-outlined text-[17px]" aria-hidden="true">image</span>
-                PNG
-              </button>
-              <button class="inline-flex min-h-[38px] items-center gap-1.5 rounded-sm border border-[#bdb4a5] bg-transparent px-3 py-[9px] font-sans text-[9px] font-extrabold tracking-[.12em] text-[#512301] uppercase transition-colors duration-[180ms] hover:border-folio-gold hover:bg-[#ebe7df] disabled:cursor-wait disabled:opacity-55 [&_.material-symbols-outlined]:text-[17px]" type="button" :disabled="isExporting" @click="exportAsPdf">
+              <button class="inline-flex min-h-[42px] items-center gap-2 rounded-sm border border-[#512301] bg-[#512301] px-4 py-[11px] font-sans text-[9px] font-extrabold tracking-[.13em] text-[#fbfaf6] uppercase transition-[background,box-shadow,transform] duration-[180ms] hover:-translate-y-0.5 hover:bg-[#6d3914] hover:shadow-[0_14px_28px_-20px_rgba(81,35,1,0.7)] disabled:cursor-wait disabled:opacity-70 disabled:hover:translate-y-0 disabled:hover:shadow-none [&_.material-symbols-outlined]:text-[17px]" type="button" :disabled="isExporting" @click="exportAsPdf">
                 <span class="material-symbols-outlined text-[17px]" aria-hidden="true">picture_as_pdf</span>
-                PDF
+                {{ isExporting ? 'Generando PDF' : 'Descargar como PDF' }}
               </button>
               <button class="inline-flex min-h-[38px] items-center gap-1.5 rounded-sm border border-transparent bg-transparent px-3 py-[9px] font-sans text-[9px] font-extrabold tracking-[.12em] text-[#7c7469] uppercase transition-colors duration-[180ms] hover:border-folio-gold hover:bg-[#ebe7df] [&_.material-symbols-outlined]:text-[17px]" type="button" @click="editName">
                 <span class="material-symbols-outlined text-[17px]" aria-hidden="true">edit</span>
@@ -1423,10 +1421,11 @@ async function exportAsPdf() {
 }
 
 .preview-invitation__cover .preview-invitation__monogram {
+  display: block;
   width: 90px;
   height: 90px;
   margin: 25px 0 18px;
-  filter: brightness(0) invert(1);
+  object-fit: contain;
   opacity: 0.92;
 }
 
