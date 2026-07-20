@@ -272,7 +272,7 @@ async function exportAsPdf() {
         <section class="min-h-[680px] border border-folio-line bg-[rgba(251,250,246,0.74)] p-[clamp(32px,5vw,64px)] max-[900px]:min-h-0 max-[520px]:px-5 max-[520px]:py-6">
           <span class="font-sans text-[11px] font-bold tracking-[.18em] text-folio-gold uppercase">01 <span class="font-medium text-[#9a9285]">de 01</span></span>
           <h2 class="mt-8 font-serif text-4xl leading-none text-[#512301] md:text-5xl">
-            ¿Cómo debemos recibirte?
+            Llene la invitacion
           </h2>
           <p class="mt-5 max-w-md text-[#6f5b50]">
             Escriba su nombre completo y si tiene el de sus acompañantes
