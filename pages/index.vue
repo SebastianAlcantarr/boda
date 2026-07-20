@@ -130,6 +130,7 @@ onBeforeUnmount(() => {
           <a href="#evento" @click.prevent="scrollToSection('#evento')"
             >Evento</a
           >
+          <a href="#asistencia" @click.prevent="scrollToSection('#asistencia')">asistencia</a>
           <a href="#familia" @click.prevent="scrollToSection('#familia')"
             >Familia</a
           >
@@ -139,7 +140,6 @@ onBeforeUnmount(() => {
           <a href="#regalos" @click.prevent="scrollToSection('#regalos')"
             >Regalos</a
           >
-          <a href="#asistencia" @click.prevent="scrollToSection('#asistencia')">asistencia</a>
         </nav>
 
         <p class="header-date">
@@ -840,7 +840,6 @@ onBeforeUnmount(() => {
           <article
             class="rounded-[24px] border border-outline/50 bg-surface/80 p-6 soft-shadow"
           >
-            <span class="material-symbols-outlined text-primary">favorite</span>
             <p
               class="mt-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-secondary"
             >
@@ -849,10 +848,6 @@ onBeforeUnmount(() => {
             <h3 class="mt-2 font-serif text-2xl text-primary">
               Respetuosamente no niños
             </h3>
-            <p class="mt-2 text-muted">
-              Queremos que disfrutes con nosotros esta celebración pensada para
-              adultos.
-            </p>
           </article>
         </div>
       </section>
