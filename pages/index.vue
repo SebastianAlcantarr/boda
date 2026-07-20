@@ -445,7 +445,6 @@ onBeforeUnmount(() => {
           </div>
           <span class="font-sans text-[9px] font-bold tracking-[.2em] text-folio-overline uppercase">ASISTENCIA</span>
           <h2 class="mx-[30px] mt-3.5 max-w-[580px] font-serif text-[clamp(42px,5vw,67px)] font-medium leading-[.85] tracking-[-.055em] text-[#512301] max-[600px]:mx-[18px] max-[600px]:text-[47px]">Agradecemos la confirmación de tu asistencia</h2>
-          <p class="mt-5 font-serif text-[21px] text-folio-muted max-[600px]:text-lg">Tu presencia hará todavía más especial este día.</p>
           <NuxtLink
             to="/asistencia"
             class="mt-[26px] inline-flex items-center justify-center gap-2.5 border border-folio-ink px-[18px] py-[13px] font-sans text-[9px] font-bold tracking-[.16em] text-[#512301] uppercase transition-[background,color,transform] duration-[180ms] hover:-translate-y-0.5 hover:bg-folio-ink hover:text-folio-paper"
@@ -518,22 +517,19 @@ onBeforeUnmount(() => {
         <div class="flex min-h-[460px] flex-col justify-center border border-folio-line bg-folio-paper p-[clamp(28px,5vw,62px)] max-[900px]:min-h-[390px] max-[600px]:min-h-[360px]">
           <span class="font-sans text-[9px] font-bold tracking-[.2em] text-folio-overline uppercase">Un momento especial</span>
           <h2 class="mt-[13px] max-w-[700px] font-serif text-[clamp(43px,4vw,63px)] font-medium leading-[.85] tracking-[-.055em] text-[#512301] max-[600px]:text-[clamp(42px,13vw,62px)]">Escucha la canción de la boda</h2>
-          <p class="mt-[25px] max-w-[410px] font-serif text-xl leading-[1.08] text-folio-muted max-[600px]:text-[19px]">La invitación también tendrá un momento para escuchar nuestra canción y acompañar la experiencia.</p>
-          <a
-            class="mt-[34px] inline-flex w-fit items-center gap-2 border-b border-folio-gold pb-[7px] font-sans text-[10px] font-bold tracking-[.16em] text-[#512301] uppercase [&_.material-symbols-outlined]:text-base"
-            href="https://vt.tiktok.com/ZSX64fHqU/"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Ver referencia <span class="material-symbols-outlined text-base">north_east</span>
-          </a>
         </div>
         <div class="relative min-h-[460px] overflow-hidden border border-[rgba(39,35,30,0.5)] bg-white max-[900px]:min-h-[390px] max-[600px]:min-h-[360px] after:absolute after:inset-[17px] after:border after:border-[rgba(251,250,246,0.45)] after:content-[''] after:pointer-events-none">
           <img class="h-full w-full object-cover sepia-[.3] saturate-[.7] brightness-[.74]" :src="assetPath('/images/slide-7.webp')" alt="Renée y Gabriel" loading="lazy" />
           <div class="absolute inset-0 z-[2] flex flex-col justify-end bg-[linear-gradient(0deg,rgba(28,21,15,0.74),transparent_68%)] p-[clamp(30px,5vw,68px)] text-folio-paper">
             <span class="text-white font-sans text-[9px] font-bold tracking-[.2em] uppercase">Renée &amp; Gabriel</span>
             <strong class="text-white mt-3 font-serif text-[clamp(48px,5vw,82px)] font-medium leading-[.8] tracking-[-.06em] max-[600px]:text-[56px]">Escucha<br />nuestra canción</strong>
-            <span class="material-symbols-outlined mt-7 grid h-[49px] w-[49px] place-items-center rounded-full border border-[rgba(251,250,246,0.72)] text-[22px] bg-white" aria-hidden="true">play_arrow</span>
+            <a
+              class="material-symbols-outlined relative z-[3] mt-7 grid h-[49px] w-[49px] place-items-center rounded-full border border-[rgba(251,250,246,0.72)] bg-white text-[22px] text-[#512301] transition-transform duration-[180ms] hover:scale-105"
+              href="https://vt.tiktok.com/ZSX64fHqU/"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Reproducir canción"
+            >play_arrow</a>
           </div>
         </div>
       </section>
