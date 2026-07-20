@@ -156,76 +156,81 @@ onBeforeUnmount(() => {
       class="fixed left-0 top-0 z-50 w-full border-b border-[rgba(181,171,155,0.55)] bg-[rgba(247,244,238,0.9)] shadow-[0_12px_32px_-30px_rgba(39,35,30,0.55)] backdrop-blur-[18px]"
     >
       <div
-        class="mx-auto flex h-[82px] w-[calc(100%-48px)] max-w-[1560px] items-center justify-between gap-6 max-[900px]:h-[70px] max-[900px]:w-[calc(100%-32px)] max-[600px]:h-[66px] max-[600px]:w-[calc(100%-24px)] max-[600px]:gap-2.5"
+        class="mx-auto grid h-[82px] w-[calc(100%-48px)] max-w-[1560px] grid-cols-[minmax(230px,1fr)_auto_minmax(230px,1fr)] items-center gap-6 max-[900px]:flex max-[900px]:h-[70px] max-[900px]:w-[calc(100%-32px)] max-[900px]:justify-between max-[600px]:h-[66px] max-[600px]:w-[calc(100%-24px)] max-[600px]:gap-2.5"
       >
         <a
           href="#inicio"
-          class="inline-flex min-w-[210px] items-center gap-3 text-[#512301] max-[600px]:min-w-0 max-[600px]:gap-2"
+          class="inline-flex min-w-[230px] items-center justify-self-start gap-3.5 text-[#512301] max-[600px]:min-w-0 max-[600px]:gap-2"
           aria-label="Inicio"
           @click.prevent="scrollToSection('#inicio')"
         >
           <span
-            class="grid h-[43px] w-[43px] shrink-0 place-items-center rounded-full border border-[rgba(168,142,95,0.65)] bg-folio-paper max-[600px]:h-[38px] max-[600px]:w-[38px]"
+            class="grid h-[46px] w-[46px] shrink-0 place-items-center rounded-full border border-[rgba(168,142,95,0.65)] bg-folio-paper max-[600px]:h-[38px] max-[600px]:w-[38px]"
             aria-hidden="true"
           >
             <img
-              class="h-[34px] w-[50px] object-contain max-[600px]:h-[30px] max-[600px]:w-[30px]"
+              class="h-[36px] w-[36px] object-contain max-[600px]:h-[30px] max-[600px]:w-[30px]"
               :src="assetPath('/images/monograma.png')"
               alt=""
             />
           </span>
           <span class="min-w-0">
             <strong
-              class="block overflow-hidden text-ellipsis whitespace-nowrap font-serif text-[25px] font-medium leading-[.9] tracking-[-.035em] max-[600px]:text-[21px]"
+              class="block overflow-hidden text-ellipsis whitespace-nowrap font-serif text-[31px] font-medium leading-[.9] tracking-[-.035em] max-[1100px]:text-[27px] max-[600px]:text-[21px]"
               >Renée <i class="text-[.72em] font-normal">&amp;</i> Gabriel</strong
             >
           </span>
         </a>
 
         <nav
-          class="flex items-center gap-[clamp(18px,3vw,42px)] max-[900px]:hidden"
+          class="flex items-center justify-center gap-[clamp(16px,2vw,34px)] max-[900px]:hidden"
           aria-label="Navegación de la invitación"
         >
           <a
-            class="relative py-8 pb-[29px] font-sans text-[9px] font-bold tracking-[.2em] text-folio-muted uppercase transition-colors duration-[180ms] after:absolute after:inset-x-0 after:bottom-[22px] after:h-px after:origin-center after:scale-x-0 after:bg-folio-gold after:content-[''] after:transition-transform after:duration-[180ms] hover:text-[#512301] hover:after:scale-x-100"
-            href="#evento"
-            @click.prevent="scrollToSection('#evento')"
-            >El día</a
+            class="relative py-8 pb-[29px] font-serif text-[19px] font-medium leading-none tracking-normal text-[#512301] transition-colors duration-[180ms] after:absolute after:inset-x-0 after:bottom-[22px] after:h-px after:origin-center after:scale-x-0 after:bg-folio-gold after:content-[''] after:transition-transform after:duration-[180ms] hover:text-folio-gold hover:after:scale-x-100"
+            href="#inicio"
+            @click.prevent="scrollToSection('#inicio')"
+            >Inicio</a
           >
           <a
-            class="relative py-8 pb-[29px] font-sans text-[9px] font-bold tracking-[.2em] text-folio-muted uppercase transition-colors duration-[180ms] after:absolute after:inset-x-0 after:bottom-[22px] after:h-px after:origin-center after:scale-x-0 after:bg-folio-gold after:content-[''] after:transition-transform after:duration-[180ms] hover:text-[#512301] hover:after:scale-x-100"
+            class="relative py-8 pb-[29px] font-serif text-[19px] font-medium leading-none tracking-normal text-[#512301] transition-colors duration-[180ms] after:absolute after:inset-x-0 after:bottom-[22px] after:h-px after:origin-center after:scale-x-0 after:bg-folio-gold after:content-[''] after:transition-transform after:duration-[180ms] hover:text-folio-gold hover:after:scale-x-100"
+            href="#asistencia"
+            @click.prevent="scrollToSection('#asistencia')"
+            >Asistencia</a
+          >
+          <a
+            class="relative py-8 pb-[29px] font-serif text-[19px] font-medium leading-none tracking-normal text-[#512301] transition-colors duration-[180ms] after:absolute after:inset-x-0 after:bottom-[22px] after:h-px after:origin-center after:scale-x-0 after:bg-folio-gold after:content-[''] after:transition-transform after:duration-[180ms] hover:text-folio-gold hover:after:scale-x-100"
             href="#familia"
             @click.prevent="scrollToSection('#familia')"
             >Familia</a
           >
           <a
-            class="relative py-8 pb-[29px] font-sans text-[9px] font-bold tracking-[.2em] text-folio-muted uppercase transition-colors duration-[180ms] after:absolute after:inset-x-0 after:bottom-[22px] after:h-px after:origin-center after:scale-x-0 after:bg-folio-gold after:content-[''] after:transition-transform after:duration-[180ms] hover:text-[#512301] hover:after:scale-x-100"
+            class="relative py-8 pb-[29px] font-serif text-[19px] font-medium leading-none tracking-normal text-[#512301] transition-colors duration-[180ms] after:absolute after:inset-x-0 after:bottom-[22px] after:h-px after:origin-center after:scale-x-0 after:bg-folio-gold after:content-[''] after:transition-transform after:duration-[180ms] hover:text-folio-gold hover:after:scale-x-100"
             href="#padrinos"
             @click.prevent="scrollToSection('#padrinos')"
             >Padrinos</a
           >
           <a
-            class="relative py-8 pb-[29px] font-sans text-[9px] font-bold tracking-[.2em] text-folio-muted uppercase transition-colors duration-[180ms] after:absolute after:inset-x-0 after:bottom-[22px] after:h-px after:origin-center after:scale-x-0 after:bg-folio-gold after:content-[''] after:transition-transform after:duration-[180ms] hover:text-[#512301] hover:after:scale-x-100"
+            class="relative py-8 pb-[29px] font-serif text-[19px] font-medium leading-none tracking-normal text-[#512301] transition-colors duration-[180ms] after:absolute after:inset-x-0 after:bottom-[22px] after:h-px after:origin-center after:scale-x-0 after:bg-folio-gold after:content-[''] after:transition-transform after:duration-[180ms] hover:text-folio-gold hover:after:scale-x-100"
+            href="#musica"
+            @click.prevent="scrollToSection('#musica')"
+            >Nuestra canción</a
+          >
+          <a
+            class="relative py-8 pb-[29px] font-serif text-[19px] font-medium leading-none tracking-normal text-[#512301] transition-colors duration-[180ms] after:absolute after:inset-x-0 after:bottom-[22px] after:h-px after:origin-center after:scale-x-0 after:bg-folio-gold after:content-[''] after:transition-transform after:duration-[180ms] hover:text-folio-gold hover:after:scale-x-100"
             href="#info"
             @click.prevent="scrollToSection('#info')"
             >Detalles</a
           >
         </nav>
-
-        <NuxtLink
-          to="/asistencia"
-          class="inline-flex min-w-[112px] items-center justify-center gap-2.5 border border-folio-ink px-3.5 py-[11px] font-sans text-[9px] font-bold tracking-[.2em] text-[#512301] uppercase transition-[background,color,transform] duration-[180ms] hover:-translate-y-0.5 hover:bg-folio-ink hover:text-folio-paper max-[600px]:min-w-0 max-[600px]:px-2.5 [&_.material-symbols-outlined]:text-base max-[600px]:[&_.material-symbols-outlined]:hidden"
-        >
-          <span>ASISTENCIA</span>
-          <span class="material-symbols-outlined text-base" aria-hidden="true">north_east</span>
-        </NuxtLink>
+        
       </div>
     </header>
 
     <main class="pb-20 pt-[82px] max-[900px]:pt-[70px]">
       <section
         id="inicio"
-        class="mx-auto grid min-h-[calc(100svh-82px)] w-[calc(100%-48px)] max-w-[1560px] grid-cols-[minmax(0,1fr)_minmax(280px,320px)] items-center gap-[clamp(16px,1.6vw,24px)] pb-[74px] pt-[42px] max-[1100px]:grid-cols-[minmax(0,1fr)_minmax(260px,300px)] max-[900px]:block max-[900px]:min-h-0 max-[900px]:w-[calc(100%-32px)] max-[900px]:pt-[52px] max-[600px]:w-[calc(100%-24px)] max-[600px]:pt-10"
+        class="mx-auto grid min-h-[calc(100svh-82px)] w-[calc(100%-48px)] max-w-[1560px] grid-cols-[minmax(0,1fr)_minmax(280px,320px)] items-center gap-[clamp(16px,1.6vw,24px)] pb-[74px] pt-[42px] max-[1100px]:grid-cols-[minmax(0,1fr)_minmax(260px,300px)] max-[900px]:block max-[900px]:min-h-0 max-[900px]:w-[calc(100%-32px)] max-[900px]:pb-0 max-[900px]:pt-[52px] max-[600px]:w-[calc(100%-24px)] max-[600px]:pt-10"
       >
         <div class="hidden" aria-hidden="true"></div>
 
@@ -396,64 +401,59 @@ onBeforeUnmount(() => {
           </article>
 
           <article
-            class="col-span-full min-h-0 border border-folio-line bg-[rgba(247,245,239,0.85)] p-[clamp(27px,4vw,52px)] shadow-[0_24px_60px_-56px_rgba(39,35,30,0.7)] max-[900px]:col-auto max-[600px]:px-5 max-[600px]:py-[27px]"
+            class="col-span-full grid min-h-0 grid-cols-[minmax(0,1fr)_minmax(300px,390px)] gap-3.5 max-[900px]:col-auto max-[900px]:grid-cols-1"
           >
-            <div class="flex items-center justify-between gap-3.5 border-b border-folio-line pb-4">
-              <span class="font-sans text-[9px] font-bold tracking-[.2em] text-folio-overline uppercase">Cronograma</span>
-              <span class="material-symbols-outlined text-[22px] text-folio-gold" aria-hidden="true">schedule</span>
-            </div>
-            <div class="mt-[35px] grid grid-cols-3 max-[1100px]:grid-cols-2 max-[600px]:mt-7 max-[600px]:grid-cols-1">
-              <div
-                v-for="(item, index) in schedule"
-                :key="item.time"
-                class="relative grid min-h-[132px] grid-cols-[62px_15px_minmax(0,1fr)] gap-3.5 border-b border-folio-line px-6 pb-[25px] [&:nth-child(3n+1)]:pl-0 [&:nth-child(n+4)]:border-b-0 [&:nth-child(n+4)]:pt-[25px] max-[1100px]:[&:nth-child(3n+1)]:pl-6 max-[1100px]:[&:nth-child(2n+1)]:pl-0 max-[600px]:min-h-0 max-[600px]:border-b max-[600px]:px-0 max-[600px]:py-[17px] max-[600px]:[&:nth-child(n+4)]:pt-[17px] max-[600px]:first:pt-0 max-[600px]:last:border-b-0 max-[600px]:last:pb-0"
-              >
-                <span class="pt-0.5 font-sans text-[9px] font-bold tracking-[.07em] text-folio-gold uppercase">{{ item.time }}</span>
-                <span
-                  class="relative mt-0.5 block h-[9px] w-[9px] rounded-full border-2 border-folio-paper bg-folio-gold shadow-[0_0_0_1px_#a88e5f] after:content-['']"
-                  :class="{
-                    'after:absolute after:left-[3px] after:top-[9px] after:h-[112px] after:w-px after:bg-folio-line': index < 3,
-                    'max-[1100px]:after:h-0': index < 3,
-                    'max-[1100px]:after:absolute max-[1100px]:after:left-[3px] max-[1100px]:after:top-[9px] max-[1100px]:after:h-[112px] max-[1100px]:after:w-px max-[1100px]:after:bg-folio-line': index === 3,
-                    'max-[600px]:after:h-[72px]': index < 4,
-                  }"
-                  aria-hidden="true"
-                ></span>
-                <div>
-                  <h3 class="m-0 font-serif text-[26px] font-medium leading-[.88] tracking-[-.035em] text-[#512301]">{{ item.title }}</h3>
-                  <p class="mt-1.5 font-serif text-[17px] leading-none text-folio-muted">{{ item.detail }}</p>
-                  <a v-if="item.link" class="mt-2 inline-flex items-center gap-[5px] text-[9px] text-folio-overline underline underline-offset-4 transition-colors hover:text-[#512301]" :href="item.link" target="_blank" rel="noreferrer">Ver ubicación</a>
+            <div class="border border-folio-line bg-[rgba(247,245,239,0.85)] p-[clamp(27px,4vw,52px)] shadow-[0_24px_60px_-56px_rgba(39,35,30,0.7)] max-[600px]:px-5 max-[600px]:py-[27px]">
+              <div class="flex items-center justify-between gap-3.5 border-b border-folio-line pb-4">
+                <span class="font-sans text-[9px] font-bold tracking-[.2em] text-folio-overline uppercase">Cronograma</span>
+                <span class="material-symbols-outlined text-[22px] text-folio-gold" aria-hidden="true">schedule</span>
+              </div>
+              <div class="mt-[35px] grid gap-0 max-[600px]:mt-7">
+                <div
+                  v-for="(item, index) in schedule"
+                  :key="item.time"
+                  class="relative grid grid-cols-[76px_18px_minmax(0,1fr)] gap-4 pb-[30px] last:pb-0 max-[600px]:grid-cols-[61px_16px_minmax(0,1fr)] max-[600px]:gap-3 max-[600px]:pb-[24px]"
+                >
+                  <span class="pt-0.5 font-sans text-[9px] font-bold tracking-[.07em] text-folio-gold uppercase">{{ item.time }}</span>
+                  <span
+                    class="relative mt-0.5 block h-[10px] w-[10px] rounded-full border-2 border-folio-paper bg-folio-gold shadow-[0_0_0_1px_#a88e5f] after:absolute after:left-[3px] after:top-[10px] after:w-px after:bg-folio-line after:content-['']"
+                    :class="index < schedule.length - 1 ? 'after:h-[calc(100%+20px)]' : 'after:h-0'"
+                    aria-hidden="true"
+                  ></span>
+                  <div
+                    class="pb-[24px] max-[600px]:pb-[20px]"
+                    :class="index < schedule.length - 1 ? 'border-b border-folio-line' : ''"
+                  >
+                    <h3 class="m-0 font-serif text-[clamp(28px,2.7vw,39px)] font-medium leading-[.88] tracking-[-.035em] text-[#512301]">{{ item.title }}</h3>
+                    <p class="mt-2 font-serif text-[18px] leading-none text-folio-muted max-[600px]:text-[17px]">{{ item.detail }}</p>
+                    <a v-if="item.link" class="mt-3 inline-flex items-center gap-[5px] text-[9px] text-folio-overline underline underline-offset-4 transition-colors hover:text-[#512301]" :href="item.link" target="_blank" rel="noreferrer">Ver ubicación</a>
+                  </div>
                 </div>
               </div>
             </div>
+            <div
+              id="asistencia"
+              class="relative flex min-h-[520px] scroll-mt-[102px] flex-col items-center justify-center border border-folio-line bg-[linear-gradient(135deg,transparent_19px,rgba(168,142,95,0.16)_20px,transparent_21px)] bg-[length:42px_42px] bg-folio-paper px-8 py-12 text-center shadow-[0_25px_65px_-52px_rgba(39,35,30,0.7)] before:absolute before:left-5 before:top-5 before:h-[96px] before:w-[96px] before:rounded-full before:border before:border-[rgba(168,142,95,0.55)] before:content-[''] after:absolute after:bottom-5 after:right-5 after:h-[96px] after:w-[96px] after:rounded-full after:border after:border-[rgba(168,142,95,0.55)] after:content-[''] max-[900px]:min-h-[420px] max-[600px]:min-h-[390px] max-[600px]:px-5 max-[600px]:py-[42px] max-[600px]:before:left-[13px] max-[600px]:before:top-[13px] max-[600px]:before:h-[70px] max-[600px]:before:w-[70px] max-[600px]:after:bottom-[13px] max-[600px]:after:right-[13px] max-[600px]:after:h-[70px] max-[600px]:after:w-[70px]"
+            >
+              <div
+                class="absolute -top-[31px] grid h-16 w-16 rotate-[5deg] place-items-center rounded-full border border-[rgba(130,111,79,0.8)] bg-[#b7aa93] font-serif text-[15px] text-[#675a49]"
+                aria-hidden="true"
+              >
+                R&amp;G
+              </div>
+              <span class="font-sans text-[9px] font-bold tracking-[.2em] text-folio-overline uppercase">ASISTENCIA</span>
+              <h2 class="mx-[18px] mt-3.5 max-w-[330px] font-serif text-[clamp(39px,4vw,55px)] font-medium leading-[.85] tracking-[-.055em] text-[#512301] max-[600px]:text-[47px]">Agradecemos la confirmación de tu asistencia</h2>
+              <NuxtLink
+                to="/asistencia"
+                class="bg-[#512301]  text-white text-sm mt-[26px] inline-flex items-center justify-center gap-2.5 border border-folio-ink px-[18px] py-[13px] font-sans text-[9px] font-bold tracking-[.16em] text-[#512301] uppercase transition-[background,color,transform] duration-[180ms] hover:-translate-y-0.5 hover:bg-folio-ink hover:text-folio-paper"
+              >
+                Confirmar asistencia
+                <span class="material-symbols-outlined text-base" aria-hidden="true">north_east</span>
+              </NuxtLink>
+              <span class="absolute bottom-[25px] font-sans text-[8px] font-bold tracking-[.2em] text-folio-muted uppercase max-[600px]:bottom-[19px] max-[600px]:text-[7px]">Renée &amp; Gabriel · 21.11.2026</span>
+            </div>
           </article>
         </div>
-      </section>
-
-      <section
-        id="asistencia"
-        class="mx-auto mt-[clamp(100px,14vw,190px)] w-[calc(100%-48px)] max-w-[1560px] scroll-mt-[102px] max-[900px]:w-[calc(100%-32px)] max-[600px]:w-[calc(100%-24px)]"
-      >
-        <article
-          class="relative mx-auto flex min-h-[420px] max-w-[820px] flex-col items-center justify-center border border-folio-line bg-[linear-gradient(135deg,transparent_19px,rgba(168,142,95,0.16)_20px,transparent_21px)] bg-[length:42px_42px] bg-folio-paper text-center shadow-[0_25px_65px_-52px_rgba(39,35,30,0.7)] before:absolute before:left-5 before:top-5 before:h-[105px] before:w-[105px] before:rounded-full before:border before:border-[rgba(168,142,95,0.55)] before:content-[''] after:absolute after:bottom-5 after:right-5 after:h-[105px] after:w-[105px] after:rounded-full after:border after:border-[rgba(168,142,95,0.55)] after:content-[''] max-[600px]:min-h-[390px] max-[600px]:before:left-[13px] max-[600px]:before:top-[13px] max-[600px]:before:h-[70px] max-[600px]:before:w-[70px] max-[600px]:after:bottom-[13px] max-[600px]:after:right-[13px] max-[600px]:after:h-[70px] max-[600px]:after:w-[70px]"
-        >
-          <div
-            class="absolute -top-[31px] grid h-16 w-16 rotate-[5deg] place-items-center rounded-full border border-[rgba(130,111,79,0.8)] bg-[#b7aa93] font-serif text-[15px] text-[#675a49]"
-            aria-hidden="true"
-          >
-            R&amp;G
-          </div>
-          <span class="font-sans text-[9px] font-bold tracking-[.2em] text-folio-overline uppercase">ASISTENCIA</span>
-          <h2 class="mx-[30px] mt-3.5 max-w-[580px] font-serif text-[clamp(42px,5vw,67px)] font-medium leading-[.85] tracking-[-.055em] text-[#512301] max-[600px]:mx-[18px] max-[600px]:text-[47px]">Agradecemos la confirmación de tu asistencia</h2>
-          <NuxtLink
-            to="/asistencia"
-            class="mt-[26px] inline-flex items-center justify-center gap-2.5 border border-folio-ink px-[18px] py-[13px] font-sans text-[9px] font-bold tracking-[.16em] text-[#512301] uppercase transition-[background,color,transform] duration-[180ms] hover:-translate-y-0.5 hover:bg-folio-ink hover:text-folio-paper"
-          >
-            Confirmar asistencia
-            <span class="material-symbols-outlined text-base" aria-hidden="true">north_east</span>
-          </NuxtLink>
-          <span class="absolute bottom-[25px] font-sans text-[8px] font-bold tracking-[.2em] text-folio-muted uppercase max-[600px]:bottom-[19px] max-[600px]:text-[7px]">Renée &amp; Gabriel · 21.11.2026</span>
-        </article>
       </section>
 
       <section
@@ -597,13 +597,14 @@ onBeforeUnmount(() => {
     </main>
 
     <nav
-      class="fixed bottom-[max(9px,env(safe-area-inset-bottom))] left-[10px] right-[10px] z-50 hidden justify-around border border-[rgba(251,250,246,0.18)] bg-[rgba(39,35,30,0.96)] shadow-[0_18px_42px_-24px_rgba(39,35,30,0.75)] max-[900px]:flex max-[600px]:bottom-[max(8px,env(safe-area-inset-bottom))]"
+      class="fixed bottom-[max(9px,env(safe-area-inset-bottom))] left-[10px] right-[10px] z-50 hidden justify-around border border-[rgba(173,147,99,0.42)] bg-[rgba(251,250,246,0.94)] shadow-[0_18px_42px_-24px_rgba(81,35,1,0.45)] backdrop-blur-[14px] max-[900px]:flex max-[600px]:bottom-[max(8px,env(safe-area-inset-bottom))]"
       aria-label="Navegación rápida"
     >
-      <a class="flex min-w-[68px] flex-1 flex-col items-center gap-[3px] px-1 pb-[7px] pt-2 text-[rgba(251,250,246,0.68)] transition-colors duration-[180ms] hover:bg-[rgba(251,250,246,0.1)] hover:text-folio-paper max-[600px]:px-1 max-[600px]:py-[7px]" href="#inicio" @click.prevent="scrollToSection('#inicio')"><span class="material-symbols-outlined text-[19px]">home</span><small class="font-sans text-[8px] font-bold tracking-[.08em] uppercase">Inicio</small></a>
-      <a class="flex min-w-[68px] flex-1 flex-col items-center gap-[3px] px-1 pb-[7px] pt-2 text-[rgba(251,250,246,0.68)] transition-colors duration-[180ms] hover:bg-[rgba(251,250,246,0.1)] hover:text-folio-paper max-[600px]:px-1 max-[600px]:py-[7px]" href="#evento" @click.prevent="scrollToSection('#evento')"><span class="material-symbols-outlined text-[19px]">event</span><small class="font-sans text-[8px] font-bold tracking-[.08em] uppercase">El día</small></a>
-      <a class="flex min-w-[68px] flex-1 flex-col items-center gap-[3px] px-1 pb-[7px] pt-2 text-[rgba(251,250,246,0.68)] transition-colors duration-[180ms] hover:bg-[rgba(251,250,246,0.1)] hover:text-folio-paper max-[600px]:px-1 max-[600px]:py-[7px]" href="#info" @click.prevent="scrollToSection('#info')"><span class="material-symbols-outlined text-[19px]">info</span><small class="font-sans text-[8px] font-bold tracking-[.08em] uppercase">Detalles</small></a>
-      <NuxtLink class="flex min-w-[68px] flex-1 flex-col items-center gap-[3px] px-1 pb-[7px] pt-2 text-[rgba(251,250,246,0.68)] transition-colors duration-[180ms] hover:bg-[rgba(251,250,246,0.1)] hover:text-folio-paper max-[600px]:px-1 max-[600px]:py-[7px]" to="/asistencia"><span class="material-symbols-outlined text-[19px]">check</span><small class="font-sans text-[8px] font-bold tracking-[.08em] uppercase">ASISTENCIA</small></NuxtLink>
+      <a class="flex min-w-[68px] flex-1 flex-col items-center gap-[3px] px-1 pb-[7px] pt-2 text-[#512301] transition-colors duration-[180ms] hover:bg-[#512301] hover:text-[#fbfaf6] max-[600px]:px-1 max-[600px]:py-[7px]" href="#inicio" @click.prevent="scrollToSection('#inicio')"><span class="material-symbols-outlined text-[19px]">home</span><small class="font-sans text-[8px] font-bold tracking-[.08em] uppercase">Inicio</small></a>
+      <a class="flex min-w-[68px] flex-1 flex-col items-center gap-[3px] px-1 pb-[7px] pt-2 text-[#512301] transition-colors duration-[180ms] hover:bg-[#512301] hover:text-[#fbfaf6] max-[600px]:px-1 max-[600px]:py-[7px]" href="#evento" @click.prevent="scrollToSection('#evento')"><span class="material-symbols-outlined text-[19px]">event</span><small class="font-sans text-[8px] font-bold tracking-[.08em] uppercase">Cronograma</small></a>
+      <a class="flex min-w-[68px] flex-1 flex-col items-center gap-[3px] px-1 pb-[7px] pt-2 text-[#512301] transition-colors duration-[180ms] hover:bg-[#512301] hover:text-[#fbfaf6] max-[600px]:px-1 max-[600px]:py-[7px]" href="#familia" @click.prevent="scrollToSection('#familia')"><span class="material-symbols-outlined text-[19px]">family_group</span><small class="font-sans text-[8px] font-bold tracking-[.08em] uppercase">Familia</small></a>
+      <a class="flex min-w-[68px] flex-1 flex-col items-center gap-[3px] px-1 pb-[7px] pt-2 text-[#512301] transition-colors duration-[180ms] hover:bg-[#512301] hover:text-[#fbfaf6] max-[600px]:px-1 max-[600px]:py-[7px]" href="#info" @click.prevent="scrollToSection('#info')"><span class="material-symbols-outlined text-[19px]">info</span><small class="font-sans text-[8px] font-bold tracking-[.08em] uppercase">Detalles</small></a>
+      <NuxtLink class="flex min-w-[68px] flex-1 flex-col items-center gap-[3px] px-1 pb-[7px] pt-2 text-[#512301] transition-colors duration-[180ms] hover:bg-[#512301] hover:text-[#fbfaf6] max-[600px]:px-1 max-[600px]:py-[7px]" to="/asistencia"><span class="material-symbols-outlined text-[19px]">open_in_new</span><small class="font-sans text-[8px] font-bold tracking-[.08em] uppercase">Asistencia</small></NuxtLink>
     </nav>
   </div>
 </template>
