@@ -24,7 +24,11 @@ const nameError = ref('');
 const companionError = ref('');
 const isExporting = ref(false);
 const invitationCard = ref(null);
-const exportCanvasScale = 4;
+const exportCardWidth = 430;
+const exportImageCanvasScale = 3;
+const exportPdfCanvasScale = 2.4;
+const exportPdfImageQuality = 0.9;
+const cssPixelToMm = 25.4 / 96;
 
 const queryName = computed(() => {
   const value = route.query.nombre;
@@ -55,11 +59,45 @@ const invitationNameDensity = computed(() => {
 
   return 'normal';
 });
+const invitationSlides = [
+  { src: assetPath('/images/slide-9.webp'), alt: 'Renée y Gabriel caminando juntos' },
+  { src: assetPath('/images/slide-4.webp'), alt: 'Renée y Gabriel en una sesión de fotos' },
+  { src: assetPath('/images/slide-7.webp'), alt: 'Renée y Gabriel al atardecer' },
+  { src: assetPath('/images/slide-8.webp'), alt: 'Renée y Gabriel celebrando juntos' },
+];
+const invitationSchedule = [
+  {
+    time: '4:00 PM',
+    title: 'Ceremonia religiosa',
+    detail: 'Iglesia Nuestro Señor de Jesús.',
+    link: 'https://www.google.com/maps/search/?api=1&query=Iglesia%20Nuestro%20Se%C3%B1or%20de%20Jes%C3%BAs%20Hermosillo%20Sonora',
+  },
+  {
+    time: '7:00 PM',
+    title: 'Cóctel de bienvenida',
+    detail: 'Kiosko Villa Toscana.',
+    link: 'https://www.google.com/maps/search/?api=1&query=Eventos%20Villa%20Toscana%20Hermosillo',
+  },
+  { time: '7:45 PM', title: 'Recepción', detail: 'Villa Toscana.' },
+  { time: '8:00 PM', title: 'Cena', detail: 'Una noche para compartir.' },
+  { time: '9:30 PM', title: 'Vals', detail: 'Nuestro primer baile.' },
+  { time: '1:00 AM', title: 'Final', detail: 'Hasta la próxima.' },
+];
+const invitationParents = [
+  {
+    label: 'Papás de Renée',
+    names: ['Francisca Imelda Urías Alcalá', 'Martín Ricardo Millanes Gaxiola'],
+  },
+  {
+    label: 'Papás de Gabriel',
+    names: ['María Medina Laborín', 'Carlos Coronado Medina'],
+  },
+];
 const invitationSponsors = [
-  { label: 'Velación', names: 'Sandra y Raúl Ambriz' },
-  { label: 'Lazo', names: 'Carlos Coronado y Carolina Henry' },
-  { label: 'Anillos', names: 'Marisol Urías y Héctor Díaz' },
-  { label: 'Arras', names: 'Fernando Coronado y Leslie Ibarra' },
+  { label: 'Velación', names: 'Sandra y Raúl Ambriz', icon: 'favorite' },
+  { label: 'Lazo', names: 'Carlos Coronado y Carolina Henry', icon: 'all_inclusive' },
+  { label: 'Anillos', names: 'Marisol Urías y Héctor Díaz', icon: 'join' },
+  { label: 'Arras', names: 'Fernando Coronado y Leslie Ibarra', icon: 'groups' },
 ];
 const invitationAvoidColors = [
   { name: 'Beige', value: '#f1dfc7' },
@@ -67,6 +105,8 @@ const invitationAvoidColors = [
   { name: 'Crema', value: '#fff1d6' },
   { name: 'Rojo', value: '#c5161d' },
 ];
+const invitationMusicLink = 'https://open.spotify.com/intl-es/track/3zl7j5ua8mF4JDYuxrfo01';
+const invitationGiftLink = 'https://mesaderegalos.liverpool.com.mx/milistaderegalos/51972633';
 
 watch(
   [queryName, queryCompanionCount, queryCompanionNames],
@@ -133,25 +173,27 @@ function editName() {
   router.replace('/asistencia');
 }
 
-async function getInvitationCanvas() {
-  if (!invitationCard.value) return null;
-
-  await document.fonts?.ready;
-  const { default: html2canvas } = await import('html2canvas');
-  const card = invitationCard.value;
+function createExportCard() {
   const exportHost = document.createElement('div');
-  const exportCard = card.cloneNode(true);
+  const exportCard = invitationCard.value.cloneNode(true);
 
   exportHost.className = 'invitation-export-host';
   exportCard.classList.add('preview-invitation--export');
+  exportCard.style.width = `${exportCardWidth}px`;
+  exportCard.style.height = 'auto';
+  exportCard.style.maxHeight = 'none';
   exportHost.appendChild(exportCard);
   document.body.appendChild(exportHost);
 
+  return { exportCard, exportHost };
+}
+
+async function waitForExportAssets(exportCard) {
   const images = [...exportCard.querySelectorAll('img')];
 
   await Promise.all(
     images.map((image) => {
-      if (image.complete) return Promise.resolve();
+      if (image.complete && image.naturalWidth > 0) return image.decode?.().catch(() => {}) || Promise.resolve();
 
       return new Promise((resolve) => {
         image.addEventListener('load', resolve, { once: true });
@@ -161,28 +203,60 @@ async function getInvitationCanvas() {
   );
 
   await document.fonts?.ready;
+}
+
+async function getInvitationCanvas(scale = exportImageCanvasScale) {
+  if (!invitationCard.value) return null;
+
+  await document.fonts?.ready;
+  const { default: html2canvas } = await import('html2canvas');
+  const { exportCard, exportHost } = createExportCard();
+
+  await waitForExportAssets(exportCard);
 
   try {
+    const exportHeight = Math.ceil(exportCard.scrollHeight);
+
     return await html2canvas(exportCard, {
       backgroundColor: '#f3efe7',
-      height: 760,
+      height: exportHeight,
       logging: false,
-      scale: exportCanvasScale,
+      scale,
       scrollX: 0,
       scrollY: 0,
       useCORS: true,
-      width: 430,
+      width: exportCardWidth,
+      windowHeight: exportHeight,
+      windowWidth: exportCardWidth,
     });
   } finally {
     exportHost.remove();
   }
 }
 
+function addPdfPageLinks(pdf, pageElement, pageWidthMm) {
+  const pageRect = pageElement.getBoundingClientRect();
+  const mmPerPixel = pageWidthMm / pageRect.width;
+
+  pageElement.querySelectorAll('a[href]').forEach((link) => {
+    const href = link.getAttribute('href');
+    if (!href) return;
+
+    const linkRect = link.getBoundingClientRect();
+    const x = (linkRect.left - pageRect.left) * mmPerPixel;
+    const y = (linkRect.top - pageRect.top) * mmPerPixel;
+    const width = linkRect.width * mmPerPixel;
+    const height = linkRect.height * mmPerPixel;
+
+    pdf.link(x, y, width, height, { url: href });
+  });
+}
+
 async function exportAsImage() {
   isExporting.value = true;
 
   try {
-    const canvas = await getInvitationCanvas();
+    const canvas = await getInvitationCanvas(exportImageCanvasScale);
     if (!canvas) return;
 
     const link = document.createElement('a');
@@ -198,24 +272,59 @@ async function exportAsPdf() {
   isExporting.value = true;
 
   try {
-    const canvas = await getInvitationCanvas();
-    if (!canvas) return;
+    if (!invitationCard.value) return;
 
+    await document.fonts?.ready;
+    const { default: html2canvas } = await import('html2canvas');
     const { jsPDF } = await import('jspdf');
-    const imageData = canvas.toDataURL('image/png');
-    const cssPixelToMm = 25.4 / 96;
-    const pdfWidth = (canvas.width / exportCanvasScale) * cssPixelToMm;
-    const pdfHeight = (canvas.height / exportCanvasScale) * cssPixelToMm;
-    const pdf = new jsPDF({
-      orientation: 'portrait',
-      unit: 'mm',
-      format: [pdfWidth, pdfHeight],
-    });
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    const pageHeight = pdf.internal.pageSize.getHeight();
+    const { exportCard, exportHost } = createExportCard();
 
-    pdf.addImage(imageData, 'PNG', 0, 0, pageWidth, pageHeight);
-    pdf.save(`invitacion-renee-gabriel-${normalizeName(submittedName.value).toLowerCase().replace(/\s+/g, '-')}.pdf`);
+    try {
+      await waitForExportAssets(exportCard);
+
+      const pages = [...exportCard.querySelectorAll('.preview-invitation__page')];
+      if (!pages.length) return;
+
+      const firstPageHeight = Math.ceil(pages[0].getBoundingClientRect().height);
+      const pdfWidth = exportCardWidth * cssPixelToMm;
+      const firstPdfHeight = firstPageHeight * cssPixelToMm;
+      const pdf = new jsPDF({
+        compress: true,
+        orientation: 'portrait',
+        unit: 'mm',
+        format: [pdfWidth, firstPdfHeight],
+      });
+
+      for (const [index, page] of pages.entries()) {
+        const pageHeight = Math.ceil(page.getBoundingClientRect().height);
+        const pdfHeight = pageHeight * cssPixelToMm;
+
+        if (index > 0) {
+          pdf.addPage([pdfWidth, pdfHeight], 'portrait');
+        }
+
+        const canvas = await html2canvas(page, {
+          backgroundColor: '#f3efe7',
+          height: pageHeight,
+          logging: false,
+          scale: exportPdfCanvasScale,
+          scrollX: 0,
+          scrollY: 0,
+          useCORS: true,
+          width: exportCardWidth,
+          windowHeight: pageHeight,
+          windowWidth: exportCardWidth,
+        });
+        const imageData = canvas.toDataURL('image/jpeg', exportPdfImageQuality);
+
+        pdf.addImage(imageData, 'JPEG', 0, 0, pdfWidth, pdfHeight, undefined, 'SLOW');
+        addPdfPageLinks(pdf, page, pdfWidth);
+      }
+
+      pdf.save(`invitacion-renee-gabriel-${normalizeName(submittedName.value).toLowerCase().replace(/\s+/g, '-')}.pdf`);
+    } finally {
+      exportHost.remove();
+    }
   } finally {
     isExporting.value = false;
   }
@@ -371,106 +480,147 @@ async function exportAsPdf() {
 
 
 
-          <div v-if="submittedName" class="mt-8 grid min-h-[540px] place-items-center bg-[linear-gradient(rgba(173,147,99,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(173,147,99,0.08)_1px,transparent_1px),#ece8df] bg-[length:28px_28px] p-[clamp(18px,4vw,42px)] max-[520px]:min-h-[420px]">
+          <div v-if="submittedName" class="preview-stage mt-8">
             <article
               ref="invitationCard"
               class="preview-invitation"
               :data-guest-count="invitationNames.length"
               :data-guest-density="invitationNameDensity"
             >
-              <div class="preview-invitation__envelope" aria-hidden="true"></div>
-              <div class="preview-invitation__paper">
-                <div class="preview-invitation__masthead">
-                  <span>Renée &amp; Gabriel</span>
-                  <span>21 · 11 · 2026</span>
+              <section class="preview-invitation__page preview-invitation__cover">
+                <img class="preview-invitation__cover-image" :src="invitationSlides[0].src" :alt="invitationSlides[0].alt" />
+                <div class="preview-invitation__cover-wash" aria-hidden="true"></div>
+                <div class="preview-invitation__frame" aria-hidden="true"></div>
+                <div class="preview-invitation__cover-content">
+                  <span class="preview-invitation__eyebrow">Renée &amp; Gabriel</span>
+                  <img class="preview-invitation__monogram" :src="assetPath('/images/monograma.png')" alt="Monograma de Renée y Gabriel" />
+                  <p class="preview-invitation__cover-kicker">Siempre tuyo, siempre mío,<br />siempre nuestro.</p>
+                  <h3>Renée <i>&amp;</i> Gabriel</h3>
+                  <div class="preview-invitation__cover-date">
+                    <span>21 de noviembre de 2026</span>
+                    <i aria-hidden="true"></i>
+                    <span>Hermosillo, Sonora</span>
+                  </div>
+                  <a class="preview-invitation__music-link" :href="invitationMusicLink" target="_blank" rel="noreferrer">
+                    <span class="material-symbols-outlined" aria-hidden="true">play_circle</span>
+                    Escucha nuestra canción
+                  </a>
                 </div>
+              </section>
 
-                <div class="preview-invitation__intro">
-                  <img
-                    class="preview-invitation__monogram"
-                    :src="assetPath('/images/monograma.png')"
-                    alt="Monograma de Renée y Gabriel"
-                  />
-                  <p class="preview-invitation__overline">Siempre tuyo, siempre mío,<br />siempre nuestro.</p>
-                  <p class="preview-invitation__blessing">Con la bendición de Dios<br />y nuestros padres</p>
+              <section class="preview-invitation__page preview-invitation__story">
+                <div class="preview-invitation__page-heading">
+                  <span>01 / Invitación</span>
+                  <span>21 — 11 — 26</span>
+                </div>
+                <p class="preview-invitation__section-label">Con la bendición de Dios y nuestros padres</p>
+                <h3 class="preview-invitation__title">Tenemos el honor<br />de invitarte a celebrar</h3>
+                <p class="preview-invitation__names">Renée <i>&amp;</i> Gabriel</p>
+
+                <div class="preview-invitation__guest-card">
+                  <span>Esta invitación es para</span>
+                  <strong v-for="(name, index) in invitationNames" :key="`${name}-${index}`">{{ name }}</strong>
                 </div>
 
                 <div class="preview-invitation__parents">
-                  <div>
-                    <span>Padres de Renée</span>
-                    <p>Francisca Imelda Urías Alcalá</p>
-                    <p>Martín Ricardo Millanes Gaxiola</p>
-                  </div>
-                  <div>
-                    <span>Padres de Gabriel</span>
-                    <p>María Medina Laborín</p>
-                    <p>Carlos Coronado Medina</p>
+                  <div v-for="parent in invitationParents" :key="parent.label">
+                    <span>{{ parent.label }}</span>
+                    <p v-for="name in parent.names" :key="name">{{ name }}</p>
                   </div>
                 </div>
 
-                <div class="preview-invitation__couple">
-                  <p>Tenemos el honor de invitarte a celebrar</p>
-                  <h3>Renée <i>&amp;</i> Gabriel</h3>
-                </div>
+                <div class="preview-invitation__quote">“El amor no mira con los ojos, sino con el alma.”</div>
+              </section>
 
-                <div class="preview-invitation__guest">
-                  <span>Esta invitación es para</span>
-                  <div>
-                    <p v-for="(name, index) in invitationNames" :key="`${name}-${index}`">
-                      {{ name }}
-                    </p>
-                  </div>
-                </div>
-
-                <div class="preview-invitation__date">
-                  <span>Sábado 21 de noviembre de 2026</span>
-                  <i aria-hidden="true"></i>
+              <section class="preview-invitation__page preview-invitation__event-page">
+                <div class="preview-invitation__page-heading">
+                  <span>02 / El día</span>
                   <span>Hermosillo, Sonora</span>
                 </div>
+                <h3 class="preview-invitation__title">Cronograma<br />de nuestra celebración</h3>
+                <p class="preview-invitation__intro-text">Acompáñanos a vivir cada momento de este día tan especial.</p>
 
-                <div class="preview-invitation__events">
-                  <div>
-                    <span>Ceremonia religiosa</span>
-                    <strong>4:00 PM</strong>
-                    <small>Iglesia Nuestro Señor de Jesús</small>
-                  </div>
-                  <div>
-                    <span>Recepción</span>
-                    <strong>7:45 PM</strong>
-                    <small>Villa Toscana</small>
+                <div class="preview-invitation__schedule">
+                  <div v-for="(item, index) in invitationSchedule" :key="`${item.time}-${item.title}`" class="preview-invitation__schedule-item">
+                    <span class="preview-invitation__schedule-time">{{ item.time }}</span>
+                    <span class="preview-invitation__schedule-dot" aria-hidden="true"></span>
+                    <div>
+                      <h4>{{ item.title }}</h4>
+                      <p>{{ item.detail }}</p>
+                      <a v-if="item.link" :href="item.link" target="_blank" rel="noreferrer">
+                        Ver ubicación <span class="material-symbols-outlined" aria-hidden="true">north_east</span>
+                      </a>
+                    </div>
                   </div>
                 </div>
+              </section>
+
+              <section class="preview-invitation__page preview-invitation__people-page">
+                <div class="preview-invitation__page-heading">
+                  <span>03 / Padrinos</span>
+                  <span>Con cariño</span>
+                </div>
+                <h3 class="preview-invitation__title">Personas que<br />nos acompañan</h3>
+                <p class="preview-invitation__intro-text">Con cariño compartimos los nombres de quienes estarán cerca de nosotros en este día.</p>
 
                 <div class="preview-invitation__sponsors">
-                  <span>Padrinos de nuestra celebración</span>
-                  <div>
-                    <p v-for="sponsor in invitationSponsors" :key="sponsor.label">
-                      <strong>{{ sponsor.names }}</strong>
-                      <small>Padrinos de {{ sponsor.label }}</small>
-                    </p>
-                  </div>
+                  <article v-for="sponsor in invitationSponsors" :key="sponsor.label">
+                    <span class="material-symbols-outlined" aria-hidden="true">{{ sponsor.icon }}</span>
+                    <small>Padrinos de {{ sponsor.label }}</small>
+                    <strong>{{ sponsor.names }}</strong>
+                  </article>
                 </div>
 
-                <div class="preview-invitation__details">
-                  <span>Detalles</span>
-                  <div class="preview-invitation__details-grid">
+              </section>
+
+              <section class="preview-invitation__page preview-invitation__details-page">
+                <div class="preview-invitation__photo-wide">
+                  <img :src="invitationSlides[2].src" :alt="invitationSlides[2].alt" />
+                  <span>Renée &amp; Gabriel</span>
+                </div>
+
+                <div class="preview-invitation__detail-block">
+                  <span class="preview-invitation__section-label">Detalles importantes</span>
+                  <h3 class="preview-invitation__title">Para celebrar<br />en armonía</h3>
+                  <div class="preview-invitation__detail-grid">
                     <div>
                       <span>Código de vestimenta</span>
                       <strong>Elegancia rigurosa</strong>
                     </div>
                     <div>
-                      <span>Colores a evitar</span>
-                      <div class="preview-invitation__avoid-colors" aria-label="Beige, blanco, crema y rojo">
-                        <i v-for="color in invitationAvoidColors" :key="color.name" :style="{ backgroundColor: color.value }" :title="color.name"></i>
-                      </div>
+                      <span>Invitación</span>
+                      <strong>Respetuosamente no niños</strong>
                     </div>
                   </div>
+                  <div class="preview-invitation__colors-block">
+                    <span>Colores a evitar</span>
+                    <div class="preview-invitation__avoid-colors" aria-label="Beige, blanco, crema y rojo">
+                      <i v-for="color in invitationAvoidColors" :key="color.name" :style="{ backgroundColor: color.value }" :title="color.name"></i>
+                    </div>
+                    <p>Beige, blanco, crema, tonos similares y rojo.</p>
+                  </div>
                 </div>
-                <div class="preview-invitation__footer">
-                  <span>Respetuosamente no niños</span>
+
+                <div class="preview-invitation__actions">
+                  <a :href="invitationMusicLink" target="_blank" rel="noreferrer">
+                    Escucha nuestra canción
+                  </a>
+                  <a :href="invitationGiftLink" target="_blank" rel="noreferrer">
+                    Ver mesa de regalos
+                  </a>
+                </div>
+              </section>
+
+              <section class="preview-invitation__page preview-invitation__closing-page">
+                <img :src="invitationSlides[3].src" :alt="invitationSlides[3].alt" />
+                <div class="preview-invitation__closing-wash" aria-hidden="true"></div>
+                <div class="preview-invitation__closing-content">
+                  <span class="preview-invitation__eyebrow">Gracias por acompañarnos</span>
+                  <h3>Nos vemos<br />en el altar</h3>
+                  <p>{{ invitationNames.join(' · ') }}</p>
                   <span>Renée &amp; Gabriel · 21.11.2026</span>
                 </div>
-              </div>
+              </section>
             </article>
           </div>
 
@@ -1123,6 +1273,793 @@ async function exportAsPdf() {
 
   .preview-invitation__footer {
     font-size: 5.5px;
+  }
+}
+</style>
+
+<style>
+.preview-stage {
+  display: grid;
+  min-height: 540px;
+  max-height: 760px;
+  place-items: start center;
+  overflow: auto;
+  padding: 24px;
+  background:
+    linear-gradient(rgba(173, 147, 99, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(173, 147, 99, 0.08) 1px, transparent 1px),
+    #e8e3da;
+  background-size: 28px 28px;
+  scrollbar-color: #a88e5f transparent;
+  scrollbar-width: thin;
+}
+
+.preview-invitation {
+  position: relative;
+  width: min(100%, 430px);
+  height: auto;
+  overflow: visible;
+  background: #eee8dc;
+  color: #27231e;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  box-shadow: 0 28px 54px -30px rgba(53, 38, 21, 0.58);
+}
+
+.preview-invitation,
+.preview-invitation * {
+  box-sizing: border-box;
+}
+
+.preview-invitation::before {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+  content: '';
+  opacity: 0.24;
+  background: repeating-linear-gradient(0deg, rgba(72, 55, 33, 0.035) 0 1px, transparent 1px 4px);
+  mix-blend-mode: multiply;
+}
+
+.preview-invitation__page {
+  position: relative;
+  display: flex;
+  width: 100%;
+  min-height: 720px;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 40px 30px;
+}
+
+.preview-invitation__page::after {
+  position: absolute;
+  right: -74px;
+  bottom: -74px;
+  width: 170px;
+  height: 170px;
+  border: 1px solid rgba(168, 142, 95, 0.42);
+  border-radius: 50%;
+  content: '';
+}
+
+.preview-invitation__page-heading {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(168, 142, 95, 0.42);
+  color: #826f4f;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.preview-invitation__eyebrow,
+.preview-invitation__section-label {
+  color: #f8f3e9;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.preview-invitation__cover {
+  min-height: 720px;
+  align-items: center;
+  justify-content: center;
+  padding: 46px 34px;
+  color: #fffaf1;
+  text-align: center;
+}
+
+.preview-invitation__cover-image,
+.preview-invitation__cover-wash,
+.preview-invitation__frame,
+.preview-invitation__closing-page > img,
+.preview-invitation__closing-wash {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.preview-invitation__cover-image,
+.preview-invitation__closing-page > img {
+  object-fit: cover;
+  object-position: center center;
+}
+
+.preview-invitation__cover-image {
+  filter: saturate(0.72) sepia(0.22) brightness(0.72);
+  transform: scale(1.02);
+}
+
+.preview-invitation__cover-wash {
+  background: linear-gradient(180deg, rgba(45, 28, 18, 0.28), rgba(45, 28, 18, 0.78));
+}
+
+.preview-invitation__frame {
+  inset: 17px;
+  width: auto;
+  height: auto;
+  border: 1px solid rgba(255, 248, 233, 0.66);
+}
+
+.preview-invitation__cover-content,
+.preview-invitation__closing-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.preview-invitation__cover .preview-invitation__monogram {
+  width: 90px;
+  height: 90px;
+  margin: 25px 0 18px;
+  filter: brightness(0) invert(1);
+  opacity: 0.92;
+}
+
+.preview-invitation__cover-kicker {
+  margin: 0;
+  color: rgba(255, 250, 241, 0.9);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  line-height: 1.45;
+  text-transform: uppercase;
+}
+
+.preview-invitation__cover h3 {
+  margin: 24px 0 0;
+  color: #fffaf1;
+  font-size: 58px;
+  font-weight: 500;
+  letter-spacing: -0.08em;
+  line-height: 0.78;
+}
+
+.preview-invitation__cover h3 i,
+.preview-invitation__names i {
+  font-size: 0.58em;
+  font-style: normal;
+  font-weight: 400;
+}
+
+.preview-invitation__cover-date {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 29px;
+  color: rgba(255, 250, 241, 0.94);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.preview-invitation__cover-date i {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #d3b37a;
+}
+
+.preview-invitation__music-link,
+.preview-invitation__actions a {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: inherit;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.preview-invitation__music-link {
+  margin-top: 32px;
+  padding: 10px 14px;
+  border: 1px solid rgba(255, 248, 233, 0.7);
+}
+
+.preview-invitation__music-link .material-symbols-outlined,
+.preview-invitation__actions .material-symbols-outlined {
+  font-size: 17px;
+}
+
+.preview-invitation__story,
+.preview-invitation__details-page {
+  background: #f5f0e7;
+}
+
+.preview-invitation__story {
+  justify-content: center;
+  padding-top: 48px;
+  padding-bottom: 48px;
+  text-align: center;
+}
+
+.preview-invitation__story .preview-invitation__page-heading,
+.preview-invitation__event-page .preview-invitation__page-heading,
+.preview-invitation__people-page .preview-invitation__page-heading {
+  width: 100%;
+}
+
+.preview-invitation__section-label {
+  margin: 48px 0 0;
+  color: #826f4f;
+  font-size: 8px;
+}
+
+.preview-invitation__title {
+  position: relative;
+  z-index: 1;
+  margin: 18px 0 0;
+  color: #5b2503;
+  font-size: 48px;
+  font-weight: 500;
+  letter-spacing: -0.06em;
+  line-height: 0.84;
+}
+
+.preview-invitation__names {
+  margin: 25px 0 0;
+  color: #5b2503;
+  font-size: 42px;
+  font-weight: 500;
+  letter-spacing: -0.06em;
+  line-height: 0.82;
+}
+
+.preview-invitation__guest-card {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 5px;
+  margin: 40px auto 0;
+  padding: 17px 20px 19px;
+  border-top: 1px solid rgba(168, 142, 95, 0.45);
+  border-bottom: 1px solid rgba(168, 142, 95, 0.45);
+}
+
+.preview-invitation__guest-card span,
+.preview-invitation__parents span,
+.preview-invitation__detail-grid span,
+.preview-invitation__colors-block > span,
+.preview-invitation__sponsors small {
+  color: #826f4f;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.preview-invitation__guest-card strong {
+  max-width: 100%;
+  color: #27231e;
+  font-size: 23px;
+  font-weight: 600;
+  line-height: 0.9;
+  overflow-wrap: anywhere;
+}
+
+.preview-invitation[data-guest-density='compact'] .preview-invitation__guest-card strong {
+  font-size: 19px;
+}
+
+.preview-invitation[data-guest-density='long'] .preview-invitation__guest-card strong {
+  font-size: 15px;
+}
+
+.preview-invitation__parents {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+  width: min(100%, 340px);
+  margin: 34px auto 0;
+  padding: 0;
+  border: 0;
+  text-align: center;
+}
+
+.preview-invitation__parents > div {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.preview-invitation__parents > div + div {
+  padding-left: 22px;
+  border-left: 1px solid rgba(168, 142, 95, 0.34);
+}
+
+.preview-invitation__parents p {
+  max-width: 125px;
+  margin: 8px 0 0;
+  color: #6f6256;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 7.6px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1.45;
+}
+
+.preview-invitation__quote {
+  position: relative;
+  z-index: 1;
+  margin-top: auto;
+  padding-top: 35px;
+  color: #756e64;
+  font-size: 17px;
+  font-style: italic;
+  line-height: 1.1;
+}
+
+.preview-invitation__event-page {
+  min-height: 900px;
+  background: #ebe5da;
+}
+
+.preview-invitation__intro-text {
+  position: relative;
+  z-index: 1;
+  max-width: 280px;
+  margin: 19px 0 0;
+  color: #756e64;
+  font-size: 19px;
+  line-height: 1.05;
+}
+
+.preview-invitation__schedule {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 0;
+  margin-top: 42px;
+}
+
+.preview-invitation__schedule-item {
+  display: grid;
+  grid-template-columns: 58px 12px minmax(0, 1fr);
+  gap: 12px;
+  min-height: 104px;
+  padding: 0 0 24px;
+}
+
+.preview-invitation__schedule-time {
+  padding-top: 2px;
+  color: #a88e5f;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.preview-invitation__schedule-dot {
+  position: relative;
+  display: block;
+  width: 9px;
+  height: 9px;
+  margin-top: 2px;
+  border: 2px solid #ebe5da;
+  border-radius: 50%;
+  background: #a88e5f;
+  box-shadow: 0 0 0 1px #a88e5f;
+}
+
+.preview-invitation__schedule-item:not(:last-child) .preview-invitation__schedule-dot::after {
+  position: absolute;
+  top: 8px;
+  left: 2px;
+  width: 1px;
+  height: 104px;
+  background: rgba(168, 142, 95, 0.45);
+  content: '';
+}
+
+.preview-invitation__schedule-item h4 {
+  margin: 0;
+  color: #5b2503;
+  font-size: 27px;
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  line-height: 0.86;
+}
+
+.preview-invitation__schedule-item p {
+  margin: 6px 0 0;
+  color: #756e64;
+  font-size: 17px;
+  line-height: 1;
+}
+
+.preview-invitation__schedule-item a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+  color: #826f4f;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-transform: uppercase;
+}
+
+.preview-invitation__schedule-item a .material-symbols-outlined {
+  font-size: 13px;
+}
+
+.preview-invitation__people-page {
+  min-height: 820px;
+  background: #f5f0e7;
+}
+
+.preview-invitation__sponsors {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+  margin-top: 40px;
+  padding: 0;
+  border: 0;
+}
+
+.preview-invitation__sponsors article {
+  min-height: 145px;
+  padding: 16px 14px;
+  border: 1px solid rgba(168, 142, 95, 0.4);
+  background: rgba(251, 250, 246, 0.62);
+}
+
+.preview-invitation__sponsors article:nth-child(2n) {
+  background: rgba(231, 224, 212, 0.68);
+}
+
+.preview-invitation__sponsors article > .material-symbols-outlined {
+  display: block;
+  margin-bottom: 18px;
+  color: #a88e5f;
+  font-size: 20px;
+}
+
+.preview-invitation__sponsors small {
+  display: block;
+  font-size: 6px;
+}
+
+.preview-invitation__sponsors strong {
+  display: block;
+  margin-top: 8px;
+  color: #5b2503;
+  font-size: 19px;
+  font-weight: 500;
+  line-height: 0.88;
+}
+
+.preview-invitation__photo-card {
+  position: relative;
+  z-index: 1;
+  margin: 29px 0 0;
+  overflow: hidden;
+  border: 1px solid rgba(168, 142, 95, 0.42);
+  background: #d3c7b4;
+}
+
+.preview-invitation__photo-card img {
+  display: block;
+  width: 100%;
+  height: 185px;
+  object-fit: cover;
+  filter: saturate(0.75) sepia(0.15);
+}
+
+.preview-invitation__photo-card figcaption {
+  padding: 10px 12px 12px;
+  color: #756e64;
+  font-size: 16px;
+  font-style: italic;
+  line-height: 1;
+  text-align: center;
+}
+
+.preview-invitation__details-page {
+  min-height: 890px;
+  padding: 30px;
+}
+
+.preview-invitation__photo-wide {
+  position: relative;
+  z-index: 1;
+  height: 260px;
+  overflow: hidden;
+  border: 1px solid rgba(168, 142, 95, 0.55);
+}
+
+.preview-invitation__photo-wide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.72) sepia(0.2) brightness(0.82);
+}
+
+.preview-invitation__photo-wide span {
+  position: absolute;
+  right: 13px;
+  bottom: 12px;
+  color: #fffaf1;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.preview-invitation__detail-block {
+  position: relative;
+  z-index: 1;
+  margin-top: 31px;
+}
+
+.preview-invitation__detail-block .preview-invitation__section-label {
+  display: block;
+}
+
+.preview-invitation__detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-top: 28px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(168, 142, 95, 0.42);
+}
+
+.preview-invitation__detail-grid > div + div {
+  padding-left: 15px;
+  border-left: 1px solid rgba(168, 142, 95, 0.34);
+}
+
+.preview-invitation__detail-grid strong {
+  display: block;
+  margin-top: 7px;
+  color: #5b2503;
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 0.9;
+}
+
+.preview-invitation__colors-block {
+  margin-top: 22px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(168, 142, 95, 0.42);
+}
+
+.preview-invitation__avoid-colors {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.preview-invitation__avoid-colors i {
+  display: block;
+  width: 19px;
+  height: 19px;
+  border: 2px solid #f5f0e7;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgba(39, 35, 30, 0.32);
+}
+
+.preview-invitation__colors-block p {
+  margin: 9px 0 0;
+  color: #756e64;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 8px;
+  letter-spacing: 0.04em;
+}
+
+.preview-invitation__actions {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 9px;
+  margin-top: auto;
+  padding-top: 24px;
+  border-top: 1px solid rgba(168, 142, 95, 0.42);
+}
+
+.preview-invitation__actions a {
+  justify-content: center;
+  min-height: 42px;
+  color: #f8f3e9;
+  background: #5b2503;
+}
+
+.preview-invitation__closing-page {
+  min-height: 680px;
+  align-items: center;
+  justify-content: center;
+  padding: 45px 34px;
+  color: #fffaf1;
+  text-align: center;
+}
+
+.preview-invitation__closing-page > img {
+  filter: saturate(0.7) sepia(0.2) brightness(0.62);
+  object-position: center center;
+}
+
+.preview-invitation__closing-wash {
+  background: linear-gradient(180deg, rgba(39, 30, 22, 0.22), rgba(39, 30, 22, 0.8));
+}
+
+.preview-invitation__closing-content h3 {
+  margin: 26px 0 0;
+  color: #fffaf1;
+  font-size: 58px;
+  font-weight: 500;
+  letter-spacing: -0.07em;
+  line-height: 0.78;
+}
+
+.preview-invitation__closing-content p {
+  max-width: 330px;
+  margin: 32px 0 0;
+  color: #fffaf1;
+  font-size: 22px;
+  line-height: 0.92;
+}
+
+.preview-invitation__closing-content > span:last-child {
+  margin-top: 18px;
+  color: rgba(255, 250, 241, 0.82);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.invitation-export-host {
+  position: absolute !important;
+  top: 0 !important;
+  left: -10000px !important;
+  width: 430px !important;
+  height: auto !important;
+  overflow: visible !important;
+  pointer-events: none !important;
+}
+
+.preview-invitation--export {
+  width: 430px !important;
+  height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+  box-shadow: none !important;
+}
+
+.preview-invitation--export .preview-invitation__page {
+  break-inside: avoid;
+}
+
+@media (max-width: 520px) {
+  .preview-stage {
+    min-height: 430px;
+    max-height: 690px;
+    padding: 14px;
+  }
+
+  .preview-invitation__page {
+    padding: 33px 22px;
+  }
+
+  .preview-invitation__cover,
+  .preview-invitation__closing-page {
+    padding-right: 25px;
+    padding-left: 25px;
+  }
+
+  .preview-invitation__cover h3,
+  .preview-invitation__closing-content h3 {
+    font-size: 49px;
+  }
+
+  .preview-invitation__cover .preview-invitation__monogram {
+    width: 76px;
+    height: 76px;
+  }
+
+  .preview-invitation__title {
+    font-size: 42px;
+  }
+
+  .preview-invitation__names {
+    font-size: 36px;
+  }
+
+  .preview-invitation__parents {
+    gap: 11px;
+  }
+
+  .preview-invitation__parents > div + div,
+  .preview-invitation__detail-grid > div + div {
+    padding-left: 11px;
+  }
+
+  .preview-invitation__parents p {
+    font-size: 10px;
+  }
+
+  .preview-invitation__schedule-item {
+    grid-template-columns: 50px 12px minmax(0, 1fr);
+    gap: 9px;
+  }
+
+  .preview-invitation__schedule-item h4 {
+    font-size: 24px;
+  }
+
+  .preview-invitation__sponsors strong {
+    font-size: 16px;
+  }
+
+  .preview-invitation__details-page {
+    padding-right: 22px;
+    padding-left: 22px;
+  }
+
+  .preview-invitation__detail-grid {
+    gap: 10px;
+  }
+
+  .preview-invitation__detail-grid strong {
+    font-size: 18px;
   }
 }
 </style>

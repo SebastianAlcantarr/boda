@@ -214,9 +214,9 @@ onBeforeUnmount(() => {
 
         <NuxtLink
           to="/asistencia"
-          class="inline-flex min-w-[112px] items-center justify-center gap-2.5 border border-folio-ink px-3.5 py-[11px] font-sans text-[9px] font-bold tracking-[.2em] text-[#512301] uppercase transition-[background,color,transform] duration-[180ms] hover:-translate-y-0.5 hover:bg-gray-300 hover:text-folio-paper max-[600px]:min-w-0 max-[600px]:px-2.5 [&_.material-symbols-outlined]:text-base max-[600px]:[&_.material-symbols-outlined]:hidden"
+          class="inline-flex min-w-[112px] items-center justify-center gap-2.5 border border-folio-ink px-3.5 py-[11px] font-sans text-[9px] font-bold tracking-[.2em] text-[#512301] uppercase transition-[background,color,transform] duration-[180ms] hover:-translate-y-0.5 hover:bg-folio-ink hover:text-folio-paper max-[600px]:min-w-0 max-[600px]:px-2.5 [&_.material-symbols-outlined]:text-base max-[600px]:[&_.material-symbols-outlined]:hidden"
         >
-          <span class="hover:border-gray-50">ASISTENCIA</span>
+          <span>ASISTENCIA</span>
           <span class="material-symbols-outlined text-base" aria-hidden="true">north_east</span>
         </NuxtLink>
       </div>
@@ -515,17 +515,16 @@ onBeforeUnmount(() => {
         class="mx-auto mt-[clamp(100px,14vw,190px)] grid w-[calc(100%-48px)] max-w-[1560px] grid-cols-[.7fr_1.3fr] gap-3.5 scroll-mt-[102px] max-[900px]:grid-cols-1 max-[900px]:w-[calc(100%-32px)] max-[600px]:w-[calc(100%-24px)]"
       >
         <div class="flex min-h-[460px] flex-col justify-center border border-folio-line bg-folio-paper p-[clamp(28px,5vw,62px)] max-[900px]:min-h-[390px] max-[600px]:min-h-[360px]">
-          <span class="font-sans text-[9px] font-bold tracking-[.2em] text-folio-overline uppercase">Un momento especial</span>
-          <h2 class="mt-[13px] max-w-[700px] font-serif text-[clamp(43px,4vw,63px)] font-medium leading-[.85] tracking-[-.055em] text-[#512301] max-[600px]:text-[clamp(42px,13vw,62px)]">Escucha la canción de la boda</h2>
+
+          <h2 class="mt-[13px] max-w-[700px] font-serif text-[clamp(43px,4vw,63px)] font-medium leading-[.85] tracking-[-.055em] text-[#512301] max-[600px]:text-[clamp(42px,13vw,62px)]">Escucha nuestra cancion</h2>
         </div>
         <div class="relative min-h-[460px] overflow-hidden border border-[rgba(39,35,30,0.5)] bg-white max-[900px]:min-h-[390px] max-[600px]:min-h-[360px] after:absolute after:inset-[17px] after:border after:border-[rgba(251,250,246,0.45)] after:content-[''] after:pointer-events-none">
           <img class="h-full w-full object-cover sepia-[.3] saturate-[.7] brightness-[.74]" :src="assetPath('/images/slide-7.webp')" alt="Renée y Gabriel" loading="lazy" />
           <div class="absolute inset-0 z-[2] flex flex-col justify-end bg-[linear-gradient(0deg,rgba(28,21,15,0.74),transparent_68%)] p-[clamp(30px,5vw,68px)] text-folio-paper">
             <span class="text-white font-sans text-[9px] font-bold tracking-[.2em] uppercase">Renée &amp; Gabriel</span>
-            <strong class="text-white mt-3 font-serif text-[clamp(48px,5vw,82px)] font-medium leading-[.8] tracking-[-.06em] max-[600px]:text-[56px]">Escucha<br />nuestra canción</strong>
             <a
               class="material-symbols-outlined relative z-[3] mt-7 grid h-[49px] w-[49px] place-items-center rounded-full border border-[rgba(251,250,246,0.72)] bg-white text-[22px] text-[#512301] transition-transform duration-[180ms] hover:scale-105"
-              href="https://vt.tiktok.com/ZSX64fHqU/"
+              href="https://open.spotify.com/intl-es/track/3zl7j5ua8mF4JDYuxrfo01"
               target="_blank"
               rel="noreferrer"
               aria-label="Reproducir canción"
