@@ -1256,6 +1256,547 @@ main > section.mt-16 {
   }
 }
 
+/* Personal invitation flow */
+.attendance-page {
+  background:
+    radial-gradient(circle at 90% 18%, rgba(205, 192, 166, 0.2), transparent 25rem),
+    linear-gradient(180deg, #f7f4ee 0%, #f0ede5 100%);
+}
+
+.attendance-main {
+  min-height: 100vh;
+}
+
+.attendance-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.attendance-back-link:hover {
+  color: #7c6945;
+}
+
+.attendance-layout {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.78fr) minmax(0, 1.22fr);
+  gap: 14px;
+}
+
+.attendance-form-panel,
+.attendance-preview-panel {
+  border: 1px solid var(--line);
+  background: rgba(251, 250, 246, 0.74);
+}
+
+.attendance-form-panel {
+  min-height: 680px;
+  padding: clamp(32px, 5vw, 64px);
+}
+
+.attendance-preview-panel {
+  padding: clamp(24px, 4vw, 48px);
+}
+
+.attendance-step {
+  color: var(--champagne);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+}
+
+.attendance-step span {
+  color: #9a9285;
+  font-weight: 500;
+}
+
+.attendance-label {
+  display: block;
+  color: var(--ink);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.attendance-input {
+  width: 100%;
+  margin-top: 12px;
+  border: 0;
+  border-bottom: 1px solid #bdb4a5;
+  border-radius: 0;
+  background: transparent;
+  padding: 12px 0 14px;
+  color: var(--ink);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px;
+  outline: none;
+  transition: border-color 180ms ease;
+}
+
+.attendance-input::placeholder {
+  color: #a69d90;
+}
+
+.attendance-input:focus {
+  border-color: var(--champagne);
+}
+
+.attendance-input[aria-invalid='true'] {
+  border-color: #a85845;
+}
+
+.attendance-error {
+  margin-top: 9px;
+  color: #a85845;
+  font-size: 13px;
+}
+
+.companion-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.companion-option {
+  position: relative;
+  display: flex;
+  min-height: 88px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line);
+  background: rgba(247, 244, 238, 0.5);
+  color: #7c7469;
+  cursor: pointer;
+  transition: border-color 180ms ease, background 180ms ease, color 180ms ease;
+}
+
+.companion-option:hover,
+.companion-option.is-selected {
+  border-color: var(--champagne);
+  background: #ebe7df;
+  color: var(--ink);
+}
+
+.companion-option:focus-within {
+  outline: 2px solid rgba(173, 147, 99, 0.5);
+  outline-offset: 2px;
+}
+
+.companion-option input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.companion-number {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 31px;
+  line-height: 0.8;
+}
+
+.companion-caption {
+  margin-top: 10px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.companion-fields {
+  display: grid;
+  gap: 17px;
+  margin-top: 22px;
+}
+
+.companion-input {
+  margin-top: 5px;
+  font-size: 23px;
+}
+
+.attendance-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  border-top: 1px solid var(--line);
+  padding-top: 18px;
+  color: #7c7469;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.attendance-note .material-symbols-outlined {
+  color: var(--champagne);
+  font-size: 19px;
+}
+
+.preview-ready {
+  border: 1px solid rgba(173, 147, 99, 0.55);
+  padding: 7px 10px;
+  color: #7c6945;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.preview-stage {
+  display: grid;
+  place-items: center;
+  min-height: 540px;
+  background:
+    linear-gradient(rgba(173, 147, 99, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(173, 147, 99, 0.08) 1px, transparent 1px),
+    #ece8df;
+  background-size: 28px 28px;
+  padding: clamp(18px, 4vw, 42px);
+}
+
+.personal-invitation {
+  width: min(100%, 430px);
+  aspect-ratio: 0.77;
+  background: #f7f4ee;
+  color: var(--ink);
+  box-shadow: 0 24px 50px -30px rgba(81, 35, 1, 0.44);
+}
+
+.invitation-frame {
+  position: relative;
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  justify-content: space-between;
+  margin: 12px;
+  border: 1px solid rgba(173, 147, 99, 0.68);
+  padding: clamp(18px, 4vw, 34px);
+}
+
+.invitation-frame::before,
+.invitation-frame::after {
+  position: absolute;
+  width: 68px;
+  height: 68px;
+  border-color: rgba(173, 147, 99, 0.72);
+  content: '';
+}
+
+.invitation-frame::before {
+  top: -1px;
+  left: -1px;
+  border-top: 2px solid;
+  border-left: 2px solid;
+}
+
+.invitation-frame::after {
+  right: -1px;
+  bottom: -1px;
+  border-right: 2px solid;
+  border-bottom: 2px solid;
+}
+
+.invitation-topline,
+.invitation-details,
+.invitation-footer {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.invitation-topline {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: #7c6945;
+}
+
+.invitation-center {
+  display: flex;
+  min-height: 0;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.invitation-logo {
+  width: 62px;
+  height: 62px;
+  object-fit: contain;
+  margin-bottom: 16px;
+}
+
+.invitation-kicker,
+.invitation-guest-label {
+  color: #7c6945;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.invitation-copy {
+  max-width: 220px;
+  margin-top: 10px;
+  color: #776f64;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 17px;
+  font-style: italic;
+  line-height: 1.15;
+}
+
+.invitation-couple {
+  margin-top: 17px;
+  color: var(--ink);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(50px, 8vw, 78px);
+  font-weight: 500;
+  letter-spacing: -0.08em;
+  line-height: 0.72;
+}
+
+.invitation-couple i {
+  font-size: 0.66em;
+  font-weight: 400;
+}
+
+.invitation-rule {
+  width: 48px;
+  height: 1px;
+  margin: 19px auto 14px;
+  background: var(--champagne);
+}
+
+.invitation-guest {
+  max-width: 290px;
+  margin: 0;
+  color: var(--ink);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(22px, 3.7vw, 34px);
+  font-weight: 500;
+  line-height: 0.92;
+  overflow-wrap: anywhere;
+}
+
+.invitation-guests {
+  display: flex;
+  max-width: 100%;
+  min-height: 96px;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.personal-invitation[data-guest-count='2'] .invitation-guest {
+  font-size: clamp(21px, 3.25vw, 31px);
+  line-height: 0.94;
+}
+
+.personal-invitation[data-guest-count='3'] .invitation-logo {
+  width: 56px;
+  height: 56px;
+  margin-bottom: 12px;
+}
+
+.personal-invitation[data-guest-count='3'] .invitation-copy {
+  margin-top: 8px;
+  font-size: 15px;
+}
+
+.personal-invitation[data-guest-count='3'] .invitation-couple {
+  margin-top: 13px;
+  font-size: clamp(44px, 6.4vw, 64px);
+}
+
+.personal-invitation[data-guest-count='3'] .invitation-rule {
+  margin: 15px auto 11px;
+}
+
+.personal-invitation[data-guest-count='3'] .invitation-guests {
+  min-height: 112px;
+  gap: 2px;
+  margin-top: 6px;
+}
+
+.personal-invitation[data-guest-count='3'] .invitation-guest {
+  max-width: 310px;
+  font-size: clamp(20px, 3vw, 29px);
+  line-height: 0.9;
+}
+
+.invitation-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  border-top: 1px solid var(--line);
+  padding-top: 14px;
+  color: #7c6945;
+}
+
+.invitation-details div + div {
+  border-left: 1px solid var(--line);
+  padding-left: 18px;
+}
+
+.invitation-details strong {
+  display: block;
+  margin-top: 7px;
+  color: var(--ink);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 1.05;
+  text-transform: none;
+}
+
+.invitation-footer {
+  margin-top: 18px;
+  color: #7c6945;
+  text-align: center;
+}
+
+.preview-empty {
+  display: flex;
+  min-height: 540px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #ece8df;
+}
+
+.preview-empty-mark {
+  display: grid;
+  width: 68px;
+  height: 68px;
+  place-items: center;
+  margin-bottom: 26px;
+  border: 1px solid rgba(173, 147, 99, 0.66);
+  color: #7c6945;
+}
+
+.preview-empty-mark .material-symbols-outlined {
+  font-size: 26px;
+}
+
+.preview-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  border-top: 1px solid var(--line);
+  padding-top: 18px;
+}
+
+.export-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 38px;
+  border: 1px solid #bdb4a5;
+  border-radius: 2px;
+  padding: 9px 12px;
+  background: transparent;
+  color: var(--ink);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: background 180ms ease, border-color 180ms ease;
+}
+
+.export-button:hover:not(:disabled) {
+  border-color: var(--champagne);
+  background: #ebe7df;
+}
+
+.export-button:disabled {
+  cursor: wait;
+  opacity: 0.55;
+}
+
+.export-button .material-symbols-outlined {
+  font-size: 17px;
+}
+
+.export-button-quiet {
+  border-color: transparent;
+  color: #7c7469;
+}
+
+@media (max-width: 900px) {
+  .attendance-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .attendance-form-panel {
+    min-height: auto;
+  }
+}
+
+@media (max-width: 520px) {
+  .attendance-back-link {
+    font-size: 0;
+  }
+
+  .attendance-back-link .material-symbols-outlined {
+    font-size: 20px;
+  }
+
+  .attendance-form-panel,
+  .attendance-preview-panel {
+    padding: 24px 20px;
+  }
+
+  .attendance-input {
+    font-size: 24px;
+  }
+
+  .preview-stage,
+  .preview-empty {
+    min-height: 420px;
+  }
+
+  .invitation-frame {
+    margin: 8px;
+    padding: 18px;
+  }
+
+  .invitation-topline {
+    font-size: 7px;
+  }
+
+  .invitation-copy {
+    font-size: 14px;
+  }
+
+  .invitation-details {
+    gap: 10px;
+    font-size: 7px;
+  }
+
+  .invitation-details div + div {
+    padding-left: 10px;
+  }
+
+  .invitation-details strong {
+    font-size: 13px;
+  }
+
+  .preview-actions {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
 @media (max-width: 520px) {
   .mobile-bottom-nav {
     right: 10px;
