@@ -41,6 +41,50 @@ const slides = [
   },
 ];
 
+const schedule = [
+  {
+    time: '4:00 PM',
+    title: 'Ceremonia religiosa',
+    detail: 'Iglesia Nuestro Señor de Jesús.',
+    link: 'https://www.google.com/maps/search/?api=1&query=Iglesia%20Nuestro%20Se%C3%B1or%20de%20Jes%C3%BAs%20Hermosillo%20Sonora',
+  },
+  {
+    time: '7:00 PM',
+    title: 'Cóctel de bienvenida',
+    detail: 'Kiosko Villa Toscana.',
+    link: 'https://www.google.com/maps/search/?api=1&query=Eventos%20Villa%20Toscana%20Hermosillo',
+  },
+  { time: '7:45 PM', title: 'Recepción', detail: 'Villa Toscana.' },
+  { time: '8:00 PM', title: 'Cena', detail: 'Una noche para compartir.' },
+  { time: '9:30 PM', title: 'Vals', detail: 'Nuestro primer baile.' },
+  { time: '1:00 AM', title: 'Final', detail: 'Hasta la próxima.' },
+];
+
+const parents = [
+  {
+    label: 'Papás de Renée',
+    names: ['Francisca Imelda Urías Alcalá', 'Martín Ricardo Millanes Gaxiola'],
+  },
+  {
+    label: 'Papás de Gabriel',
+    names: ['María Medina Laborín', 'Carlos Coronado Medina'],
+  },
+];
+
+const sponsors = [
+  { label: 'Velación', names: 'Sandra y Raúl Ambriz', detail: 'Padrinos de velación.', icon: 'favorite' },
+  { label: 'Lazo', names: 'Carlos Coronado y Carolina Henry', detail: 'Padrinos de lazo.', icon: 'all_inclusive' },
+  { label: 'Anillos', names: 'Marisol Urías y Héctor Díaz', detail: 'Padrinos de anillos.', icon: 'join' },
+  { label: 'Arras', names: 'Fernando Coronado y Leslie Ibarra', detail: 'Padrinos de arras.', icon: 'groups' },
+];
+
+const avoidColors = [
+  { name: 'Beige', value: '#f1dfc7' },
+  { name: 'Blanco', value: '#ffffff' },
+  { name: 'Crema', value: '#fff1d6' },
+  { name: 'Rojo', value: '#c5161d' },
+];
+
 const isMobile = ref(false);
 const currentSlide = ref(0);
 const visibleSlides = computed(() =>
@@ -77,7 +121,7 @@ function scrollToSection(selector) {
   if (!target) return;
 
   window.scrollTo({
-    top: target.offsetTop - 84,
+    top: target.offsetTop - 92,
     behavior: 'smooth',
   });
 }
@@ -105,792 +149,466 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="font-sans text-[16px] leading-6">
-    <header class="site-header fixed left-0 top-0 z-50 w-full">
-      <div class="header-shell page-shell">
+  <div
+    class="min-h-screen overflow-hidden bg-[radial-gradient(circle_at_12%_10%,rgba(206,190,157,0.16),transparent_29rem),radial-gradient(circle_at_90%_55%,rgba(190,176,149,0.12),transparent_32rem),linear-gradient(180deg,#f7f4ee_0%,#efebe3_58%,#e6e1d7_100%)] text-[#512301]"
+  >
+    <header
+      class="fixed left-0 top-0 z-50 w-full border-b border-[rgba(181,171,155,0.55)] bg-[rgba(247,244,238,0.9)] shadow-[0_12px_32px_-30px_rgba(39,35,30,0.55)] backdrop-blur-[18px]"
+    >
+      <div
+        class="mx-auto flex h-[82px] w-[calc(100%-48px)] max-w-[1560px] items-center justify-between gap-6 max-[900px]:h-[70px] max-[900px]:w-[calc(100%-32px)] max-[600px]:h-[66px] max-[600px]:w-[calc(100%-24px)] max-[600px]:gap-2.5"
+      >
         <a
-          href="#"
-          class="brand-link"
+          href="#inicio"
+          class="inline-flex min-w-[210px] items-center gap-3 text-[#512301] max-[600px]:min-w-0 max-[600px]:gap-2"
           aria-label="Inicio"
           @click.prevent="scrollToSection('#inicio')"
         >
-          <span class="header-mark" aria-hidden="true">
+          <span
+            class="grid h-[43px] w-[43px] shrink-0 place-items-center rounded-full border border-[rgba(168,142,95,0.65)] bg-folio-paper max-[600px]:h-[38px] max-[600px]:w-[38px]"
+            aria-hidden="true"
+          >
             <img
-              class="brand-logo"
+              class="h-[34px] w-[50px] object-contain max-[600px]:h-[30px] max-[600px]:w-[30px]"
               :src="assetPath('/images/monograma.png')"
               alt=""
             />
           </span>
           <span class="min-w-0">
-            <span class="brand-title">Renée &amp; Gabriel</span>
+            <strong
+              class="block overflow-hidden text-ellipsis whitespace-nowrap font-serif text-[25px] font-medium leading-[.9] tracking-[-.035em] max-[600px]:text-[21px]"
+              >Renée <i class="text-[.72em] font-normal">&amp;</i> Gabriel</strong
+            >
           </span>
         </a>
 
-        <nav class="header-nav" aria-label="Navegación superior">
-          <a href="#evento" @click.prevent="scrollToSection('#evento')"
-            >Evento</a
+        <nav
+          class="flex items-center gap-[clamp(18px,3vw,42px)] max-[900px]:hidden"
+          aria-label="Navegación de la invitación"
+        >
+          <a
+            class="relative py-8 pb-[29px] font-sans text-[9px] font-bold tracking-[.2em] text-folio-muted uppercase transition-colors duration-[180ms] after:absolute after:inset-x-0 after:bottom-[22px] after:h-px after:origin-center after:scale-x-0 after:bg-folio-gold after:content-[''] after:transition-transform after:duration-[180ms] hover:text-[#512301] hover:after:scale-x-100"
+            href="#evento"
+            @click.prevent="scrollToSection('#evento')"
+            >El día</a
           >
-          <a href="#asistencia" @click.prevent="scrollToSection('#asistencia')"
-            >asistencia</a
-          >
-          <a href="#familia" @click.prevent="scrollToSection('#familia')"
+          <a
+            class="relative py-8 pb-[29px] font-sans text-[9px] font-bold tracking-[.2em] text-folio-muted uppercase transition-colors duration-[180ms] after:absolute after:inset-x-0 after:bottom-[22px] after:h-px after:origin-center after:scale-x-0 after:bg-folio-gold after:content-[''] after:transition-transform after:duration-[180ms] hover:text-[#512301] hover:after:scale-x-100"
+            href="#familia"
+            @click.prevent="scrollToSection('#familia')"
             >Familia</a
           >
-          <a href="#padrinos" @click.prevent="scrollToSection('#padrinos')"
+          <a
+            class="relative py-8 pb-[29px] font-sans text-[9px] font-bold tracking-[.2em] text-folio-muted uppercase transition-colors duration-[180ms] after:absolute after:inset-x-0 after:bottom-[22px] after:h-px after:origin-center after:scale-x-0 after:bg-folio-gold after:content-[''] after:transition-transform after:duration-[180ms] hover:text-[#512301] hover:after:scale-x-100"
+            href="#padrinos"
+            @click.prevent="scrollToSection('#padrinos')"
             >Padrinos</a
           >
-          <a href="#regalos" @click.prevent="scrollToSection('#regalos')"
-            >Regalos</a
+          <a
+            class="relative py-8 pb-[29px] font-sans text-[9px] font-bold tracking-[.2em] text-folio-muted uppercase transition-colors duration-[180ms] after:absolute after:inset-x-0 after:bottom-[22px] after:h-px after:origin-center after:scale-x-0 after:bg-folio-gold after:content-[''] after:transition-transform after:duration-[180ms] hover:text-[#512301] hover:after:scale-x-100"
+            href="#info"
+            @click.prevent="scrollToSection('#info')"
+            >Detalles</a
           >
         </nav>
 
-        <p class="header-date">
-          <span>21</span>
-          <span>Nov</span>
-          <span>2026</span>
-        </p>
+        <NuxtLink
+          to="/asistencia"
+          class="inline-flex min-w-[112px] items-center justify-center gap-2.5 border border-folio-ink px-3.5 py-[11px] font-sans text-[9px] font-bold tracking-[.2em] text-[#512301] uppercase transition-[background,color,transform] duration-[180ms] hover:-translate-y-0.5 hover:bg-gray-300 hover:text-folio-paper max-[600px]:min-w-0 max-[600px]:px-2.5 [&_.material-symbols-outlined]:text-base max-[600px]:[&_.material-symbols-outlined]:hidden"
+        >
+          <span class="hover:border-gray-50">ASISTENCIA</span>
+          <span class="material-symbols-outlined text-base" aria-hidden="true">north_east</span>
+        </NuxtLink>
       </div>
     </header>
 
-    <main class="pb-32 pt-24">
-      <section id="inicio" class="hero page-shell">
-        <div class="hero-media soft-shadow">
-          <div class="absolute inset-0">
+    <main class="pb-20 pt-[82px] max-[900px]:pt-[70px]">
+      <section
+        id="inicio"
+        class="mx-auto grid min-h-[calc(100svh-82px)] w-[calc(100%-48px)] max-w-[1560px] grid-cols-[minmax(0,1fr)_minmax(280px,320px)] items-center gap-[clamp(16px,1.6vw,24px)] pb-[74px] pt-[42px] max-[1100px]:grid-cols-[minmax(0,1fr)_minmax(260px,300px)] max-[900px]:block max-[900px]:min-h-0 max-[900px]:w-[calc(100%-32px)] max-[900px]:pt-[52px] max-[600px]:w-[calc(100%-24px)] max-[600px]:pt-10"
+      >
+        <div class="hidden" aria-hidden="true"></div>
+
+        <div
+          class="relative grid h-[760px] place-items-center max-[1100px]:h-[700px] max-[900px]:h-[750px] max-[600px]:h-[675px]"
+        >
+          <div
+            class="absolute inset-0 overflow-hidden border border-[rgba(174,165,151,0.7)] bg-[#d9d4ca] shadow-[0_28px_70px_-48px_rgba(39,35,30,0.6)] before:absolute before:inset-[15px] before:z-[4] before:border before:border-[rgba(251,250,246,0.55)] before:content-[''] before:pointer-events-none max-[900px]:top-0 max-[600px]:before:inset-[9px]"
+            aria-label="Galería de Renée y Gabriel"
+          >
             <div
               v-for="(slide, index) in visibleSlides"
               :key="slide.src"
-              class="hero-slide"
-              :class="{ 'is-active': currentSlide === index }"
+              class="absolute inset-0 opacity-0 transition-opacity duration-[900ms]"
+              :class="{ 'opacity-100': currentSlide === index }"
             >
               <img
+                class="h-full w-full scale-[1.02] object-cover grayscale-[.18] sepia-[.12] contrast-[.93] transition-transform duration-[7000ms]"
                 :src="slide.src"
                 :alt="slide.alt"
                 :loading="isMobile || index === 0 ? 'eager' : 'lazy'"
                 decoding="async"
+                :class="{ 'scale-[1.06]': currentSlide === index }"
               />
-              <div class="hero-overlay"></div>
             </div>
-          </div>
+            <div
+              class="pointer-events-none absolute inset-0 z-[2] bg-[linear-gradient(90deg,rgba(39,35,30,0.42),rgba(39,35,30,0.08)_48%,rgba(39,35,30,0.26))]"
+              aria-hidden="true"
+            ></div>
+            <div
+              class="absolute bottom-[27px] right-[29px] z-[6] flex items-center gap-[13px] font-sans text-[8px] font-bold tracking-[.14em] text-folio-paper uppercase max-[600px]:bottom-[17px] max-[600px]:right-[18px]"
+            >
+              <button
+                class="grid h-[31px] w-[31px] text-white place-items-center rounded-full border border-white text-inherit transition-colors duration-[180ms] hover:bg-black"
+                type="button"
+                aria-label="Imagen anterior"
+                @click="prevSlide(); restartTimer()"
+              >
+                <span class="material-symbols-outlined text-[15px]">west</span>
+              </button>
 
-          <button
-            aria-label="Imagen anterior"
-            type="button"
-            class="carousel-control absolute left-5 top-1/2 z-20 -translate-y-1/2"
-            @click="
-              prevSlide();
-              restartTimer();
-            "
-          >
-            <span class="material-symbols-outlined">chevron_left</span>
-          </button>
 
-          <button
-            aria-label="Imagen siguiente"
-            type="button"
-            class="carousel-control absolute right-5 top-1/2 z-20 -translate-y-1/2"
-            @click="
-              nextSlide();
-              restartTimer();
-            "
-          >
-            <span class="material-symbols-outlined">chevron_right</span>
-          </button>
-
-          <div
-            class="carousel-dots absolute bottom-6 left-1/2 z-30 flex -translate-x-1/2 gap-2.5"
-            aria-label="Seleccionar imagen"
-          >
-            <button
-              v-for="(slide, index) in visibleSlides"
-              :key="`${slide.src}-dot`"
-              :aria-label="`Imagen ${index + 1}`"
-              :aria-pressed="currentSlide === index"
-              type="button"
-              class="carousel-dot"
-              :class="{ 'is-active': currentSlide === index }"
-              @click="
-                goToSlide(index);
-                restartTimer();
-              "
-            ></button>
+              <span  class="text-white text-sm">{{ String(currentSlide + 1).padStart(2, '0') }} / {{ String(visibleSlides.length).padStart(2, '0') }}</span>
+              <button
+                class=" text-white grid h-[31px] w-[31px] place-items-center rounded-full border border-white text-inherit transition-colors duration-[180ms] hover:bg-black"
+                type="button"
+                aria-label="Imagen siguiente"
+                @click="nextSlide(); restartTimer()"
+              >
+                <span class="material-symbols-outlined text-[15px]">east</span>
+              </button>
+            </div>
           </div>
         </div>
 
-        <aside class="hero-card soft-shadow">
+        <aside
+          class="flex h-[760px] flex-col items-center justify-start border border-[rgba(174,165,151,0.7)] bg-[rgba(251,250,246,0.78)] px-8 pb-[48px] pt-[4px] text-center shadow-[0_28px_70px_-56px_rgba(39,35,30,0.5)] max-[1100px]:h-[700px] max-[1100px]:pt-[34px] max-[900px]:h-auto max-[900px]:py-[42px] max-[600px]:px-6 max-[600px]:py-[34px]"
+          aria-label="Resumen de la invitación"
+        >
           <img
-            class="hero-logo mb-6"
+            class=""
             :src="assetPath('/images/monograma.png')"
-            alt="Logo R y G"
+            alt="Monograma de Renée y Gabriel"
           />
-          <span class="kicker">21 de noviembre 2026</span>
-
-          <h1
-            class="mt-4 font-serif text-[52px] leading-[56px] italic text-primary md:text-[76px] md:leading-[78px]"
+          <div
+            class="grid w-full grid-cols-[1fr_auto_1fr] items-center gap-[18px] font-sans text-[8px] font-bold tracking-[.22em] text-folio-overline uppercase max-[600px]:gap-3"
           >
-            Renée <span class="not-italic">&amp;</span><br />
-            Gabriel
+            <span class="h-px bg-folio-line"></span>
+            <strong class="text-sm">21 de noviembre 2026</strong>
+            <span class="h-px bg-folio-line"></span>
+          </div>
+          <h1
+            class="my-6 mb-[31px] font-serif text-[clamp(48px,4.6vw,72px)] font-medium leading-[.78] tracking-[-.06em] text-folio-brown max-[600px]:my-[19px] max-[600px]:mb-6 max-[600px]:text-[clamp(46px,15vw,62px)]"
+          >
+            Renée <i class="text-[.66em] font-normal">&amp;</i><br />Gabriel
           </h1>
-
-          <div class="mt-8 grid w-full grid-cols-1 gap-3 sm:grid-cols-2">
-            <div class="info-chip text-left">
-              <p
-                class="text-[11px] font-semibold uppercase tracking-[0.16em] text-secondary"
-              >
-                Ceremonia
-              </p>
-              <p class="mt-1 font-serif text-xl text-primary">4:00 PM</p>
+          <div
+            class="grid w-full grid-cols-2 gap-[18px] border-t border-folio-line pt-5 max-[600px]:gap-3 max-[600px]:pt-4"
+          >
+            <div class="text-left">
+              <span class="block font-sans text-[8px] font-bold tracking-[.2em] text-folio-overline uppercase">Ceremonia</span>
+              <strong class="mt-3 block font-serif text-3xl font-medium leading-none text-folio-brown">4:00 PM</strong>
             </div>
-            <div class="info-chip text-left">
-              <p
-                class="text-[11px] font-semibold uppercase tracking-[0.16em] text-secondary"
-              >
-                Lugar
-              </p>
-              <p class="mt-1 font-serif text-xl text-primary">Villa Toscana</p>
+            <div class="border-l border-folio-line pl-[18px] text-left max-[600px]:pl-3">
+              <span class="block font-sans text-[8px] font-bold tracking-[.2em] text-folio-overline uppercase">Lugar</span>
+              <strong class="mt-3 block font-serif text-3xl font-medium leading-none text-folio-brown">Villa Toscana</strong>
             </div>
           </div>
-
-          <NuxtLink to="/asistencia" class="action-button action-button-primary mt-8">
+          <NuxtLink
+            to="/asistencia"
+            class="bg-[#512301]  text-white text-sm mt-[37px] inline-flex min-h-[55px] w-[min(100%,212px)] items-center justify-center bg-folio-brown font-sans text-[9px] font-bold tracking-[.2em] text-folio-paper uppercase transition-[background,transform] duration-[180ms] hover:-translate-y-0.5 hover:bg-folio-ink max-[600px]:mt-7"
+          >
             Confirmar asistencia
           </NuxtLink>
         </aside>
       </section>
 
-      <section id="evento" class="page-shell mt-16 md:mt-20">
-        <div class="mx-auto max-w-3xl text-center">
-          <span class="kicker">Evento</span>
-          <h2
-            class="mt-4 font-serif text-[34px] leading-tight text-primary md:text-[48px]"
-          >
-            Detalles del día
-          </h2>
-          <p class="mt-4 text-muted">
-            Primero nos acompañas en la ceremonia religiosa y después
-            continuamos la celebración en Villa Toscana.
-          </p>
+      <section
+        id="evento"
+        class="mx-auto mt-[clamp(90px,12vw,170px)] w-[calc(100%-48px)] max-w-[1560px] scroll-mt-[102px] max-[900px]:w-[calc(100%-32px)] max-[600px]:w-[calc(100%-24px)]"
+      >
+        <div
+          class="mb-11 grid grid-cols-[minmax(0,1fr)_minmax(250px,0.5fr)] items-end gap-10 max-[900px]:grid-cols-1 max-[900px]:items-start max-[900px]:gap-5"
+        >
+          <div>
+            <span class="font-sans text-[9px] font-bold tracking-[.2em] text-folio-overline uppercase">01 / Detalles</span>
+            <h2 class="mt-[13px] max-w-[700px] font-serif text-[clamp(43px,5vw,75px)] font-medium leading-[.85] tracking-[-.055em]">Cronograma y Ubicacion</h2>
+          </div>
         </div>
 
-        <div class="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-[1.08fr_.92fr]">
-          <div
-            class="rounded-[24px] border border-outline/50 bg-surface/80 p-3 soft-shadow"
+        <div class="grid grid-cols-[.9fr_1.1fr] gap-3.5 max-[900px]:grid-cols-1">
+          <article
+            class="min-h-[470px] border border-folio-line bg-folio-paper p-[clamp(27px,4vw,52px)] shadow-[0_24px_60px_-56px_rgba(39,35,30,0.7)] max-[600px]:min-h-0 max-[600px]:px-5 max-[600px]:py-[27px]"
           >
-            <iframe
-              title="Mapa de Eventos Villa Toscana"
-              class="aspect-[4/3] w-full rounded-[18px]"
-              loading="lazy"
-              allowfullscreen
-              referrerpolicy="no-referrer-when-downgrade"
-              style="border: 0"
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3486.9636703074916!2d-111.009019!3d29.077218499999997!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x86ce83f2b6598fd7%3A0x3193509b3b6d3a7d!2sEventos%20Villa%20Toscana!5e0!3m2!1ses-419!2smx!4v1781115194446!5m2!1ses-419!2smx"
-            ></iframe>
-
-            <div class="grid gap-5 p-5 md:grid-cols-2">
+            <div class="flex items-center justify-between gap-3.5 border-b border-folio-line pb-4">
+              <span class="font-sans text-[9px] font-bold tracking-[.2em] text-folio-overline uppercase">Ceremonia &amp; recepción</span>
+              <span class="font-sans text-[8px] tracking-[.12em] text-folio-muted">21—11—26</span>
+            </div>
+            <div class="grid grid-cols-[72px_minmax(0,1fr)] gap-[22px] pt-[37px] max-[600px]:grid-cols-[59px_minmax(0,1fr)] max-[600px]:gap-[13px] max-[600px]:pt-[29px]">
+              <span class="pt-[5px] font-sans text-[10px] font-bold tracking-[.08em] text-folio-gold uppercase">04:00 PM</span>
               <div>
-                <p
-                  class="text-[11px] font-semibold uppercase tracking-[0.16em] text-secondary"
-                >
-                  Recepción
-                </p>
-                <h3 class="mt-2 font-serif text-2xl text-primary">
-                  Villa Toscana
-                </h3>
-                <p class="mt-2 text-muted">
-                  C. Quintero Arce 280, Puerta Grande, 83246 Hermosillo, Son.
-                </p>
-              </div>
-              <div>
-                <p
-                  class="text-[11px] font-semibold uppercase tracking-[0.16em] text-secondary"
-                >
-                  Ceremonia religiosa
-                </p>
-                <h3 class="mt-2 font-serif text-2xl text-primary">
-                  Iglesia de Nuestro Señor Jesús
-                </h3>
-                <p class="mt-2 text-muted">
-                  Nos vemos primero en misa y después seguimos con la
-                  celebración.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div
-            class="rounded-[24px] border border-outline/50 bg-surface/80 px-6 py-8 soft-shadow"
-          >
-            <div class="text-center lg:text-left">
-              <span class="kicker">Cronograma</span>
-              <h3
-                class="mt-4 font-serif text-[32px] leading-tight text-primary"
-              >
-                Programa
-              </h3>
-            </div>
-
-            <div class="mt-8 space-y-0">
-              <div class="grid grid-cols-[74px_28px_minmax(0,1fr)] gap-4">
-                <span
-                  class="pt-1 text-[13px] font-semibold uppercase tracking-[.08em] text-primary"
-                  >4:00 PM</span
-                >
-                <div class="relative flex justify-center">
-                  <div class="timeline-line absolute bottom-0 top-2"></div>
-                  <span class="timeline-dot relative mt-1"></span>
-                </div>
-                <div class="border-b border-outline/40 pb-6">
-                  <h4 class="font-serif text-2xl text-primary">
-                    Ceremonia religiosa
-                  </h4>
-                  <p class="mt-1 text-muted">Iglesia Nuestro Señor de Jesús.</p>
-                  <a
-                    class="mt-2 inline-flex text-sm font-semibold text-secondary underline decoration-secondary/30 underline-offset-4"
-                    href="https://www.google.com/maps/search/?api=1&query=Iglesia%20Nuestro%20Se%C3%B1or%20de%20Jes%C3%BAs%20Hermosillo%20Sonora"
-                    target="_blank"
-                    rel="noreferrer"
-                    >Ver ubicación</a
-                  >
-                </div>
-              </div>
-
-              <div class="grid grid-cols-[74px_28px_minmax(0,1fr)] gap-4">
-                <span
-                  class="pt-6 text-[13px] font-semibold uppercase tracking-[.08em] text-primary"
-                  >7:00 PM</span
-                >
-                <div class="relative flex justify-center">
-                  <div class="timeline-line absolute bottom-0 top-0"></div>
-                  <span class="timeline-dot relative mt-6"></span>
-                </div>
-                <div class="border-b border-outline/40 py-6">
-                  <h4 class="font-serif text-2xl text-primary">
-                    Cóctel de bienvenida
-                  </h4>
-                  <p class="mt-1 text-muted">Kiosko Villa Toscana.</p>
-                  <a
-                    class="mt-2 inline-flex text-sm font-semibold text-secondary underline decoration-secondary/30 underline-offset-4"
-                    href="https://www.google.com/maps/search/?api=1&query=Eventos%20Villa%20Toscana%20Hermosillo"
-                    target="_blank"
-                    rel="noreferrer"
-                    >Ver ubicación</a
-                  >
-                </div>
-              </div>
-
-              <div class="grid grid-cols-[74px_28px_minmax(0,1fr)] gap-4">
-                <span
-                  class="pt-6 text-[13px] font-semibold uppercase tracking-[.08em] text-primary"
-                  >7:45 PM</span
-                >
-                <div class="relative flex justify-center">
-                  <div class="timeline-line absolute bottom-0 top-0"></div>
-                  <span class="timeline-dot relative mt-6"></span>
-                </div>
-                <div class="border-b border-outline/40 py-6">
-                  <h4 class="font-serif text-2xl text-primary">Recepción</h4>
-                </div>
-              </div>
-
-              <div class="grid grid-cols-[74px_28px_minmax(0,1fr)] gap-4">
-                <span
-                  class="pt-6 text-[13px] font-semibold uppercase tracking-[.08em] text-primary"
-                  >8:00 PM</span
-                >
-                <div class="relative flex justify-center">
-                  <div class="timeline-line absolute bottom-0 top-0"></div>
-                  <span class="timeline-dot relative mt-6"></span>
-                </div>
-                <div class="border-b border-outline/40 py-6">
-                  <h4 class="font-serif text-2xl text-primary">Cena</h4>
-                </div>
-              </div>
-
-              <div class="grid grid-cols-[74px_28px_minmax(0,1fr)] gap-4">
-                <span
-                  class="pt-6 text-[13px] font-semibold uppercase tracking-[.08em] text-primary"
-                  >9:30 PM</span
-                >
-                <div class="relative flex justify-center">
-                  <div class="timeline-line absolute bottom-0 top-0"></div>
-                  <span class="timeline-dot relative mt-6"></span>
-                </div>
-                <div class="border-b border-outline/40 py-6">
-                  <h4 class="font-serif text-2xl text-primary">Vals</h4>
-                </div>
-              </div>
-
-              <div class="grid grid-cols-[74px_28px_minmax(0,1fr)] gap-4">
-                <span
-                  class="pt-6 text-[13px] font-semibold uppercase tracking-[.08em] text-primary"
-                  >1:00 AM</span
-                >
-                <div class="relative flex justify-center">
-                  <div class="timeline-line absolute bottom-8 top-0"></div>
-                  <span class="timeline-dot relative mt-6"></span>
-                </div>
-                <div class="pt-6">
-                  <h4 class="font-serif text-2xl text-primary">Final</h4>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="asistencia" class="page-shell mt-16 md:mt-20">
-        <div
-          class="rounded-[28px] border border-outline/50 bg-surface/80 px-6 py-14 text-center soft-shadow md:px-10"
-        >
-          <h2
-            class="mt-3 font-serif text-[34px] leading-tight text-primary md:text-[48px]"
-          >
-            Confirma tu asistencia
-          </h2>
-          <p class="mx-auto mt-4 max-w-xl text-muted">
-            Ayúdanos confirmando tu asistencia
-          </p>
-
-          <div class="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-            <NuxtLink to="/asistencia" class="action-button action-button-primary">
-              Confirmar asistencia
-            </NuxtLink>
-            <a
-              class="action-button action-button-secondary"
-              href="#evento"
-              @click.prevent="scrollToSection('#evento')"
-              >Ver cronograma</a
-            >
-          </div>
-        </div>
-      </section>
-
-      <section id="familia" class="page-shell mt-16 md:mt-20">
-        <div
-          class="rounded-[28px] border border-outline/50 bg-surface/80 px-6 py-14 soft-shadow md:px-10"
-        >
-          <div class="mx-auto max-w-3xl text-center">
-            <h2
-              class="mt-4 font-serif text-[34px] leading-tight text-primary md:text-[48px]"
-            >
-              Ceremonia religiosa
-            </h2>
-          </div>
-
-          <div class="mt-10 grid grid-cols-1 gap-5 md:grid-cols-2">
-            <article
-              class="rounded-[24px] border border-outline/50 bg-cream/70 p-8 text-center"
-            >
-              <span
-                class="material-symbols-outlined text-[34px] text-primary"
-                aria-hidden="true"
-                >family_restroom</span
-              >
-              <p
-                class="mt-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-secondary"
-              >
-                Papás de Renée
-              </p>
-              <div class="mt-4 space-y-2">
-                <p class="font-serif text-2xl leading-tight text-primary">
-                  Francisca Imelda Urías Alcalá
-                </p>
-                <p class="font-serif text-2xl leading-tight text-primary">
-                  Martín Ricardo Millanes Gaxiola
-                </p>
-              </div>
-            </article>
-
-            <article
-              class="rounded-[24px] border border-outline/50 bg-cream/70 p-8 text-center"
-            >
-              <span
-                class="material-symbols-outlined text-[34px] text-primary"
-                aria-hidden="true"
-                >family_restroom</span
-              >
-              <p
-                class="mt-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-secondary"
-              >
-                Papás de Gabriel
-              </p>
-              <div class="mt-4 space-y-2">
-                <p class="font-serif text-2xl leading-tight text-primary">
-                  María Medina Laborín
-                </p>
-                <p class="font-serif text-2xl leading-tight text-primary">
-                  Carlos Coronado Medina
-                </p>
-              </div>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section id="padrinos" class="page-shell mt-16 md:mt-20">
-        <div
-          class="floral-panel rounded-[28px] border border-outline/50 px-6 py-14 soft-shadow md:px-10"
-        >
-          <div class="relative mx-auto max-w-3xl text-center">
-            <h2
-              class="mt-4 font-serif text-[34px] leading-tight text-primary md:text-[48px]"
-            >
-              Padrinos
-            </h2>
-          </div>
-
-          <div
-            class="relative mt-10 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4"
-          >
-            <article class="sponsor-card">
-              <svg
-                class="h-7 w-7 text-primary"
-                viewBox="0 0 32 32"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.8"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                aria-hidden="true"
-              >
-                <path
-                  d="M16 5.5c-5 3.1-8.2 8.7-8.2 15.1v5.2h16.4v-5.2C24.2 14.2 21 8.6 16 5.5Z"
-                />
-                <path d="M11.5 18.8c1.1-1.5 2.6-2.3 4.5-2.3s3.4.8 4.5 2.3" />
-                <path
-                  d="M12.3 25.8V21c0-2.1 1.7-3.7 3.7-3.7s3.7 1.6 3.7 3.7v4.8"
-                />
-                <path d="M13.7 7.4 16 3.7l2.3 3.7" />
-                <path d="M10 25.8c.9-4.8 3-8.4 6-10.7 3 2.3 5.1 5.9 6 10.7" />
-              </svg>
-              <p
-                class="mt-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-secondary"
-              >
-                Velación
-              </p>
-              <h3 class="mt-2 font-serif text-2xl text-primary">
-                Sandra y Raúl Ambriz
-              </h3>
-              <p class="mt-2 text-muted">Padrinos de velación.</p>
-            </article>
-            <article class="sponsor-card">
-              <svg
-                class="h-7 w-7 text-primary"
-                viewBox="0 0 32 32"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.8"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                aria-hidden="true"
-              >
-                <path d="M6.7 20.5c3.4-4.7 6.7-7 9.8-7 3.2 0 6 2.5 8.8 7" />
-                <path
-                  d="M6.7 20.5c2.6 4 5.7 5.7 9.3 5.2 3.8-.6 6.8-2.3 9.3-5.2"
-                />
-                <path
-                  d="M13 14.2c-2.1-3.7-4-5.3-5.6-4.7-1.3.5-1.2 2.1.1 3.4 1.4 1.5 3.2 1.9 5.5 1.3Z"
-                />
-                <path
-                  d="M19 14.2c2.1-3.7 4-5.3 5.6-4.7 1.3.5 1.2 2.1-.1 3.4-1.4 1.5-3.2 1.9-5.5 1.3Z"
-                />
-                <path d="M16 13.5v12.3" />
-              </svg>
-              <p
-                class="mt-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-secondary"
-              >
-                Lazo
-              </p>
-              <h3 class="mt-2 font-serif text-2xl text-primary">
-                Carlos Coronado y Carolina Henry
-              </h3>
-              <p class="mt-2 text-muted">Padrinos de lazo.</p>
-            </article>
-            <article class="sponsor-card">
-              <svg
-                class="h-7 w-7 text-primary"
-                viewBox="0 0 32 32"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.8"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                aria-hidden="true"
-              >
-                <circle cx="14" cy="18.5" r="6.5" />
-                <circle cx="20" cy="18.5" r="6.5" />
-                <path d="M10.8 12.9 14 7.1l3.2 5.8" />
-                <path d="M16.8 12.9 20 7.1l3.2 5.8" />
-                <path d="M12.2 7.1h3.6" />
-                <path d="M18.2 7.1h3.6" />
-              </svg>
-              <p
-                class="mt-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-secondary"
-              >
-                Anillos
-              </p>
-              <h3 class="mt-2 font-serif text-2xl text-primary">
-                Marisol Urías y Héctor Díaz
-              </h3>
-              <p class="mt-2 text-muted">Padrinos de anillos.</p>
-            </article>
-            <article class="sponsor-card">
-              <svg
-                class="h-7 w-7 text-primary"
-                viewBox="0 0 32 32"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.8"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                aria-hidden="true"
-              >
-                <path
-                  d="M8.2 18.5c0-3.2 2.6-5.8 5.8-5.8h4c3.2 0 5.8 2.6 5.8 5.8v5.2H8.2v-5.2Z"
-                />
-                <path d="M10.5 16.5c1.5 1.2 3.3 1.8 5.5 1.8s4-.6 5.5-1.8" />
-                <circle cx="12.1" cy="11.2" r="2.2" />
-                <circle cx="16" cy="9.2" r="2.2" />
-                <circle cx="19.9" cy="11.2" r="2.2" />
-                <path d="M9.4 23.7c1.7 1.5 3.9 2.3 6.6 2.3s4.9-.8 6.6-2.3" />
-              </svg>
-              <p
-                class="mt-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-secondary"
-              >
-                Arras
-              </p>
-              <h3 class="mt-2 font-serif text-2xl text-primary">
-                Fernando Coronado y Leslie Ibarra
-              </h3>
-              <p class="mt-2 text-muted">Padrinos de arras.</p>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section id="musica" class="page-shell mt-16 md:mt-20">
-        <div class="grid grid-cols-1 gap-8 lg:grid-cols-[.9fr_1.1fr]">
-          <div
-            class="rounded-[28px] border border-outline/50 bg-surface/80 p-8 soft-shadow md:p-10"
-          >
-            <span class="kicker">Nuestra canción</span>
-            <h2
-              class="mt-4 font-serif text-[34px] leading-tight text-primary md:text-[48px]"
-            >
-              Escucha la canción de la boda
-            </h2>
-            <p class="mt-4 text-muted">
-              La invitación también tendrá un momento especial para escuchar
-              nuestra canción y acompañar la experiencia.
-            </p>
-            <a
-              class="action-button action-button-primary mt-8"
-              href="https://vt.tiktok.com/ZSX64fHqU/"
-              target="_blank"
-              rel="noreferrer"
-              >Ver referencia</a
-            >
-          </div>
-
-          <div
-            class="music-shell rounded-[28px] border border-outline/50 bg-[#26170e] p-4 soft-shadow"
-          >
-            <div
-              class="music-stage relative min-h-[420px] overflow-hidden rounded-[22px] bg-[radial-gradient(circle_at_50%_20%,rgba(255,250,247,.22),transparent_18rem),linear-gradient(145deg,#5b3c22,#1e120b)] p-6 text-cream md:min-h-[520px]"
-            >
-              <div
-                class="absolute inset-x-8 top-10 h-56 rounded-full bg-[rgba(255,250,247,.12)] blur-3xl"
-              ></div>
-              <div
-                class="relative mx-auto flex h-[390px] max-w-[230px] flex-col justify-end overflow-hidden rounded-[34px] border-[10px] border-[#100b08] bg-cover bg-center p-5 text-center shadow-2xl md:h-[470px] md:max-w-[270px]"
-                :style="{
-                  backgroundImage: `linear-gradient(180deg, rgba(255, 250, 247, 0.14), rgba(81, 35, 1, 0.72)), url('${assetPath('/images/slide-7.webp')}')`,
-                }"
-              >
-                <p
-                  class="text-[10px] font-semibold uppercase tracking-[0.2em] text-cream/80"
-                >
-                  Renée &amp; Gabriel
-                </p>
-                <h3 class="mt-2 font-serif text-3xl italic leading-tight">
-                  Escucha nuestra canción
-                </h3>
-                <span
-                  class="material-symbols-outlined mx-auto mt-5 grid h-12 w-12 place-items-center rounded-full bg-cream/90 text-primary"
-                  >play_arrow</span
-                >
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="regalos" class="page-shell mt-16 md:mt-20">
-        <div
-          class="rounded-[28px] border border-outline/50 bg-surface/80 px-6 py-14 soft-shadow md:px-10"
-        >
-          <div
-            class="grid grid-cols-1 items-center gap-10 lg:grid-cols-[.85fr_1.15fr]"
-          >
-            <div class="mx-auto flex flex-col items-center text-center">
-              <div class="envelope-icon" aria-hidden="true">
-                <span class="money-mark">$</span>
-              </div>
-              <p
-                class="mt-6 text-[11px] font-semibold uppercase tracking-[0.18em] text-secondary"
-              >
-                Con cariño
-              </p>
-              <h2
-                class="mt-3 font-serif text-[34px] leading-tight text-primary md:text-[48px]"
-              >
-                Mesa de regalos
-              </h2>
-            </div>
-
-            <div class="grid gap-4">
-              <article
-                class="flex min-h-[210px] flex-col items-center justify-center rounded-[24px] border border-outline/50 bg-cream/70 p-8 text-center md:p-10"
-              >
-                <span class="material-symbols-outlined text-primary"
-                  >redeem</span
-                >
-                <p class="mt-5 max-w-xl text-muted">
-                  Si deseas hacernos un regalo, puedes encontrar nuestra mesa de
-                  regalos aquí.
-                </p>
+                <p class="mb-[7px] font-sans text-[9px] tracking-[.14em] text-folio-overline uppercase">Ceremonia religiosa</p>
+                <h3 class="m-0 font-serif text-[clamp(29px,3vw,42px)] font-medium leading-[.88] tracking-[-.035em] text-[#512301] max-[600px]:text-[32px]">Iglesia de Nuestro<br />Señor Jesús</h3>
                 <a
-                  class="action-button action-button-primary mt-6"
-                  href="https://mesaderegalos.liverpool.com.mx/milistaderegalos/51972633"
+                  class="mt-3.5 inline-flex items-center gap-[5px] text-[11px] text-folio-overline underline decoration-1 underline-offset-4 transition-colors hover:text-[#512301] [&_.material-symbols-outlined]:text-sm"
+                  href="https://www.google.com/maps/search/?api=1&query=Iglesia%20Nuestro%20Se%C3%B1or%20de%20Jes%C3%BAs%20Hermosillo%20Sonora"
                   target="_blank"
                   rel="noreferrer"
-                  >Ver mesa</a
-                >
-              </article>
+                >Ver ubicación <span class="material-symbols-outlined">north_east</span></a>
+              </div>
             </div>
+            <div class="ml-[94px] mt-[31px] h-px w-[calc(100%-94px)] bg-folio-line max-[600px]:ml-[72px] max-[600px]:w-[calc(100%-72px)]" aria-hidden="true"></div>
+            <div class="grid grid-cols-[72px_minmax(0,1fr)] gap-[22px] pt-[37px] max-[600px]:grid-cols-[59px_minmax(0,1fr)] max-[600px]:gap-[13px] max-[600px]:pt-[29px]">
+              <span class="pt-[5px] font-sans text-[10px] font-bold tracking-[.08em] text-folio-gold uppercase">07:00 PM</span>
+              <div>
+                <p class="mb-[7px] font-sans text-[9px] tracking-[.14em] text-folio-overline uppercase">Recepción</p>
+                <h3 class="m-0 font-serif text-[clamp(29px,3vw,42px)] font-medium leading-[.88] tracking-[-.035em] text-[#512301] max-[600px]:text-[32px]">Villa Toscana</h3>
+                <p class="mt-[13px] font-serif text-lg leading-[1.05] text-folio-muted max-[600px]:text-base">C. Quintero Arce 280, Puerta Grande,<br />83246 Hermosillo, Son.</p>
+                <a
+                  class="mt-3.5 inline-flex items-center gap-[5px] text-[11px] text-folio-overline underline decoration-1 underline-offset-4 transition-colors hover:text-[#512301] [&_.material-symbols-outlined]:text-sm"
+                  href="https://www.google.com/maps/search/?api=1&query=Eventos%20Villa%20Toscana%20Hermosillo"
+                  target="_blank"
+                  rel="noreferrer"
+                >Ver ubicación <span class="material-symbols-outlined">north_east</span></a>
+              </div>
+            </div>
+          </article>
+
+          <article
+            class="flex min-h-[470px] flex-col border border-folio-line bg-[#e8e4da] p-[clamp(27px,4vw,52px)] shadow-[0_24px_60px_-56px_rgba(39,35,30,0.7)] max-[600px]:min-h-0 max-[600px]:px-5 max-[600px]:py-[27px]"
+          >
+            <div class="relative min-h-[320px] flex-1 overflow-hidden border border-[rgba(170,160,145,0.65)] bg-[#d8d2c5] max-[600px]:min-h-[270px]">
+              <iframe
+                class="h-full min-h-[320px] w-full border-0 grayscale-[.8] sepia-[.15] contrast-[.9] max-[600px]:min-h-[270px]"
+                title="Mapa de Eventos Villa Toscana"
+                loading="lazy"
+                allowfullscreen
+                referrerpolicy="no-referrer-when-downgrade"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3486.9636703074916!2d-111.009019!3d29.077218499999997!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x86ce83f2b6598fd7%3A0x3193509b3b6d3a7d!2sEventos%20Villa%20Toscana!5e0!3m2!1ses-419!2smx!4v1781115194446!5m2!1ses-419!2smx"
+              ></iframe>
+              <span class="absolute bottom-3.5 right-3.5 bg-[rgba(251,250,246,0.88)] px-2.5 py-2 font-sans text-[9px] tracking-[.1em] text-[#512301] uppercase">Villa Toscana · Hermosillo</span>
+            </div>
+            <div class="flex items-center gap-[11px] pt-5">
+              <span class="material-symbols-outlined text-folio-gold" aria-hidden="true">location_on</span>
+              <p class="m-0 font-serif text-lg leading-none text-folio-muted">C. Quintero Arce 280, Puerta Grande,
+                83246 Hermosillo, Son.</p>
+            </div>
+          </article>
+
+          <article
+            class="col-span-full min-h-0 border border-folio-line bg-[rgba(247,245,239,0.85)] p-[clamp(27px,4vw,52px)] shadow-[0_24px_60px_-56px_rgba(39,35,30,0.7)] max-[900px]:col-auto max-[600px]:px-5 max-[600px]:py-[27px]"
+          >
+            <div class="flex items-center justify-between gap-3.5 border-b border-folio-line pb-4">
+              <span class="font-sans text-[9px] font-bold tracking-[.2em] text-folio-overline uppercase">Cronograma</span>
+              <span class="material-symbols-outlined text-[22px] text-folio-gold" aria-hidden="true">schedule</span>
+            </div>
+            <div class="mt-[35px] grid grid-cols-3 max-[1100px]:grid-cols-2 max-[600px]:mt-7 max-[600px]:grid-cols-1">
+              <div
+                v-for="(item, index) in schedule"
+                :key="item.time"
+                class="relative grid min-h-[132px] grid-cols-[62px_15px_minmax(0,1fr)] gap-3.5 border-b border-folio-line px-6 pb-[25px] [&:nth-child(3n+1)]:pl-0 [&:nth-child(n+4)]:border-b-0 [&:nth-child(n+4)]:pt-[25px] max-[1100px]:[&:nth-child(3n+1)]:pl-6 max-[1100px]:[&:nth-child(2n+1)]:pl-0 max-[600px]:min-h-0 max-[600px]:border-b max-[600px]:px-0 max-[600px]:py-[17px] max-[600px]:[&:nth-child(n+4)]:pt-[17px] max-[600px]:first:pt-0 max-[600px]:last:border-b-0 max-[600px]:last:pb-0"
+              >
+                <span class="pt-0.5 font-sans text-[9px] font-bold tracking-[.07em] text-folio-gold uppercase">{{ item.time }}</span>
+                <span
+                  class="relative mt-0.5 block h-[9px] w-[9px] rounded-full border-2 border-folio-paper bg-folio-gold shadow-[0_0_0_1px_#a88e5f] after:content-['']"
+                  :class="{
+                    'after:absolute after:left-[3px] after:top-[9px] after:h-[112px] after:w-px after:bg-folio-line': index < 3,
+                    'max-[1100px]:after:h-0': index < 3,
+                    'max-[1100px]:after:absolute max-[1100px]:after:left-[3px] max-[1100px]:after:top-[9px] max-[1100px]:after:h-[112px] max-[1100px]:after:w-px max-[1100px]:after:bg-folio-line': index === 3,
+                    'max-[600px]:after:h-[72px]': index < 4,
+                  }"
+                  aria-hidden="true"
+                ></span>
+                <div>
+                  <h3 class="m-0 font-serif text-[26px] font-medium leading-[.88] tracking-[-.035em] text-[#512301]">{{ item.title }}</h3>
+                  <p class="mt-1.5 font-serif text-[17px] leading-none text-folio-muted">{{ item.detail }}</p>
+                  <a v-if="item.link" class="mt-2 inline-flex items-center gap-[5px] text-[9px] text-folio-overline underline underline-offset-4 transition-colors hover:text-[#512301]" :href="item.link" target="_blank" rel="noreferrer">Ver ubicación</a>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section
+        id="asistencia"
+        class="mx-auto mt-[clamp(100px,14vw,190px)] w-[calc(100%-48px)] max-w-[1560px] scroll-mt-[102px] max-[900px]:w-[calc(100%-32px)] max-[600px]:w-[calc(100%-24px)]"
+      >
+        <article
+          class="relative mx-auto flex min-h-[420px] max-w-[820px] flex-col items-center justify-center border border-folio-line bg-[linear-gradient(135deg,transparent_19px,rgba(168,142,95,0.16)_20px,transparent_21px)] bg-[length:42px_42px] bg-folio-paper text-center shadow-[0_25px_65px_-52px_rgba(39,35,30,0.7)] before:absolute before:left-5 before:top-5 before:h-[105px] before:w-[105px] before:rounded-full before:border before:border-[rgba(168,142,95,0.55)] before:content-[''] after:absolute after:bottom-5 after:right-5 after:h-[105px] after:w-[105px] after:rounded-full after:border after:border-[rgba(168,142,95,0.55)] after:content-[''] max-[600px]:min-h-[390px] max-[600px]:before:left-[13px] max-[600px]:before:top-[13px] max-[600px]:before:h-[70px] max-[600px]:before:w-[70px] max-[600px]:after:bottom-[13px] max-[600px]:after:right-[13px] max-[600px]:after:h-[70px] max-[600px]:after:w-[70px]"
+        >
+          <div
+            class="absolute -top-[31px] grid h-16 w-16 rotate-[5deg] place-items-center rounded-full border border-[rgba(130,111,79,0.8)] bg-[#b7aa93] font-serif text-[15px] text-[#675a49]"
+            aria-hidden="true"
+          >
+            R&amp;G
+          </div>
+          <span class="font-sans text-[9px] font-bold tracking-[.2em] text-folio-overline uppercase">ASISTENCIA</span>
+          <h2 class="mx-[30px] mt-3.5 max-w-[580px] font-serif text-[clamp(42px,5vw,67px)] font-medium leading-[.85] tracking-[-.055em] text-[#512301] max-[600px]:mx-[18px] max-[600px]:text-[47px]">Agradecemos la confirmación de tu asistencia</h2>
+          <p class="mt-5 font-serif text-[21px] text-folio-muted max-[600px]:text-lg">Tu presencia hará todavía más especial este día.</p>
+          <NuxtLink
+            to="/asistencia"
+            class="mt-[26px] inline-flex items-center justify-center gap-2.5 border border-folio-ink px-[18px] py-[13px] font-sans text-[9px] font-bold tracking-[.16em] text-[#512301] uppercase transition-[background,color,transform] duration-[180ms] hover:-translate-y-0.5 hover:bg-folio-ink hover:text-folio-paper"
+          >
+            Confirmar asistencia
+            <span class="material-symbols-outlined text-base" aria-hidden="true">north_east</span>
+          </NuxtLink>
+          <span class="absolute bottom-[25px] font-sans text-[8px] font-bold tracking-[.2em] text-folio-muted uppercase max-[600px]:bottom-[19px] max-[600px]:text-[7px]">Renée &amp; Gabriel · 21.11.2026</span>
+        </article>
+      </section>
+
+      <section
+        id="familia"
+        class="mx-auto mt-[clamp(90px,12vw,170px)] w-[calc(100%-48px)] max-w-[1560px] scroll-mt-[102px] max-[900px]:w-[calc(100%-32px)] max-[600px]:w-[calc(100%-24px)]"
+      >
+        <div class="mx-auto mb-11 block max-w-[700px] text-center">
+          <div>
+            <span class="font-sans text-[9px] font-bold tracking-[.2em] text-folio-overline uppercase">02 / Familia</span>
+            <h2 class="mt-[13px] max-w-[700px] font-serif text-[clamp(43px,5vw,75px)] font-medium leading-[.85] tracking-[-.055em] max-[600px]:text-[clamp(42px,13vw,62px)]">Nuestros padres</h2>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3.5 max-[600px]:grid-cols-1">
+          <article
+            v-for="(parent, index) in parents"
+            :key="parent.label"
+            class="min-h-[300px] border border-folio-line bg-[rgba(251,250,246,0.68)] p-[43px_clamp(27px,5vw,75px)] text-center shadow-[0_24px_60px_-56px_rgba(39,35,30,0.7)] max-[600px]:min-h-[245px] max-[600px]:px-5 max-[600px]:py-[35px]"
+            :class="{ 'bg-folio-paper': index === 0 }"
+          >
+            <span class="mb-[21px] block text-lg text-folio-gold" aria-hidden="true">✦</span>
+            <span class="font-sans text-[9px] font-bold tracking-[.2em] text-folio-overline uppercase">{{ parent.label }}</span>
+            <div class="mt-[22px]">
+              <p v-for="name in parent.names" :key="name" class="my-2 font-serif text-[clamp(24px,3vw,35px)] leading-[.95] text-[#512301] max-[600px]:text-[28px]">{{ name }}</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section
+        id="padrinos"
+        class="mx-auto mt-[clamp(90px,12vw,170px)] w-[calc(100%-48px)] max-w-[1560px] scroll-mt-[102px] max-[900px]:w-[calc(100%-32px)] max-[600px]:w-[calc(100%-24px)]"
+      >
+        <div class="mb-11 grid grid-cols-[minmax(0,1fr)_minmax(250px,0.5fr)] items-end gap-10 max-[900px]:grid-cols-1 max-[900px]:items-start max-[900px]:gap-5">
+          <div>
+            <span class="font-sans text-[9px] font-bold tracking-[.2em] text-folio-overline uppercase">03 / Padrinos</span>
+            <h2 class="mt-[13px] max-w-[700px] font-serif text-[clamp(43px,5vw,75px)] font-medium leading-[.85] tracking-[-.055em] max-[600px]:text-[clamp(42px,13vw,62px)]">Personas que nos acompañan</h2>
+          </div>
+          <p class="max-w-[410px] font-serif text-[21px] leading-[1.08] text-folio-muted max-[600px]:text-[19px]">Con cariño compartimos los nombres de quienes estarán cerca de nosotros en este día.</p>
+        </div>
+
+        <div class="grid grid-cols-4 gap-3.5 max-[1100px]:grid-cols-2 max-[600px]:grid-cols-1">
+          <article
+            v-for="(sponsor, index) in sponsors"
+            :key="sponsor.label"
+            class="min-h-[245px] border border-folio-line bg-[rgba(251,250,246,0.68)] p-[28px_24px] shadow-[0_24px_60px_-56px_rgba(39,35,30,0.7)] max-[600px]:min-h-[205px]"
+            :class="{ 'bg-[rgba(239,235,226,0.78)]': index % 2 === 1 }"
+          >
+            <span class="material-symbols-outlined mb-7 block text-2xl text-folio-gold" aria-hidden="true">{{ sponsor.icon }}</span>
+            <span class="font-sans text-[9px] font-bold tracking-[.2em] text-folio-overline uppercase">{{ sponsor.label }}</span>
+            <h3 class="mt-3.5 font-serif text-[29px] font-medium leading-[.88] tracking-[-.035em] text-[#512301]">{{ sponsor.names }}</h3>
+            <p class="mt-3 font-serif text-[17px] text-folio-muted">{{ sponsor.detail }}</p>
+          </article>
+        </div>
+      </section>
+
+      <section
+        id="musica"
+        class="mx-auto mt-[clamp(100px,14vw,190px)] grid w-[calc(100%-48px)] max-w-[1560px] grid-cols-[.7fr_1.3fr] gap-3.5 scroll-mt-[102px] max-[900px]:grid-cols-1 max-[900px]:w-[calc(100%-32px)] max-[600px]:w-[calc(100%-24px)]"
+      >
+        <div class="flex min-h-[460px] flex-col justify-center border border-folio-line bg-folio-paper p-[clamp(28px,5vw,62px)] max-[900px]:min-h-[390px] max-[600px]:min-h-[360px]">
+          <span class="font-sans text-[9px] font-bold tracking-[.2em] text-folio-overline uppercase">Un momento especial</span>
+          <h2 class="mt-[13px] max-w-[700px] font-serif text-[clamp(43px,4vw,63px)] font-medium leading-[.85] tracking-[-.055em] text-[#512301] max-[600px]:text-[clamp(42px,13vw,62px)]">Escucha la canción de la boda</h2>
+          <p class="mt-[25px] max-w-[410px] font-serif text-xl leading-[1.08] text-folio-muted max-[600px]:text-[19px]">La invitación también tendrá un momento para escuchar nuestra canción y acompañar la experiencia.</p>
+          <a
+            class="mt-[34px] inline-flex w-fit items-center gap-2 border-b border-folio-gold pb-[7px] font-sans text-[10px] font-bold tracking-[.16em] text-[#512301] uppercase [&_.material-symbols-outlined]:text-base"
+            href="https://vt.tiktok.com/ZSX64fHqU/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Ver referencia <span class="material-symbols-outlined text-base">north_east</span>
+          </a>
+        </div>
+        <div class="relative min-h-[460px] overflow-hidden border border-[rgba(39,35,30,0.5)] bg-white max-[900px]:min-h-[390px] max-[600px]:min-h-[360px] after:absolute after:inset-[17px] after:border after:border-[rgba(251,250,246,0.45)] after:content-[''] after:pointer-events-none">
+          <img class="h-full w-full object-cover sepia-[.3] saturate-[.7] brightness-[.74]" :src="assetPath('/images/slide-7.webp')" alt="Renée y Gabriel" loading="lazy" />
+          <div class="absolute inset-0 z-[2] flex flex-col justify-end bg-[linear-gradient(0deg,rgba(28,21,15,0.74),transparent_68%)] p-[clamp(30px,5vw,68px)] text-folio-paper">
+            <span class="text-white font-sans text-[9px] font-bold tracking-[.2em] uppercase">Renée &amp; Gabriel</span>
+            <strong class="text-white mt-3 font-serif text-[clamp(48px,5vw,82px)] font-medium leading-[.8] tracking-[-.06em] max-[600px]:text-[56px]">Escucha<br />nuestra canción</strong>
+            <span class="material-symbols-outlined mt-7 grid h-[49px] w-[49px] place-items-center rounded-full border border-[rgba(251,250,246,0.72)] text-[22px] bg-white" aria-hidden="true">play_arrow</span>
           </div>
         </div>
       </section>
 
-      <section id="info" class="page-shell mt-16 md:mt-20">
-        <div class="grid grid-cols-1 gap-5 lg:grid-cols-[1.35fr_.8fr_.8fr]">
-          <article
-            class="rounded-[24px] border border-outline/50 bg-surface/80 p-6 soft-shadow"
-          >
-            <span class="material-symbols-outlined text-primary">styler</span>
-            <p
-              class="mt-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-secondary"
-            >
-              Código de vestimenta
-            </p>
-            <h3 class="mt-2 font-serif text-3xl text-primary">
-              Elegancia rigurosa
-            </h3>
-            <div class="mt-6">
-              <p
-                class="text-[11px] font-semibold uppercase tracking-[0.18em] text-secondary"
-              >
-                Evitar colores
-              </p>
-              <div
-                class="mt-3 flex flex-wrap gap-3"
-                aria-label="Colores a evitar"
-              >
-                <span class="color-dot bg-[#f1dfc7]" title="Beige"></span>
-                <span class="color-dot bg-[#ffffff]" title="Blanco"></span>
-                <span class="color-dot bg-[#fff1d6]" title="Crema"></span>
-                <span class="color-dot bg-[#c5161d]" title="Rojo"></span>
-              </div>
-              <p class="mt-3 text-sm text-muted">
-                Beige, blanco, crema, tonos similares y rojo.
-              </p>
+      <section
+        id="regalos"
+        class="mx-auto mt-[clamp(90px,12vw,170px)] w-[calc(100%-48px)] max-w-[1560px] scroll-mt-[102px] max-[900px]:w-[calc(100%-32px)] max-[600px]:w-[calc(100%-24px)]"
+      >
+        <div class="grid min-h-[300px] grid-cols-[.5fr_1.5fr] items-center gap-10 border border-folio-line bg-[rgba(251,250,246,0.8)] p-[clamp(30px,6vw,76px)] shadow-[0_24px_60px_-56px_rgba(39,35,30,0.7)] max-[900px]:grid-cols-[150px_minmax(0,1fr)] max-[600px]:block max-[600px]:px-[23px] max-[600px]:pb-[38px] max-[600px]:pt-8">
+          <div class="grid h-[90px] w-[120px] place-items-center border border-[rgba(168,142,95,0.7)] text-folio-gold max-[900px]:mx-auto max-[600px]:mb-7 max-[600px]:ml-0 max-[600px]:h-[70px] max-[600px]:w-[95px]" aria-hidden="true">
+            <span class="material-symbols-outlined text-[34px]">redeem</span>
+          </div>
+          <div>
+            <span class="font-sans text-[9px] font-bold tracking-[.2em] text-folio-overline uppercase">Con cariño</span>
+            <h2 class="mt-[13px] max-w-[700px] font-serif text-[clamp(43px,5vw,70px)] font-medium leading-[.85] tracking-[-.055em] max-[600px]:text-[clamp(42px,13vw,62px)]">Mesa de regalos</h2>
+            <p class="mt-[19px] max-w-[410px] font-serif text-xl leading-[1.08] text-folio-muted max-[600px]:text-[19px]">Si deseas hacernos un regalo, puedes encontrar nuestra mesa de regalos aquí.</p>
+            <a class="mt-[22px] inline-flex items-center justify-center gap-2.5 border border-folio-ink px-[18px] py-[13px] font-sans text-[9px] font-bold tracking-[.16em] text-[#512301] uppercase transition-[background,color,transform] duration-[180ms] hover:-translate-y-0.5 hover:bg-folio-ink hover:text-folio-paper" href="https://mesaderegalos.liverpool.com.mx/milistaderegalos/51972633" target="_blank" rel="noreferrer">
+              Ver mesa <span class="material-symbols-outlined text-base">north_east</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="info"
+        class="mx-auto mt-[clamp(90px,12vw,170px)] w-[calc(100%-48px)] max-w-[1560px] scroll-mt-[102px] max-[900px]:w-[calc(100%-32px)] max-[600px]:w-[calc(100%-24px)]"
+      >
+        <div class="mx-auto mb-11 block max-w-[700px] text-center">
+          <div>
+            <span class="font-sans text-[9px] font-bold tracking-[.2em] text-folio-overline uppercase">04 / Detalles</span>
+            <h2 class="mt-[13px] max-w-[700px] font-serif text-[clamp(43px,5vw,75px)] font-medium leading-[.85] tracking-[-.055em] max-[600px]:text-[clamp(42px,13vw,62px)]">Para celebrar en armonía</h2>
+          </div>
+          <p class="mx-auto mt-5 max-w-[410px] font-serif text-[21px] leading-[1.08] text-folio-muted max-[600px]:text-[19px]">Te compartimos algunos detalles importantes para disfrutar la noche con nosotros.</p>
+        </div>
+
+        <div class="grid grid-cols-[1.15fr_.85fr] gap-3.5 max-[900px]:grid-cols-1">
+          <article class="relative min-h-[430px] border border-folio-line bg-folio-paper p-[clamp(28px,5vw,58px)] shadow-[0_24px_60px_-56px_rgba(39,35,30,0.7)] max-[600px]:min-h-[390px] max-[600px]:px-[22px] max-[600px]:py-7">
+            <div class="mb-[29px] grid h-[47px] w-[47px] place-items-center border border-folio-gold text-folio-gold" aria-hidden="true"><span class="material-symbols-outlined">styler</span></div>
+            <span class="font-sans text-[9px] font-bold tracking-[.2em] text-folio-overline uppercase">Código de vestimenta</span>
+            <h3 class="mt-3.5 font-serif text-[clamp(36px,4vw,54px)] font-medium leading-[.88] tracking-[-.035em] text-[#512301]">Elegancia rigurosa</h3>
+            <div class="my-7 h-px w-[45px] bg-folio-gold" aria-hidden="true"></div>
+            <p class="m-0 font-sans text-[9px] tracking-[.16em] text-folio-overline uppercase">Evitar colores</p>
+            <div class="mt-3.5 flex gap-3" aria-label="Colores a evitar">
+              <span v-for="color in avoidColors" :key="color.name" class="inline-block h-8 w-8 rounded-full border-2 border-folio-paper shadow-[0_0_0_1px_rgba(39,35,30,0.35)]" :style="{ backgroundColor: color.value }" :title="color.name"></span>
             </div>
-            <div class="mt-6">
-              <p
-                class="text-[11px] font-semibold uppercase tracking-[0.18em] text-secondary"
-              >
-                Color mamá de la novia
-              </p>
-              <div class="mt-3 flex items-center gap-3">
-                <span class="color-dot bg-[#d4af37]" title="Dorado"></span>
-                <p class="font-serif text-xl text-primary">Dorado</p>
-              </div>
+            <p class="mt-3 font-serif text-lg text-folio-muted">Beige, blanco, crema, tonos similares y rojo.</p>
+            <div class="mt-[25px] flex items-center gap-3.5 border-t border-folio-line pt-[19px]">
+              <span class="inline-block h-8 w-8 rounded-full border-2 border-folio-paper bg-[#d4af37] shadow-[0_0_0_1px_rgba(39,35,30,0.35)]" title="Dorado"></span>
+              <div><p class="m-0 font-sans text-[9px] tracking-[.16em] text-folio-overline uppercase">Color mamá de la novia</p><strong class="mt-1 block font-serif text-2xl font-medium text-[#512301]">Dorado</strong></div>
             </div>
           </article>
 
-          <article
-            class="rounded-[24px] border border-outline/50 bg-surface/80 p-6 soft-shadow"
-          >
-            <span class="material-symbols-outlined text-primary">hotel</span>
-            <p
-              class="mt-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-secondary"
-            >
-              Hospedaje
-            </p>
-            <h3 class="mt-2 font-serif text-2xl text-primary">
-              Opciones para invitados
-            </h3>
-            <p class="mt-2 text-muted">LISTA DE OPCIONES</p>
-          </article>
-
-          <article
-            class="rounded-[24px] border border-outline/50 bg-surface/80 p-6 soft-shadow"
-          >
-            <p
-              class="mt-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-secondary"
-            >
-              Invitación
-            </p>
-            <h3 class="mt-2 font-serif text-2xl text-primary">
-              Respetuosamente no niños
-            </h3>
+          <article class="relative flex min-h-[430px] flex-col justify-center border border-folio-line bg-[#e8e3d9] p-[clamp(28px,5vw,58px)] shadow-[0_24px_60px_-56px_rgba(39,35,30,0.7)] after:absolute after:bottom-7 after:right-7 after:h-[115px] after:w-[115px] after:rounded-full after:border after:border-[rgba(168,142,95,0.55)] after:content-[''] max-[600px]:min-h-[390px] max-[600px]:px-[22px] max-[600px]:py-7 max-[600px]:after:bottom-7 max-[600px]:after:right-7">
+            <span class="absolute right-8 top-[29px] font-serif text-2xl text-folio-gold">02</span>
+            <span class="font-sans text-[9px] font-bold tracking-[.2em] text-folio-overline uppercase">Invitación</span>
+            <h3 class="mt-3.5 font-serif text-[clamp(42px,4.5vw,66px)] font-medium leading-[.88] tracking-[-.035em] text-[#512301] max-[600px]:text-[53px]">Respetuosamente<br />no niños</h3>
+            <span class="my-[22px] mt-8 block h-px w-[45px] bg-folio-gold" aria-hidden="true"></span>
+            <p class="max-w-[330px] font-serif text-[19px] leading-[1.05] text-folio-muted">Agradecemos mucho tu comprensión para compartir esta celebración únicamente con adultos.</p>
+            <div class="mt-7 flex items-start gap-[13px] border-t border-folio-line pt-[18px]">
+              <span class="material-symbols-outlined text-[22px] text-folio-gold" aria-hidden="true">hotel</span>
+              <div><span class="font-sans text-[9px] tracking-[.16em] text-folio-overline uppercase">Hospedaje</span><strong class="mt-1 block font-serif text-[22px] font-medium text-[#512301]">Opciones para invitados</strong><p class="mt-[3px] font-sans text-[10px] tracking-[.11em] text-folio-muted">LISTA DE OPCIONES</p></div>
+            </div>
           </article>
         </div>
       </section>
     </main>
 
     <nav
-      class="mobile-bottom-nav fixed bottom-5 left-1/2 z-50 -translate-x-1/2"
-      aria-label="Navegación principal"
+      class="fixed bottom-[max(9px,env(safe-area-inset-bottom))] left-[10px] right-[10px] z-50 hidden justify-around border border-[rgba(251,250,246,0.18)] bg-[rgba(39,35,30,0.96)] shadow-[0_18px_42px_-24px_rgba(39,35,30,0.75)] max-[900px]:flex max-[600px]:bottom-[max(8px,env(safe-area-inset-bottom))]"
+      aria-label="Navegación rápida"
     >
-      <div
-        class="bottom-pill glass flex items-center gap-1 rounded-full px-2 py-2 shadow-lg"
-      >
-        <a
-          class="nav-link rounded-full px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-primary transition hover:bg-surface-soft"
-          href="#inicio"
-          @click.prevent="scrollToSection('#inicio')"
-          >Inicio</a
-        >
-        <a
-          class="nav-link rounded-full px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-muted transition hover:bg-surface-soft hover:text-primary"
-          href="#evento"
-          @click.prevent="scrollToSection('#evento')"
-          >Evento</a
-        >
-        <a
-          class="nav-link rounded-full px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-muted transition hover:bg-surface-soft hover:text-primary"
-          href="#padrinos"
-          @click.prevent="scrollToSection('#padrinos')"
-          >Padrinos</a
-        >
-        <a
-          class="nav-link rounded-full px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-muted transition hover:bg-surface-soft hover:text-primary"
-          href="#regalos"
-          @click.prevent="scrollToSection('#regalos')"
-          >Regalos</a
-        >
-        <a
-          class="nav-link rounded-full px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-muted transition hover:bg-surface-soft hover:text-primary"
-          href="#asistencia"
-          @click.prevent="scrollToSection('#asistencia')"
-          >asistencia</a
-        >
-        <a
-          class="nav-link rounded-full px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-muted transition hover:bg-surface-soft hover:text-primary"
-          href="#info"
-          @click.prevent="scrollToSection('#info')"
-          >Info</a
-        >
-      </div>
+      <a class="flex min-w-[68px] flex-1 flex-col items-center gap-[3px] px-1 pb-[7px] pt-2 text-[rgba(251,250,246,0.68)] transition-colors duration-[180ms] hover:bg-[rgba(251,250,246,0.1)] hover:text-folio-paper max-[600px]:px-1 max-[600px]:py-[7px]" href="#inicio" @click.prevent="scrollToSection('#inicio')"><span class="material-symbols-outlined text-[19px]">home</span><small class="font-sans text-[8px] font-bold tracking-[.08em] uppercase">Inicio</small></a>
+      <a class="flex min-w-[68px] flex-1 flex-col items-center gap-[3px] px-1 pb-[7px] pt-2 text-[rgba(251,250,246,0.68)] transition-colors duration-[180ms] hover:bg-[rgba(251,250,246,0.1)] hover:text-folio-paper max-[600px]:px-1 max-[600px]:py-[7px]" href="#evento" @click.prevent="scrollToSection('#evento')"><span class="material-symbols-outlined text-[19px]">event</span><small class="font-sans text-[8px] font-bold tracking-[.08em] uppercase">El día</small></a>
+      <a class="flex min-w-[68px] flex-1 flex-col items-center gap-[3px] px-1 pb-[7px] pt-2 text-[rgba(251,250,246,0.68)] transition-colors duration-[180ms] hover:bg-[rgba(251,250,246,0.1)] hover:text-folio-paper max-[600px]:px-1 max-[600px]:py-[7px]" href="#info" @click.prevent="scrollToSection('#info')"><span class="material-symbols-outlined text-[19px]">info</span><small class="font-sans text-[8px] font-bold tracking-[.08em] uppercase">Detalles</small></a>
+      <NuxtLink class="flex min-w-[68px] flex-1 flex-col items-center gap-[3px] px-1 pb-[7px] pt-2 text-[rgba(251,250,246,0.68)] transition-colors duration-[180ms] hover:bg-[rgba(251,250,246,0.1)] hover:text-folio-paper max-[600px]:px-1 max-[600px]:py-[7px]" to="/asistencia"><span class="material-symbols-outlined text-[19px]">check</span><small class="font-sans text-[8px] font-bold tracking-[.08em] uppercase">ASISTENCIA</small></NuxtLink>
     </nav>
   </div>
 </template>
