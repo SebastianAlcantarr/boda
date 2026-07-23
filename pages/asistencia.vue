@@ -16,12 +16,8 @@ function normalizeName(value) {
 }
 
 const guestName = ref('');
-const additionalGuestCount = ref(0);
-const companionNames = ref(['', '']);
 const submittedName = ref('');
-const submittedCompanions = ref([]);
 const nameError = ref('');
-const companionError = ref('');
 const isExporting = ref(false);
 const exportProgress = ref(0);
 const invitationCard = ref(null);
@@ -36,21 +32,7 @@ const queryName = computed(() => {
   return typeof value === 'string' ? normalizeName(value) : '';
 });
 
-const queryCompanionNames = computed(() =>
-  [route.query.acompanante1, route.query.acompanante2]
-    .map((value) => (typeof value === 'string' ? normalizeName(value) : ''))
-    .filter(Boolean),
-);
-
-const queryCompanionCount = computed(() => {
-  const count = Number(route.query.acompanantes);
-
-  return Number.isInteger(count) && count >= 0 && count <= 2
-    ? count
-    : queryCompanionNames.value.length;
-});
-
-const invitationNames = computed(() => [submittedName.value, ...submittedCompanions.value]);
+const invitationNames = computed(() => [submittedName.value]);
 const invitationNameDensity = computed(() => {
   const longestName = Math.max(...invitationNames.value.map((name) => name.length), 0);
 
@@ -109,24 +91,15 @@ const invitationMusicLink = 'https://open.spotify.com/intl-es/track/3zl7j5ua8mF4
 const invitationGiftLink = 'https://mesaderegalos.liverpool.com.mx/milistaderegalos/51972633';
 
 watch(
-  [queryName, queryCompanionCount, queryCompanionNames],
-  ([name, companionCount, names]) => {
+  queryName,
+  (name) => {
     if (!name) return;
 
     guestName.value = name;
-    additionalGuestCount.value = companionCount;
-    companionNames.value = [names[0] || '', names[1] || ''];
     submittedName.value = name;
-    submittedCompanions.value = names.slice(0, companionCount);
   },
   { immediate: true },
 );
-
-function isFullName(value) {
-  const name = normalizeName(value);
-
-  return name.length >= 3 && name.split(' ').length >= 2;
-}
 
 function submitName() {
   const name = normalizeName(guestName.value);
@@ -134,32 +107,15 @@ function submitName() {
 
   if (name.length < 3 || nameParts.length < 2) {
     nameError.value = 'Escribe tu nombre y apellido para continuar.';
-    companionError.value = '';
-    return;
-  }
-
-  const companions = companionNames.value
-    .slice(0, additionalGuestCount.value)
-    .map(normalizeName);
-
-  if (companions.some((companion) => !isFullName(companion))) {
-    companionError.value = 'Escribe el nombre y apellido de cada acompañante.';
     return;
   }
 
   nameError.value = '';
-  companionError.value = '';
   submittedName.value = name;
-  submittedCompanions.value = companions;
 
   const query = {
     nombre: name,
-    acompanantes: String(additionalGuestCount.value),
   };
-
-  companions.forEach((companion, index) => {
-    query[`acompanante${index + 1}`] = companion;
-  });
 
   router.replace({ path: '/asistencia', query });
   nextTick(() => invitationCard.value?.scrollIntoView({ behavior: 'smooth', block: 'center' }));
@@ -167,9 +123,7 @@ function submitName() {
 
 function editName() {
   submittedName.value = '';
-  submittedCompanions.value = [];
   nameError.value = '';
-  companionError.value = '';
   router.replace('/asistencia');
 }
 
@@ -378,7 +332,7 @@ async function exportAsPdf() {
             Llene la invitacion
           </h2>
           <p class="mt-5 max-w-md text-[#6f5b50]">
-            Escriba su nombre completo y si tiene el de sus acompañantes
+            Escriba su nombre completo para continuar
           </p>
 
           <form class="mt-10" @submit.prevent="submitName">
@@ -398,55 +352,6 @@ async function exportAsPdf() {
             />
             <p v-if="nameError" id="name-error" class="mt-[9px] text-[13px] text-[#a85845]" role="alert">
               {{ nameError }}
-            </p>
-
-            <fieldset class="mt-9 border-0 p-0">
-              <legend class="block font-sans text-[10px] font-bold tracking-[.18em] text-[#512301] uppercase">¿Deseas agregar acompañantes?</legend>
-              <div class="mt-3.5 grid grid-cols-3 gap-2" role="radiogroup" aria-label="Cantidad de acompañantes">
-                <label
-                  v-for="option in [0, 1, 2]"
-                  :key="option"
-                  class="relative flex min-h-[88px] cursor-pointer flex-col items-center justify-center border border-folio-line bg-[rgba(247,244,238,0.5)] text-[#7c7469] transition-[border-color,background,color] duration-[180ms] hover:border-folio-gold hover:bg-[#ebe7df] hover:text-[#512301] focus-within:outline focus-within:outline-2 focus-within:outline-[rgba(173,147,99,0.5)] focus-within:outline-offset-2"
-                  :class="{ 'border-folio-gold bg-[#ebe7df] text-[#512301]': additionalGuestCount === option }"
-                >
-                  <input
-                    v-model.number="additionalGuestCount"
-                    type="radio"
-                    name="acompanantes"
-                    :value="option"
-                    class="absolute h-px w-px opacity-0"
-                    @change="companionError = ''"
-                  />
-                  <span class="font-serif text-[31px] leading-[.8]">{{ option }}</span>
-                  <span class="mt-2.5 font-sans text-[9px] font-bold tracking-[.1em] uppercase">
-                    {{ option === 0 ? 'Solo yo' : option === 1 ? '1 persona' : '2 personas' }}
-                  </span>
-                </label>
-              </div>
-            </fieldset>
-
-            <div v-if="additionalGuestCount" class="mt-[22px] grid gap-[17px]">
-              <div v-for="index in additionalGuestCount" :key="index">
-                <label class="block font-sans text-[10px] font-bold tracking-[.18em] text-[#512301] uppercase" :for="`companion-${index}`">
-                  Acompañante {{ index }}
-                </label>
-                <input
-                  :id="`companion-${index}`"
-                  v-model="companionNames[index - 1]"
-                  class="mt-[5px] w-full border-0 border-b border-[#bdb4a5] bg-transparent px-0 pb-3.5 pt-3 font-serif text-[23px] text-[#512301] outline-none transition-colors duration-[180ms] placeholder:text-[#a69d90] focus:border-folio-gold aria-[invalid=true]:border-[#a85845] max-[520px]:text-2xl"
-                  type="text"
-                  :name="`acompanante-${index}`"
-                  autocomplete="name"
-                  maxlength="80"
-                  :placeholder="`Nombre completo del acompañante ${index}`"
-                  :aria-invalid="Boolean(companionError)"
-                  @input="companionError = ''"
-                />
-              </div>
-            </div>
-
-            <p v-if="companionError" class="mt-[9px] text-[13px] text-[#a85845]" role="alert">
-              {{ companionError }}
             </p>
 
             <button class="mt-7 inline-flex min-h-12 w-full items-center justify-center rounded-sm border border-[#512301] bg-[#512301] px-[25px] py-3.5 font-sans text-[10px] font-bold tracking-[.2em] text-[#fbfaf6] uppercase transition-[background,box-shadow,transform] duration-[180ms] hover:-translate-y-0.5 hover:bg-[#6d3914] hover:shadow-[0_14px_28px_-20px_rgba(81,35,1,0.7)] sm:w-auto" type="submit">
