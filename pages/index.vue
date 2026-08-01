@@ -260,6 +260,10 @@ onBeforeUnmount(() => {
               class="pointer-events-none absolute inset-0 z-[2] bg-[linear-gradient(90deg,rgba(39,35,30,0.42),rgba(39,35,30,0.08)_48%,rgba(39,35,30,0.26))]"
               aria-hidden="true"
             ></div>
+            <div class="pointer-events-none absolute left-[29px] top-[29px] z-[6] max-w-[220px] text-folio-paper max-[600px]:left-[18px] max-[600px]:top-[18px]">
+              <span class="block font-sans text-[9px] font-bold tracking-[.2em] uppercase opacity-80">Nuestra historia</span>
+              <span class="mt-2 block font-serif text-[clamp(25px,3vw,38px)] leading-[.86]">Un día, una vida juntos.</span>
+            </div>
             <div
               class="absolute bottom-[27px] right-[29px] z-[6] flex items-center gap-[13px] font-sans text-[8px] font-bold tracking-[.14em] text-folio-paper uppercase max-[600px]:bottom-[17px] max-[600px]:right-[18px]"
             >
@@ -324,7 +328,7 @@ onBeforeUnmount(() => {
           </div>
           <NuxtLink
             to="/asistencia"
-            class="bg-[#512301]  text-white text-sm mt-[37px] inline-flex min-h-[55px] w-[min(100%,212px)] items-center justify-center bg-folio-brown font-sans text-[9px] font-bold tracking-[.2em] text-folio-paper uppercase transition-[background,transform] duration-[180ms] hover:-translate-y-0.5 hover:bg-folio-ink max-[600px]:mt-7"
+            class="mt-[37px] inline-flex min-h-[55px] w-[min(100%,212px)] items-center justify-center bg-folio-brown px-4 font-sans text-[9px] font-bold tracking-[.2em] text-folio-paper uppercase transition-[background,transform,box-shadow] duration-[180ms] hover:-translate-y-0.5 hover:bg-folio-ink hover:shadow-[0_12px_24px_-14px_rgba(39,35,30,0.8)] max-[600px]:mt-7"
           >
             Confirmar asistencia
           </NuxtLink>
@@ -340,7 +344,7 @@ onBeforeUnmount(() => {
         >
           <div>
             <span class="font-sans text-[9px] font-bold tracking-[.2em] text-folio-overline uppercase">01 / Detalles</span>
-            <h2 class="mt-[13px] max-w-[700px] font-serif text-[clamp(43px,5vw,75px)] font-medium leading-[.85] tracking-[-.055em]">Cronograma y Ubicacion</h2>
+            <h2 class="mt-[13px] max-w-[700px] font-serif text-[clamp(43px,5vw,75px)] font-medium leading-[.85] tracking-[-.055em]">Cronograma y ubicación</h2>
           </div>
         </div>
 
@@ -448,7 +452,7 @@ onBeforeUnmount(() => {
               <h2 class="mx-[18px] mt-3.5 max-w-[330px] font-serif text-[clamp(39px,4vw,55px)] font-medium leading-[.85] tracking-[-.055em] text-[#512301] max-[600px]:text-[47px]">Agradecemos la confirmación de tu asistencia</h2>
               <NuxtLink
                 to="/asistencia"
-                class="bg-[#512301]  text-white text-sm mt-[26px] inline-flex items-center justify-center gap-2.5 border border-folio-ink px-[18px] py-[13px] font-sans text-[9px] font-bold tracking-[.16em] text-[#512301] uppercase transition-[background,color,transform] duration-[180ms] hover:-translate-y-0.5 hover:bg-folio-ink hover:text-folio-paper"
+                class="mt-[26px] inline-flex items-center justify-center gap-2.5 border border-folio-ink bg-folio-brown px-[18px] py-[13px] font-sans text-[9px] font-bold tracking-[.16em] text-folio-paper uppercase transition-[background,color,transform] duration-[180ms] hover:-translate-y-0.5 hover:bg-folio-ink"
               >
                 Confirmar asistencia
                 <span class="material-symbols-outlined text-base" aria-hidden="true">north_east</span>
@@ -519,7 +523,15 @@ onBeforeUnmount(() => {
       >
         <div class="flex min-h-[460px] flex-col justify-center border border-folio-line bg-folio-paper p-[clamp(28px,5vw,62px)] max-[900px]:min-h-[390px] max-[600px]:min-h-[360px]">
 
-          <h2 class="mt-[13px] max-w-[700px] font-serif text-[clamp(43px,4vw,63px)] font-medium leading-[.85] tracking-[-.055em] text-[#512301] max-[600px]:text-[clamp(42px,13vw,62px)]">Escucha nuestra cancion</h2>
+          <span class="font-sans text-[9px] font-bold tracking-[.2em] text-folio-overline uppercase">Nuestra canción</span>
+          <h2 class="mt-[13px] max-w-[700px] font-serif text-[clamp(43px,4vw,63px)] font-medium leading-[.85] tracking-[-.055em] text-[#512301] max-[600px]:text-[clamp(42px,13vw,62px)]">La banda sonora de este día</h2>
+          <p class="mt-5 max-w-[330px] font-serif text-[20px] leading-[1.05] text-folio-muted">Una canción que nos recuerda cómo empezó todo.</p>
+          <a
+            class="mt-7 inline-flex w-fit items-center gap-2 border-b border-folio-gold pb-2 font-sans text-[9px] font-bold tracking-[.16em] text-folio-overline uppercase transition-colors hover:text-folio-brown"
+            href="https://open.spotify.com/intl-es/track/3zl7j5ua8mF4JDYuxrfo01"
+            target="_blank"
+            rel="noreferrer"
+          >Abrir en Spotify <span class="material-symbols-outlined text-base">north_east</span></a>
         </div>
         <div class="relative min-h-[460px] overflow-hidden border border-[rgba(39,35,30,0.5)] bg-white max-[900px]:min-h-[390px] max-[600px]:min-h-[360px] after:absolute after:inset-[17px] after:border after:border-[rgba(251,250,246,0.45)] after:content-[''] after:pointer-events-none">
           <img class="h-full w-full object-cover sepia-[.3] saturate-[.7] brightness-[.74]" :src="assetPath('/images/slide-7.webp')" alt="Renée y Gabriel" loading="lazy" />
@@ -598,6 +610,11 @@ onBeforeUnmount(() => {
         </div>
       </section>
     </main>
+
+    <footer class="mx-auto mb-20 mt-[-15px] flex w-[calc(100%-48px)] max-w-[1560px] items-center justify-between border-t border-folio-line py-8 text-folio-muted max-[900px]:mb-16 max-[600px]:w-[calc(100%-24px)] max-[600px]:flex-col max-[600px]:gap-3 max-[600px]:text-center">
+      <span class="font-serif text-lg">Renée &amp; Gabriel</span>
+      <span class="font-sans text-[9px] font-bold tracking-[.18em] uppercase">21 de noviembre · Hermosillo, Sonora</span>
+    </footer>
 
     <nav
       class="fixed bottom-0 left-0 right-0 z-50 hidden justify-around border-t border-[rgba(173,147,99,0.42)] bg-[rgba(251,250,246,0.96)] pb-[env(safe-area-inset-bottom)] shadow-[0_-14px_34px_-28px_rgba(81,35,1,0.45)] backdrop-blur-[14px] max-[900px]:flex"

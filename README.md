@@ -46,35 +46,39 @@ Si publicas en un dominio propio o en la raíz del servidor, usa simplemente:
 npm run generate
 ```
 
-## Notificaciones por WhatsApp (Twilio)
+## Confirmaciones por Telegram
 
-El formulario de `pages/asistencia.vue` envía el nombre a la ruta Nitro `server/api/whatsapp.post.ts`. Esa ruta usa Twilio WhatsApp Sandbox y mantiene las credenciales únicamente en el servidor.
+El formulario de `pages/asistencia.vue` envía la confirmación a `server/api/asistencia.post.ts`. Esa ruta guarda la confirmación en Nitro storage y usa `server/utils/telegram.ts` para mandar el mensaje al bot de Telegram con `$fetch()`.
 
-### Configuración de Twilio WhatsApp Sandbox
-
-1. Crea una cuenta en [Twilio](https://console.twilio.com/).
-2. Activa el WhatsApp Sandbox en `Twilio Console > Messaging > Try Twilio > WhatsApp`.
-3. Autoriza tu número de WhatsApp en el sandbox desde la consola de Twilio.
-4. Configura las siguientes variables en tu `.env`:
+### Variables de entorno
 
 ```env
-TWILIO_ACCOUNT_SID=tu_account_sid
-TWILIO_AUTH_TOKEN=tu_auth_token
-TWILIO_WHATSAPP_FROM=whatsapp:+14155238886
-TWILIO_WHATSAPP_TO=whatsapp:+52XXXXXXXXXX
+TELEGRAM_BOT_TOKEN=tu_bot_token
+TELEGRAM_CHAT_ID=tu_chat_id
 ```
 
 ### Desarrollo local
 
 1. Copia `.env.example` como `.env` si todavía no existe.
-2. Completa las variables de Twilio.
+2. Completa las variables de Telegram.
 3. Inicia Nuxt con `npm run dev` y prueba el formulario en `/asistencia`.
 
 ### Producción
 
-Despliega como servidor Nitro (por ejemplo en Vercel o Railway) y agrega las variables de Twilio como secretos del entorno. No uses `npm run generate` para la versión que necesita enviar WhatsApp: un sitio estático de GitHub Pages no puede ejecutar `server/api/whatsapp.post.ts`.
+Despliega como servidor Nitro (por ejemplo en Vercel o Railway) y agrega las variables de Telegram como secretos del entorno. Esta integración no funciona en un sitio estático puro como GitHub Pages porque requiere `server/api/asistencia.post.ts`.
 
 No subas `.env` al repositorio.
+
+## Invitación por correo
+
+Después de confirmar la asistencia, aparece un botón para enviar la invitación al correo capturado usando Resend.
+
+### Variables de entorno
+
+```env
+RESEND_API_KEY=tu_api_key
+RESEND_FROM_EMAIL=onboarding@resend.dev
+```
 
 ## Qué se sube al repositorio
 

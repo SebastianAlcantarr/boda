@@ -30,6 +30,16 @@
     background: #d5cfc3;
     color: #27231e;
   }
+
+  :focus-visible {
+    outline: 2px solid #a88e5f;
+    outline-offset: 4px;
+  }
+
+  a,
+  button {
+    -webkit-tap-highlight-color: transparent;
+  }
 }
 
 @layer components {

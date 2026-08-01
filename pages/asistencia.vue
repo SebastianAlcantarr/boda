@@ -1,27 +1,49 @@
-<script setup>
+<script setup lang="ts">
 import { computed, nextTick, ref, watch } from 'vue';
+
+type ConfirmationState = 'idle' | 'sending' | 'sent' | 'warning' | 'error';
+
+interface ConfirmationResponse {
+  success: boolean;
+  telegramSent: boolean;
+  message: string;
+}
+
+interface EmailResponse {
+  success: boolean;
+  message: string;
+}
 
 const route = useRoute();
 const router = useRouter();
 const baseURL = useRuntimeConfig().app.baseURL;
 
-function assetPath(path) {
+function assetPath(path: string) {
   const basePath = baseURL.endsWith('/') ? baseURL.slice(0, -1) : baseURL;
 
   return `${basePath}${path}`;
 }
 
-function normalizeName(value) {
+function normalizeName(value: string) {
   return value.trim().replace(/\s+/g, ' ').slice(0, 80);
 }
 
+function normalizeEmail(value: string) {
+  return value.trim().toLowerCase().slice(0, 120);
+}
+
 const guestName = ref('');
+const guestEmail = ref('');
 const submittedName = ref('');
 const nameError = ref('');
+const confirmationMessage = ref('');
+const confirmationState = ref<ConfirmationState>('idle');
+const emailMessage = ref('');
+const emailState = ref<'idle' | 'sending' | 'sent' | 'error'>('idle');
+const emailProgress = ref(0);
 const isExporting = ref(false);
 const exportProgress = ref(0);
-const whatsappState = ref('idle');
-const invitationCard = ref(null);
+const invitationCard = ref<HTMLElement | null>(null);
 const exportCardWidth = 430;
 const exportPdfCanvasScale = 2.4;
 const exportPdfImageQuality = 0.9;
@@ -90,7 +112,8 @@ const invitationAvoidColors = [
 ];
 const invitationMusicLink = 'https://open.spotify.com/intl-es/track/3zl7j5ua8mF4JDYuxrfo01';
 const invitationGiftLink = 'https://mesaderegalos.liverpool.com.mx/milistaderegalos/51972633';
-const isNotifying = computed(() => whatsappState.value === 'sending');
+const isSubmitting = computed(() => confirmationState.value === 'sending');
+const isSendingEmail = computed(() => emailState.value === 'sending');
 
 watch(
   queryName,
@@ -103,8 +126,9 @@ watch(
   { immediate: true },
 );
 
-function submitName() {
+async function submitName() {
   const name = normalizeName(guestName.value);
+  const email = normalizeEmail(guestEmail.value);
   const nameParts = name.split(' ');
 
   if (name.length < 3 || nameParts.length < 2) {
@@ -112,43 +136,106 @@ function submitName() {
     return;
   }
 
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    nameError.value = 'Escribe un correo válido.';
+    return;
+  }
+
   nameError.value = '';
-  submittedName.value = name;
+  confirmationMessage.value = '';
+  confirmationState.value = 'sending';
+  emailMessage.value = '';
+  emailState.value = 'idle';
 
-  const query = {
-    nombre: name,
-  };
+  try {
+    const response = await $fetch<ConfirmationResponse>('/api/asistencia', {
+      method: 'POST',
+      body: {
+        name,
+        email,
+      },
+    });
 
-  router.replace({ path: '/asistencia', query });
-  nextTick(() => invitationCard.value?.scrollIntoView({ behavior: 'smooth', block: 'center' }));
-  void notifyWhatsApp(name);
+    submittedName.value = name;
+    await router.replace({
+      path: '/asistencia',
+      query: {
+        nombre: name,
+      },
+    });
+    await nextTick();
+    invitationCard.value?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    confirmationMessage.value = response.message;
+    confirmationState.value = response.telegramSent ? 'sent' : 'warning';
+  } catch (error) {
+    confirmationState.value = 'error';
+    confirmationMessage.value = error instanceof Error ? error.message : 'No se pudo confirmar la asistencia.';
+  }
 }
 
 function editName() {
   submittedName.value = '';
   nameError.value = '';
-  whatsappState.value = 'idle';
-  router.replace('/asistencia');
+  confirmationMessage.value = '';
+  confirmationState.value = 'idle';
+  emailMessage.value = '';
+  emailState.value = 'idle';
+  void router.replace('/asistencia');
 }
 
-async function notifyWhatsApp(name) {
-  whatsappState.value = 'sending';
+async function sendInvitationEmail() {
+  const name = normalizeName(submittedName.value || guestName.value);
+  const email = normalizeEmail(guestEmail.value);
+
+  if (!name || !email) {
+    emailState.value = 'error';
+    emailMessage.value = 'Primero completa y confirma la asistencia.';
+    return;
+  }
+
+  emailMessage.value = '';
+  emailState.value = 'sending';
+  emailProgress.value = 4;
 
   try {
-    const response = await $fetch('/api/whatsapp', {
+    const pdf = await createInvitationPdf((progress) => {
+      emailProgress.value = Math.min(progress, 92);
+    });
+    const pdfBase64 = pdf.output('datauristring').split(',')[1];
+
+    const response = await $fetch<EmailResponse>('/api/invitacion-email', {
       method: 'POST',
-      body: { text: name },
+      body: {
+        name,
+        email,
+        pdfBase64,
+        pdfFilename: invitationPdfFilename(),
+      },
     });
 
-    whatsappState.value = response.success ? 'sent' : 'error';
-  } catch {
-    whatsappState.value = 'error';
+    emailState.value = 'sent';
+    emailProgress.value = 100;
+    emailMessage.value = response.message;
+  } catch (error) {
+    emailState.value = 'error';
+    emailMessage.value = error instanceof Error ? error.message : 'No se pudo enviar la invitación por correo.';
+  } finally {
+    if (emailState.value !== 'sending') {
+      window.setTimeout(() => {
+        emailProgress.value = 0;
+      }, 450);
+    }
   }
+}
+
+function invitationPdfFilename() {
+  return `invitacion-renee-gabriel-${normalizeName(submittedName.value).toLowerCase().replace(/\s+/g, '-')}.pdf`;
 }
 
 function createExportCard() {
   const exportHost = document.createElement('div');
-  const exportCard = invitationCard.value.cloneNode(true);
+  const exportCard = invitationCard.value.cloneNode(true) as HTMLElement;
 
   exportHost.className = 'invitation-export-host';
   exportCard.classList.add('preview-invitation--export');
@@ -225,70 +312,77 @@ function addPdfPageLinks(pdf, pageElement, pageWidthMm) {
   });
 }
 
+async function createInvitationPdf(onProgress: (progress: number) => void) {
+  if (!invitationCard.value) throw new Error('Primero genera tu invitación.');
+
+  await document.fonts?.ready;
+  const { default: html2canvas } = await import('html2canvas');
+  const { jsPDF } = await import('jspdf');
+  const { exportCard, exportHost } = createExportCard();
+
+  try {
+    onProgress(12);
+    await waitForExportAssets(exportCard);
+
+    const pages = [...exportCard.querySelectorAll('.preview-invitation__page')];
+    if (!pages.length) throw new Error('No se encontró contenido para generar el PDF.');
+    onProgress(18);
+
+    const firstPageHeight = Math.ceil(pages[0].getBoundingClientRect().height);
+    const pdfWidth = exportCardWidth * cssPixelToMm;
+    const firstPdfHeight = firstPageHeight * cssPixelToMm;
+    const pdf = new jsPDF({
+      compress: true,
+      orientation: 'portrait',
+      unit: 'mm',
+      format: [pdfWidth, firstPdfHeight],
+    });
+
+    for (const [index, page] of pages.entries()) {
+      onProgress(Math.round(18 + (index / pages.length) * 72));
+      const pageHeight = Math.ceil(page.getBoundingClientRect().height);
+      const pdfHeight = pageHeight * cssPixelToMm;
+
+      if (index > 0) {
+        pdf.addPage([pdfWidth, pdfHeight], 'portrait');
+      }
+
+      const canvas = await html2canvas(page, {
+        backgroundColor: '#f3efe7',
+        height: pageHeight,
+        logging: false,
+        scale: exportPdfCanvasScale,
+        scrollX: 0,
+        scrollY: 0,
+        useCORS: true,
+        width: exportCardWidth,
+        windowHeight: pageHeight,
+        windowWidth: exportCardWidth,
+      });
+      const imageData = canvas.toDataURL('image/jpeg', exportPdfImageQuality);
+
+      pdf.addImage(imageData, 'JPEG', 0, 0, pdfWidth, pdfHeight, undefined, 'SLOW');
+      addPdfPageLinks(pdf, page, pdfWidth);
+      onProgress(Math.round(18 + ((index + 1) / pages.length) * 72));
+    }
+
+    onProgress(96);
+    return pdf;
+  } finally {
+    exportHost.remove();
+  }
+}
+
 async function exportAsPdf() {
   isExporting.value = true;
   exportProgress.value = 4;
 
   try {
-    if (!invitationCard.value) return;
-
-    await document.fonts?.ready;
-    const { default: html2canvas } = await import('html2canvas');
-    const { jsPDF } = await import('jspdf');
-    const { exportCard, exportHost } = createExportCard();
-
-    try {
-      exportProgress.value = 12;
-      await waitForExportAssets(exportCard);
-
-      const pages = [...exportCard.querySelectorAll('.preview-invitation__page')];
-      if (!pages.length) return;
-      exportProgress.value = 18;
-
-      const firstPageHeight = Math.ceil(pages[0].getBoundingClientRect().height);
-      const pdfWidth = exportCardWidth * cssPixelToMm;
-      const firstPdfHeight = firstPageHeight * cssPixelToMm;
-      const pdf = new jsPDF({
-        compress: true,
-        orientation: 'portrait',
-        unit: 'mm',
-        format: [pdfWidth, firstPdfHeight],
-      });
-
-      for (const [index, page] of pages.entries()) {
-        exportProgress.value = Math.round(18 + (index / pages.length) * 72);
-        const pageHeight = Math.ceil(page.getBoundingClientRect().height);
-        const pdfHeight = pageHeight * cssPixelToMm;
-
-        if (index > 0) {
-          pdf.addPage([pdfWidth, pdfHeight], 'portrait');
-        }
-
-        const canvas = await html2canvas(page, {
-          backgroundColor: '#f3efe7',
-          height: pageHeight,
-          logging: false,
-          scale: exportPdfCanvasScale,
-          scrollX: 0,
-          scrollY: 0,
-          useCORS: true,
-          width: exportCardWidth,
-          windowHeight: pageHeight,
-          windowWidth: exportCardWidth,
-        });
-        const imageData = canvas.toDataURL('image/jpeg', exportPdfImageQuality);
-
-        pdf.addImage(imageData, 'JPEG', 0, 0, pdfWidth, pdfHeight, undefined, 'SLOW');
-        addPdfPageLinks(pdf, page, pdfWidth);
-        exportProgress.value = Math.round(18 + ((index + 1) / pages.length) * 72);
-      }
-
-      exportProgress.value = 96;
-      pdf.save(`invitacion-renee-gabriel-${normalizeName(submittedName.value).toLowerCase().replace(/\s+/g, '-')}.pdf`);
-      exportProgress.value = 100;
-    } finally {
-      exportHost.remove();
-    }
+    const pdf = await createInvitationPdf((progress) => {
+      exportProgress.value = progress;
+    });
+    pdf.save(invitationPdfFilename());
+    exportProgress.value = 100;
   } finally {
     window.setTimeout(() => {
       isExporting.value = false;
@@ -373,12 +467,48 @@ async function exportAsPdf() {
               :aria-describedby="nameError ? 'name-error' : undefined"
               @input="nameError = ''"
             />
+
+            <div class="mt-6 grid gap-5">
+              <div>
+                <label class="block font-sans text-[10px] font-bold tracking-[.18em] text-[#512301] uppercase" for="guest-email">Correo</label>
+                <input
+                  id="guest-email"
+                  v-model="guestEmail"
+                  class="mt-3 w-full border-0 border-b border-[#bdb4a5] bg-transparent px-0 pb-3.5 pt-3 font-sans text-[16px] text-[#512301] outline-none transition-colors duration-[180ms] placeholder:text-[#a69d90] focus:border-folio-gold"
+                  type="email"
+                  name="correo"
+                  autocomplete="email"
+                  maxlength="120"
+                  placeholder="juan@gmail.com"
+                  @input="nameError = ''"
+                />
+              </div>
+            </div>
+
             <p v-if="nameError" id="name-error" class="mt-[9px] text-[13px] text-[#a85845]" role="alert">
               {{ nameError }}
             </p>
 
-            <button class="mt-7 inline-flex min-h-12 w-full items-center justify-center rounded-sm border border-[#512301] bg-[#512301] px-[25px] py-3.5 font-sans text-[10px] font-bold tracking-[.2em] text-[#fbfaf6] uppercase transition-[background,box-shadow,transform] duration-[180ms] hover:-translate-y-0.5 hover:bg-[#6d3914] hover:shadow-[0_14px_28px_-20px_rgba(81,35,1,0.7)] disabled:cursor-wait disabled:opacity-70 sm:w-auto" type="submit" :disabled="isNotifying" :aria-busy="isNotifying">
-              {{ isNotifying ? 'Enviando confirmación...' : 'Generar mi invitación' }}
+            <p
+              v-if="confirmationMessage"
+              class="mt-[9px] text-[13px]"
+              :class="confirmationState === 'error' ? 'text-[#a85845]' : confirmationState === 'warning' ? 'text-[#a67b00]' : 'text-[#4f7f45]'"
+              role="status"
+            >
+              {{ confirmationMessage }}
+            </p>
+
+            <p
+              v-if="emailMessage"
+              class="mt-[9px] text-[13px]"
+              :class="emailState === 'error' ? 'text-[#a85845]' : 'text-[#4f7f45]'"
+              role="status"
+            >
+              {{ emailMessage }}
+            </p>
+
+            <button class="mt-7 inline-flex min-h-12 w-full items-center justify-center rounded-sm border border-[#512301] bg-[#512301] px-[25px] py-3.5 font-sans text-[10px] font-bold tracking-[.2em] text-[#fbfaf6] uppercase transition-[background,box-shadow,transform] duration-[180ms] hover:-translate-y-0.5 hover:bg-[#6d3914] hover:shadow-[0_14px_28px_-20px_rgba(81,35,1,0.7)] disabled:cursor-wait disabled:opacity-70 sm:w-auto" type="submit" :disabled="isSubmitting" :aria-busy="isSubmitting">
+              {{ isSubmitting ? 'Enviando confirmación...' : 'Confirmar asistencia' }}
               <span class="material-symbols-outlined ml-2 text-[18px]" aria-hidden="true">arrow_forward</span>
             </button>
           </form>
@@ -571,19 +701,23 @@ async function exportAsPdf() {
             <div>
               <p class="text-sm font-semibold text-[#512301]">Descarga tu invitación</p>
               <p class="mt-1 text-xs text-[#6f5b50]">
-                {{ isExporting ? `Preparando PDF · ${exportProgress}%` : 'Se generará en PDF con tus enlaces incluidos.' }}
+                {{ isExporting ? `Preparando PDF · ${exportProgress}%` : isSendingEmail ? `Preparando correo · ${emailProgress}%` : 'Se generará en PDF con tus enlaces incluidos.' }}
               </p>
-              <div v-if="isExporting" class="mt-3 h-1.5 w-[min(260px,70vw)] overflow-hidden rounded-full bg-[rgba(168,142,95,0.22)]">
+              <div v-if="isExporting || isSendingEmail" class="mt-3 h-1.5 w-[min(260px,70vw)] overflow-hidden rounded-full bg-[rgba(168,142,95,0.22)]">
                 <span
                   class="block h-full rounded-full bg-[#512301] transition-[width] duration-300"
-                  :style="{ width: `${exportProgress}%` }"
+                  :style="{ width: `${isSendingEmail ? emailProgress : exportProgress}%` }"
                 ></span>
               </div>
             </div>
             <div class="flex flex-wrap gap-2">
-              <button class="inline-flex min-h-[42px] items-center gap-2 rounded-sm border border-[#512301] bg-[#512301] px-4 py-[11px] font-sans text-[9px] font-extrabold tracking-[.13em] text-[#fbfaf6] uppercase transition-[background,box-shadow,transform] duration-[180ms] hover:-translate-y-0.5 hover:bg-[#6d3914] hover:shadow-[0_14px_28px_-20px_rgba(81,35,1,0.7)] disabled:cursor-wait disabled:opacity-70 disabled:hover:translate-y-0 disabled:hover:shadow-none [&_.material-symbols-outlined]:text-[17px]" type="button" :disabled="isExporting" @click="exportAsPdf">
+              <button class="inline-flex min-h-[42px] items-center gap-2 rounded-sm border border-[#512301] bg-[#512301] px-4 py-[11px] font-sans text-[9px] font-extrabold tracking-[.13em] text-[#fbfaf6] uppercase transition-[background,box-shadow,transform] duration-[180ms] hover:-translate-y-0.5 hover:bg-[#6d3914] hover:shadow-[0_14px_28px_-20px_rgba(81,35,1,0.7)] disabled:cursor-wait disabled:opacity-70 disabled:hover:translate-y-0 disabled:hover:shadow-none [&_.material-symbols-outlined]:text-[17px]" type="button" :disabled="isExporting || isSendingEmail" @click="exportAsPdf">
                 <span class="material-symbols-outlined text-[17px]" aria-hidden="true">picture_as_pdf</span>
                 {{ isExporting ? 'Generando PDF' : 'Descargar como PDF' }}
+              </button>
+              <button class="inline-flex min-h-[42px] items-center gap-2 rounded-sm border border-[#9a7a3f] bg-[#f7f1e4] px-4 py-[11px] font-sans text-[9px] font-extrabold tracking-[.13em] text-[#512301] uppercase transition-[background,box-shadow,transform] duration-[180ms] hover:-translate-y-0.5 hover:bg-[#efe4cf] hover:shadow-[0_14px_28px_-20px_rgba(81,35,1,0.35)] disabled:cursor-wait disabled:opacity-70 disabled:hover:translate-y-0 disabled:hover:shadow-none [&_.material-symbols-outlined]:text-[17px]" type="button" :disabled="isSendingEmail || isExporting || confirmationState === 'idle'" @click="sendInvitationEmail">
+                <span class="material-symbols-outlined text-[17px]" aria-hidden="true">mail</span>
+                {{ isSendingEmail ? 'Enviando correo' : 'Enviar por correo' }}
               </button>
               <button class="inline-flex min-h-[38px] items-center gap-1.5 rounded-sm border border-transparent bg-transparent px-3 py-[9px] font-sans text-[9px] font-extrabold tracking-[.12em] text-[#7c7469] uppercase transition-colors duration-[180ms] hover:border-folio-gold hover:bg-[#ebe7df] [&_.material-symbols-outlined]:text-[17px]" type="button" @click="editName">
                 <span class="material-symbols-outlined text-[17px]" aria-hidden="true">edit</span>
