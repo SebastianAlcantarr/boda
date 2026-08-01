@@ -34,6 +34,7 @@ function normalizeEmail(value: string) {
 
 const guestName = ref('');
 const guestEmail = ref('');
+const wantsEmailInvitation = ref(false);
 const submittedName = ref('');
 const nameError = ref('');
 const confirmationMessage = ref('');
@@ -128,16 +129,10 @@ watch(
 
 async function submitName() {
   const name = normalizeName(guestName.value);
-  const email = normalizeEmail(guestEmail.value);
   const nameParts = name.split(' ');
 
   if (name.length < 3 || nameParts.length < 2) {
     nameError.value = 'Escribe tu nombre y apellido para continuar.';
-    return;
-  }
-
-  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    nameError.value = 'Escribe un correo válido.';
     return;
   }
 
@@ -152,7 +147,6 @@ async function submitName() {
       method: 'POST',
       body: {
         name,
-        email,
       },
     });
 
@@ -468,23 +462,6 @@ async function exportAsPdf() {
               @input="nameError = ''"
             />
 
-            <div class="mt-6 grid gap-5">
-              <div>
-                <label class="block font-sans text-[10px] font-bold tracking-[.18em] text-[#512301] uppercase" for="guest-email">Correo</label>
-                <input
-                  id="guest-email"
-                  v-model="guestEmail"
-                  class="mt-3 w-full border-0 border-b border-[#bdb4a5] bg-transparent px-0 pb-3.5 pt-3 font-sans text-[16px] text-[#512301] outline-none transition-colors duration-[180ms] placeholder:text-[#a69d90] focus:border-folio-gold"
-                  type="email"
-                  name="correo"
-                  autocomplete="email"
-                  maxlength="120"
-                  placeholder="juan@gmail.com"
-                  @input="nameError = ''"
-                />
-              </div>
-            </div>
-
             <p v-if="nameError" id="name-error" class="mt-[9px] text-[13px] text-[#a85845]" role="alert">
               {{ nameError }}
             </p>
@@ -710,21 +687,57 @@ async function exportAsPdf() {
                 ></span>
               </div>
             </div>
-            <div class="flex flex-wrap gap-2">
-              <button class="inline-flex min-h-[42px] items-center gap-2 rounded-sm border border-[#512301] bg-[#512301] px-4 py-[11px] font-sans text-[9px] font-extrabold tracking-[.13em] text-[#fbfaf6] uppercase transition-[background,box-shadow,transform] duration-[180ms] hover:-translate-y-0.5 hover:bg-[#6d3914] hover:shadow-[0_14px_28px_-20px_rgba(81,35,1,0.7)] disabled:cursor-wait disabled:opacity-70 disabled:hover:translate-y-0 disabled:hover:shadow-none [&_.material-symbols-outlined]:text-[17px]" type="button" :disabled="isExporting || isSendingEmail" @click="exportAsPdf">
-                <span class="material-symbols-outlined text-[17px]" aria-hidden="true">picture_as_pdf</span>
-                {{ isExporting ? 'Generando PDF' : 'Descargar como PDF' }}
-              </button>
-              <button class="inline-flex min-h-[42px] items-center gap-2 rounded-sm border border-[#9a7a3f] bg-[#f7f1e4] px-4 py-[11px] font-sans text-[9px] font-extrabold tracking-[.13em] text-[#512301] uppercase transition-[background,box-shadow,transform] duration-[180ms] hover:-translate-y-0.5 hover:bg-[#efe4cf] hover:shadow-[0_14px_28px_-20px_rgba(81,35,1,0.35)] disabled:cursor-wait disabled:opacity-70 disabled:hover:translate-y-0 disabled:hover:shadow-none [&_.material-symbols-outlined]:text-[17px]" type="button" :disabled="isSendingEmail || isExporting || confirmationState === 'idle'" @click="sendInvitationEmail">
-                <span class="material-symbols-outlined text-[17px]" aria-hidden="true">mail</span>
-                {{ isSendingEmail ? 'Enviando correo' : 'Enviar por correo' }}
-              </button>
-              <button class="inline-flex min-h-[38px] items-center gap-1.5 rounded-sm border border-transparent bg-transparent px-3 py-[9px] font-sans text-[9px] font-extrabold tracking-[.12em] text-[#7c7469] uppercase transition-colors duration-[180ms] hover:border-folio-gold hover:bg-[#ebe7df] [&_.material-symbols-outlined]:text-[17px]" type="button" @click="editName">
-                <span class="material-symbols-outlined text-[17px]" aria-hidden="true">edit</span>
-                Editar
-              </button>
+              <div class="flex flex-wrap gap-2">
+                <button class="inline-flex min-h-[42px] items-center gap-2 rounded-sm border border-[#512301] bg-[#512301] px-4 py-[11px] font-sans text-[9px] font-extrabold tracking-[.13em] text-[#fbfaf6] uppercase transition-[background,box-shadow,transform] duration-[180ms] hover:-translate-y-0.5 hover:bg-[#6d3914] hover:shadow-[0_14px_28px_-20px_rgba(81,35,1,0.7)] disabled:cursor-wait disabled:opacity-70 disabled:hover:translate-y-0 disabled:hover:shadow-none [&_.material-symbols-outlined]:text-[17px]" type="button" :disabled="isExporting || isSendingEmail" @click="exportAsPdf">
+                  <span class="material-symbols-outlined text-[17px]" aria-hidden="true">picture_as_pdf</span>
+                  {{ isExporting ? 'Generando PDF' : 'Descargar como PDF' }}
+                </button>
+                <button class="inline-flex min-h-[38px] items-center gap-1.5 rounded-sm border border-transparent bg-transparent px-3 py-[9px] font-sans text-[9px] font-extrabold tracking-[.12em] text-[#7c7469] uppercase transition-colors duration-[180ms] hover:border-folio-gold hover:bg-[#ebe7df] [&_.material-symbols-outlined]:text-[17px]" type="button" @click="editName">
+                  <span class="material-symbols-outlined text-[17px]" aria-hidden="true">edit</span>
+                  Editar
+                </button>
+              </div>
+
+              <div class="mt-5 w-full border-t border-folio-line pt-5">
+                <p class="text-sm font-semibold text-[#512301]">¿Quieres que te enviemos el PDF por correo electrónico?</p>
+                <div class="mt-3 flex flex-wrap gap-2">
+                  <button
+                    class="inline-flex min-h-[38px] items-center rounded-sm border px-4 py-[9px] font-sans text-[9px] font-extrabold tracking-[.12em] uppercase transition-colors"
+                    :class="wantsEmailInvitation ? 'border-[#512301] bg-[#512301] text-[#fbfaf6]' : 'border-[#b8aa94] bg-transparent text-[#6f5b50]'"
+                    type="button"
+                    @click="wantsEmailInvitation = true"
+                  >
+                    Sí, enviármelo
+                  </button>
+                  <button
+                    class="inline-flex min-h-[38px] items-center rounded-sm border px-4 py-[9px] font-sans text-[9px] font-extrabold tracking-[.12em] uppercase transition-colors"
+                    :class="!wantsEmailInvitation ? 'border-[#512301] bg-[#512301] text-[#fbfaf6]' : 'border-[#b8aa94] bg-transparent text-[#6f5b50]'"
+                    type="button"
+                    @click="wantsEmailInvitation = false"
+                  >
+                    No, gracias
+                  </button>
+                </div>
+
+                <div v-if="wantsEmailInvitation" class="mt-4 flex flex-wrap items-start gap-3">
+                  <label class="min-w-[220px] flex-1">
+                    <span class="sr-only">Correo electrónico</span>
+                    <input
+                      v-model="guestEmail"
+                      class="min-h-[42px] w-full rounded-sm border border-[#b8aa94] bg-[#fbfaf6] px-3 text-sm text-[#512301] outline-none transition-colors placeholder:text-[#918578] focus:border-[#512301]"
+                      type="email"
+                      autocomplete="email"
+                      placeholder="tu@correo.com"
+                    />
+                  </label>
+                  <button class="inline-flex min-h-[42px] items-center gap-2 rounded-sm border border-[#9a7a3f] bg-[#f7f1e4] px-4 py-[11px] font-sans text-[9px] font-extrabold tracking-[.13em] text-[#512301] uppercase transition-[background,box-shadow,transform] duration-[180ms] hover:-translate-y-0.5 hover:bg-[#efe4cf] hover:shadow-[0_14px_28px_-20px_rgba(81,35,1,0.35)] disabled:cursor-wait disabled:opacity-70 disabled:hover:translate-y-0 disabled:hover:shadow-none [&_.material-symbols-outlined]:text-[17px]" type="button" :disabled="isSendingEmail || isExporting" @click="sendInvitationEmail">
+                    <span class="material-symbols-outlined text-[17px]" aria-hidden="true">mail</span>
+                    {{ isSendingEmail ? 'Enviando correo' : 'Enviar por correo' }}
+                  </button>
+                </div>
+                <p v-if="emailMessage" class="mt-3 text-xs" :class="emailState === 'sent' ? 'text-[#4f6b3b]' : 'text-[#a4462f]'">{{ emailMessage }}</p>
+              </div>
             </div>
-          </div>
         </section>
       </div>
     </main>

@@ -25,36 +25,29 @@ function escapeHtml(value: string): string {
 }
 
 function buildSubject() {
-  return 'Invitación de boda de Renée & Gabriel';
+  return 'Invitación';
 }
 
-function buildText(name: string, invitationUrl: string) {
+function buildText(name: string) {
   return [
     `Hola ${name},`,
     '',
-    'Te compartimos la invitación de nuestra boda.',
-    invitationUrl,
+    'Te compartimos nuestra invitación en el archivo adjunto.',
     '',
     'Renée & Gabriel',
   ].join('\n');
 }
 
-function buildHtml(name: string, invitationUrl: string) {
+function buildHtml(name: string) {
   const safeName = escapeHtml(name);
-  const safeUrl = escapeHtml(invitationUrl);
 
   return `
     <div style="margin:0;padding:0;background:#f7f4ee;font-family:Arial,sans-serif;color:#512301;">
       <div style="max-width:640px;margin:0 auto;padding:40px 20px;">
         <div style="background:#fbfaf6;border:1px solid #e3d8c4;padding:32px;">
           <p style="margin:0 0 12px;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:#9a7a3f;">Renée & Gabriel</p>
-          <h1 style="margin:0 0 18px;font-size:32px;line-height:1.05;font-family:Georgia,serif;">Tu invitación digital</h1>
-          <p style="margin:0 0 22px;font-size:16px;line-height:1.6;">Hola ${safeName}, te compartimos nuestra invitación para que la consultes cuando quieras.</p>
-          <p style="margin:0 0 28px;">
-            <a href="${safeUrl}" style="display:inline-block;background:#512301;color:#fbfaf6;text-decoration:none;padding:14px 22px;border-radius:4px;font-size:14px;letter-spacing:.12em;text-transform:uppercase;">Ver invitación</a>
-          </p>
-          <p style="margin:0;font-size:14px;line-height:1.6;color:#6f5b50;">Si el botón no funciona, abre este enlace:</p>
-          <p style="margin:8px 0 0;word-break:break-all;font-size:14px;line-height:1.6;color:#512301;">${safeUrl}</p>
+          <h1 style="margin:0 0 18px;font-size:32px;line-height:1.05;font-family:Georgia,serif;">Invitación</h1>
+          <p style="margin:0;font-size:16px;line-height:1.6;">Hola ${safeName}, te compartimos nuestra invitación en el archivo PDF adjunto.</p>
         </div>
       </div>
     </div>
@@ -89,17 +82,11 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  const requestUrl = getRequestURL(event);
-  const invitationUrl = new URL(
-    `${requestUrl.pathname.replace(/\/api\/invitacion-email$/, '')}asistencia?nombre=${encodeURIComponent(name)}`,
-    requestUrl.origin,
-  ).toString();
-
   await sendResendEmail({
     to: email,
     subject: buildSubject(),
-    text: buildText(name, invitationUrl),
-    html: buildHtml(name, invitationUrl),
+    text: buildText(name),
+    html: buildHtml(name),
     attachments: [
       {
         filename: pdfFilename,

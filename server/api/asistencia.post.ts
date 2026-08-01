@@ -7,7 +7,7 @@ interface RsvpPayload {
 
 interface RsvpRecord {
   name: string;
-  email: string;
+  email?: string;
   submittedAt: string;
 }
 
@@ -46,7 +46,7 @@ function buildTelegramMessage(record: RsvpRecord): string {
     record.name,
     '',
     '📧 Correo:',
-    record.email,
+    record.email || 'No proporcionado',
     '',
     '🕒 Fecha:',
     record.submittedAt,
@@ -65,7 +65,7 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     throw createError({
       statusCode: 400,
       message: 'Escribe un correo válido.',
@@ -74,7 +74,7 @@ export default defineEventHandler(async (event) => {
 
   const record: RsvpRecord = {
     name,
-    email,
+    ...(email ? { email } : {}),
     submittedAt: formatSubmittedAt(new Date()),
   };
 
@@ -89,7 +89,7 @@ export default defineEventHandler(async (event) => {
     return {
       success: true,
       telegramSent: true,
-      message: 'Confirmación registrada y enviada a Telegram.',
+      message: 'Asistencia confirmada.',
     };
   } catch (error) {
     console.error('[api/asistencia] Telegram error:', error);
@@ -97,7 +97,7 @@ export default defineEventHandler(async (event) => {
     return {
       success: true,
       telegramSent: false,
-      message: 'Confirmación registrada, pero no se pudo enviar a Telegram.',
+      message: 'Asistencia confirmada.',
     };
   }
 });
