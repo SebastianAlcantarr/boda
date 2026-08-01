@@ -20,6 +20,7 @@ const submittedName = ref('');
 const nameError = ref('');
 const isExporting = ref(false);
 const exportProgress = ref(0);
+const whatsappState = ref('idle');
 const invitationCard = ref(null);
 const exportCardWidth = 430;
 const exportPdfCanvasScale = 2.4;
@@ -89,6 +90,7 @@ const invitationAvoidColors = [
 ];
 const invitationMusicLink = 'https://open.spotify.com/intl-es/track/3zl7j5ua8mF4JDYuxrfo01';
 const invitationGiftLink = 'https://mesaderegalos.liverpool.com.mx/milistaderegalos/51972633';
+const isNotifying = computed(() => whatsappState.value === 'sending');
 
 watch(
   queryName,
@@ -119,12 +121,29 @@ function submitName() {
 
   router.replace({ path: '/asistencia', query });
   nextTick(() => invitationCard.value?.scrollIntoView({ behavior: 'smooth', block: 'center' }));
+  void notifyWhatsApp(name);
 }
 
 function editName() {
   submittedName.value = '';
   nameError.value = '';
+  whatsappState.value = 'idle';
   router.replace('/asistencia');
+}
+
+async function notifyWhatsApp(name) {
+  whatsappState.value = 'sending';
+
+  try {
+    const response = await $fetch('/api/whatsapp', {
+      method: 'POST',
+      body: { text: name },
+    });
+
+    whatsappState.value = response.success ? 'sent' : 'error';
+  } catch {
+    whatsappState.value = 'error';
+  }
 }
 
 function createExportCard() {
@@ -335,6 +354,10 @@ async function exportAsPdf() {
             Escriba su nombre completo para continuar
           </p>
 
+          <p class="mt-5 max-w-md text-[#6f5b50]">
+            **La invitacion es Intransferible**
+          </p>
+
           <form class="mt-10" @submit.prevent="submitName">
             <label class="block font-sans text-[10px] font-bold tracking-[.18em] text-[#512301] uppercase" for="guest-name">Nombre completo</label>
             <input
@@ -354,10 +377,13 @@ async function exportAsPdf() {
               {{ nameError }}
             </p>
 
-            <button class="mt-7 inline-flex min-h-12 w-full items-center justify-center rounded-sm border border-[#512301] bg-[#512301] px-[25px] py-3.5 font-sans text-[10px] font-bold tracking-[.2em] text-[#fbfaf6] uppercase transition-[background,box-shadow,transform] duration-[180ms] hover:-translate-y-0.5 hover:bg-[#6d3914] hover:shadow-[0_14px_28px_-20px_rgba(81,35,1,0.7)] sm:w-auto" type="submit">
-              Generar mi invitación
+            <button class="mt-7 inline-flex min-h-12 w-full items-center justify-center rounded-sm border border-[#512301] bg-[#512301] px-[25px] py-3.5 font-sans text-[10px] font-bold tracking-[.2em] text-[#fbfaf6] uppercase transition-[background,box-shadow,transform] duration-[180ms] hover:-translate-y-0.5 hover:bg-[#6d3914] hover:shadow-[0_14px_28px_-20px_rgba(81,35,1,0.7)] disabled:cursor-wait disabled:opacity-70 sm:w-auto" type="submit" :disabled="isNotifying" :aria-busy="isNotifying">
+              {{ isNotifying ? 'Enviando confirmación...' : 'Generar mi invitación' }}
               <span class="material-symbols-outlined ml-2 text-[18px]" aria-hidden="true">arrow_forward</span>
             </button>
+            <p v-if="whatsappState === 'sending'" class="mt-3 text-[13px] text-[#6f5b50]" role="status">Enviando el nombre por WhatsApp...</p>
+            <p v-else-if="whatsappState === 'sent'" class="mt-3 text-[13px] text-[#54704d]" role="status">Nombre enviado por WhatsApp.</p>
+            <p v-else-if="whatsappState === 'error'" class="mt-3 text-[13px] text-[#a85845]" role="alert">La invitación se generó, pero no pudimos enviar la notificación por WhatsApp.</p>
           </form>
         </section>
 
@@ -486,18 +512,22 @@ async function exportAsPdf() {
                       <span>Código de vestimenta</span>
                       <strong>Elegancia rigurosa</strong>
                     </div>
-                    <div>
-                      <span>Invitación</span>
-                      <strong>Respetuosamente no niños</strong>
-                    </div>
-                  </div>
-                  <div class="preview-invitation__colors-block">
-                    <span>Colores a evitar</span>
-                    <div class="preview-invitation__avoid-colors" aria-label="Beige, blanco, crema y rojo">
-                      <i v-for="color in invitationAvoidColors" :key="color.name" :style="{ backgroundColor: color.value }" :title="color.name"></i>
-                    </div>
-                    <p>Beige, blanco, crema, tonos similares y rojo.</p>
-                  </div>
+<div>
+                       <span>Invitación</span>
+                       <strong>Respetuosamente no niños · Intransferible</strong>
+                     </div>
+                     <div>
+                       <span>Color mamá de la novia</span>
+                       <strong>Azul</strong>
+                     </div>
+                   </div>
+                   <div class="preview-invitation__colors-block">
+                     <span>Colores a evitar</span>
+                     <div class="preview-invitation__avoid-colors" aria-label="Beige, blanco, crema y rojo">
+                       <i v-for="color in invitationAvoidColors" :key="color.name" :style="{ backgroundColor: color.value }" :title="color.name"></i>
+                     </div>
+                     <p>Beige, blanco, crema, tonos similares y rojo.</p>
+                   </div>
                 </div>
 
                 <div class="preview-invitation__actions">

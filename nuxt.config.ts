@@ -6,6 +6,12 @@ export default defineNuxtConfig({
   devtools: { enabled: false },
   modules: ['@nuxtjs/tailwindcss'],
   css: ['~/assets/css/main.css'],
+  runtimeConfig: {
+    twilioAccountSid: process.env.TWILIO_ACCOUNT_SID || '',
+    twilioAuthToken: process.env.TWILIO_AUTH_TOKEN || '',
+    twilioWhatsappFrom: process.env.TWILIO_WHATSAPP_FROM || '',
+    twilioWhatsappTo: process.env.TWILIO_WHATSAPP_TO || '',
+  },
   app: {
     baseURL: normalizedBaseURL,
     head: {

@@ -566,7 +566,7 @@ onBeforeUnmount(() => {
           </div>
           <p class="mx-auto mt-5 max-w-[410px] font-serif text-[21px] leading-[1.08] text-folio-muted max-[600px]:text-[19px]">Te compartimos algunos detalles importantes para disfrutar la noche con nosotros.</p>
         </div>
-
+         
         <div class="grid grid-cols-[1.15fr_.85fr] gap-3.5 max-[900px]:grid-cols-1">
           <article class="relative min-h-[430px] border border-folio-line bg-folio-paper p-[clamp(28px,5vw,58px)] shadow-[0_24px_60px_-56px_rgba(39,35,30,0.7)] max-[600px]:min-h-[390px] max-[600px]:px-[22px] max-[600px]:py-7">
             <div class="mb-[29px] grid h-[47px] w-[47px] place-items-center border border-folio-gold text-folio-gold" aria-hidden="true"><span class="material-symbols-outlined">styler</span></div>
@@ -579,17 +579,17 @@ onBeforeUnmount(() => {
             </div>
             <p class="mt-3 font-serif text-lg text-folio-muted">Beige, blanco, crema, tonos similares y rojo.</p>
             <div class="mt-[25px] flex items-center gap-3.5 border-t border-folio-line pt-[19px]">
-              <span class="inline-block h-8 w-8 rounded-full border-2 border-folio-paper bg-[#d4af37] shadow-[0_0_0_1px_rgba(39,35,30,0.35)]" title="Dorado"></span>
-              <div><p class="m-0 font-sans text-[9px] tracking-[.16em] text-folio-overline uppercase">Color mamá de la novia</p><strong class="mt-1 block font-serif text-2xl font-medium text-[#512301]">Dorado</strong></div>
+              <span class="inline-block h-8 w-8 rounded-full border-2 border-folio-paper bg-blue-700 shadow-[0_0_0_1px_rgba(39,35,30,0.35)]" title="Azul"></span>
+              <div><p class="m-0 font-sans text-[9px] tracking-[.16em] text-folio-overline uppercase">Color mamá de la novia</p><strong class="mt-1 block font-serif text-2xl font-medium text-[#512301]">Azul</strong></div>
             </div>
           </article>
 
           <article class="relative flex min-h-[430px] flex-col justify-center border border-folio-line bg-[#e8e3d9] p-[clamp(28px,5vw,58px)] shadow-[0_24px_60px_-56px_rgba(39,35,30,0.7)] after:absolute after:bottom-7 after:right-7 after:h-[115px] after:w-[115px] after:rounded-full after:border after:border-[rgba(168,142,95,0.55)] after:content-[''] max-[600px]:min-h-[390px] max-[600px]:px-[22px] max-[600px]:py-7 max-[600px]:after:bottom-7 max-[600px]:after:right-7">
             <span class="absolute right-8 top-[29px] font-serif text-2xl text-folio-gold">02</span>
             <span class="font-sans text-[9px] font-bold tracking-[.2em] text-folio-overline uppercase">Invitación</span>
-            <h3 class="mt-3.5 font-serif text-[clamp(42px,4.5vw,66px)] font-medium leading-[.88] tracking-[-.035em] text-[#512301] max-[600px]:text-[53px]">Respetuosamente<br />no niños</h3>
-            <span class="my-[22px] mt-8 block h-px w-[45px] bg-folio-gold" aria-hidden="true"></span>
-            <p class="max-w-[330px] font-serif text-[19px] leading-[1.05] text-folio-muted">Agradecemos mucho tu comprensión para compartir esta celebración únicamente con adultos.</p>
+<h3 class="mt-3.5 font-serif text-[clamp(42px,4.5vw,66px)] font-medium leading-[.88] tracking-[-.035em] text-[#512301] max-[600px]:text-[53px]">Respetuosamente<br />no niños</h3>
+                <span class="my-[22px] mt-8 block h-px w-[45px] bg-folio-gold" aria-hidden="true"></span>
+                <p class="max-w-[330px] font-serif text-[19px] leading-[1.05] text-folio-muted">Agradecemos mucho tu comprensión para compartir esta celebración únicamente con adultos. La invitación es intransferible.</p>
             <div class="mt-7 flex items-start gap-[13px] border-t border-folio-line pt-[18px]">
               <span class="material-symbols-outlined text-[22px] text-folio-gold" aria-hidden="true">hotel</span>
               <div><span class="font-sans text-[9px] tracking-[.16em] text-folio-overline uppercase">Hospedaje</span><strong class="mt-1 block font-serif text-[22px] font-medium text-[#512301]">Opciones para invitados</strong><p class="mt-[3px] font-sans text-[10px] tracking-[.11em] text-folio-muted">LISTA DE OPCIONES</p></div>
