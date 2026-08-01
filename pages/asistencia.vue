@@ -381,9 +381,6 @@ async function exportAsPdf() {
               {{ isNotifying ? 'Enviando confirmación...' : 'Generar mi invitación' }}
               <span class="material-symbols-outlined ml-2 text-[18px]" aria-hidden="true">arrow_forward</span>
             </button>
-            <p v-if="whatsappState === 'sending'" class="mt-3 text-[13px] text-[#6f5b50]" role="status">Enviando el nombre por WhatsApp...</p>
-            <p v-else-if="whatsappState === 'sent'" class="mt-3 text-[13px] text-[#54704d]" role="status">Nombre enviado por WhatsApp.</p>
-            <p v-else-if="whatsappState === 'error'" class="mt-3 text-[13px] text-[#a85845]" role="alert">La invitación se generó, pero no pudimos enviar la notificación por WhatsApp.</p>
           </form>
         </section>
 
