@@ -1,4 +1,9 @@
 import { sendTelegram } from '../utils/telegram';
+import {
+  iniciarWhatsApp,
+  obtenerSocketWhatsApp,
+  estaConectadoWhatsApp,
+} from '../utils/whatsapp';
 
 interface RsvpPayload {
   name?: unknown;
@@ -53,6 +58,36 @@ function buildTelegramMessage(record: RsvpRecord): string {
   ].join('\n');
 }
 
+async function sendWhatsAppMessage(record: RsvpRecord): Promise<boolean> {
+  const phone = useRuntimeConfig().whatsappNotificationPhone?.replace(/\D/g, '');
+
+  if (!phone) return false;
+
+  await iniciarWhatsApp();
+
+  const socket = obtenerSocketWhatsApp();
+
+  if (!socket || !estaConectadoWhatsApp()) return false;
+
+  const [lookup] = await socket.onWhatsApp(phone);
+
+  if (!lookup?.exists || !lookup.jid) return false;
+
+  await socket.sendMessage(lookup.jid, {
+    text: [
+      '💍 Nueva confirmación de asistencia',
+      '',
+      `Nombre: ${record.name}`,
+      '',
+      `Correo: ${record.email || 'No proporcionado'}`,
+      '',
+      `Fecha: ${record.submittedAt}`,
+    ].join('\n'),
+  });
+
+  return true;
+}
+
 export default defineEventHandler(async (event) => {
   const body = await readBody<RsvpPayload>(event);
   const name = normalizeText(body?.name);
@@ -86,9 +121,12 @@ export default defineEventHandler(async (event) => {
   try {
     await sendTelegram(buildTelegramMessage(record));
 
+    const whatsappSent = await sendWhatsAppMessage(record);
+
     return {
       success: true,
       telegramSent: true,
+      whatsappSent,
       message: 'Asistencia confirmada.',
     };
   } catch (error) {
