@@ -15,8 +15,11 @@
     "nuxt": "^3.17.5"
   },
   "dependencies": {
+    "@whiskeysockets/baileys": "^7.0.0-rc14",
     "html2canvas": "^1.4.1",
     "jspdf": "^4.2.1",
+    "pino": "^10.3.1",
+    "qrcode": "^1.5.4",
     "twilio": "^6.0.2"
   }
 }

@@ -38,3 +38,6 @@ originales/
 *.njsproj
 *.sln
 *.sw?
+
+# WhatsApp local session
+whatsapp-session/
