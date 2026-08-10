@@ -68,7 +68,7 @@ const parents = [
   },
   {
     label: 'Papás de Gabriel',
-    names: ['María Medina Laborín', 'Carlos Coronado Medina'],
+    names: ['✝ María Medina Laborín', 'Carlos Coronado Medina'],
   },
 ];
 
