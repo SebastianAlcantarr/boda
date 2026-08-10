@@ -9,6 +9,7 @@ function assetPath(path) {
   return `${basePath}${path}`;
 }
 
+
 const slides = [
   { src: assetPath('/images/slide-1.webp'), alt: 'Foto de Renée y Gabriel 1' },
   { src: assetPath('/images/slide-2.webp'), alt: 'Foto de Renée y Gabriel 2' },
@@ -116,7 +117,7 @@ function restartTimer() {
 }
 
 function scrollToSection(selector) {
-  const target = document.querySelector(selector);
+  const target = document.querySelector(selector);f
 
   if (!target) return;
 
@@ -223,7 +224,7 @@ onBeforeUnmount(() => {
             >Detalles</a
           >
         </nav>
-        
+
       </div>
     </header>
 
@@ -286,7 +287,7 @@ onBeforeUnmount(() => {
               >
                 <span class="material-symbols-outlined text-[15px]">east</span>
               </button>
-            </div>
+            </div>2
           </div>
         </div>
 
@@ -578,7 +579,7 @@ onBeforeUnmount(() => {
           </div>
           <p class="mx-auto mt-5 max-w-[410px] font-serif text-[21px] leading-[1.08] text-folio-muted max-[600px]:text-[19px]">Te compartimos algunos detalles importantes para disfrutar la noche con nosotros.</p>
         </div>
-         
+
         <div class="grid grid-cols-[1.15fr_.85fr] gap-3.5 max-[900px]:grid-cols-1">
           <article class="relative min-h-[430px] border border-folio-line bg-folio-paper p-[clamp(28px,5vw,58px)] shadow-[0_24px_60px_-56px_rgba(39,35,30,0.7)] max-[600px]:min-h-[390px] max-[600px]:px-[22px] max-[600px]:py-7">
             <div class="mb-[29px] grid h-[47px] w-[47px] place-items-center border border-folio-gold text-folio-gold" aria-hidden="true"><span class="material-symbols-outlined">styler</span></div>

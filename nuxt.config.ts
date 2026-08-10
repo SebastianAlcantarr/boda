@@ -10,6 +10,7 @@ export default defineNuxtConfig({
     telegramBotToken: process.env.TELEGRAM_BOT_TOKEN || '',
     telegramChatId: process.env.TELEGRAM_CHAT_ID || '',
     whatsappNotificationPhone: process.env.WHATSAPP_NOTIFICATION_PHONE || '',
+    whatsappAuthDir: process.env.WHATSAPP_AUTH_DIR || '',
     resendApiKey: process.env.RESEND_API_KEY || '',
     resendFromEmail: process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
   },
