@@ -117,7 +117,7 @@ function restartTimer() {
 }
 
 function scrollToSection(selector) {
-  const target = document.querySelector(selector);f
+  const target = document.querySelector(selector);
 
   if (!target) return;
 
@@ -603,10 +603,6 @@ onBeforeUnmount(() => {
 <h3 class="mt-3.5 font-serif text-[clamp(42px,4.5vw,66px)] font-medium leading-[.88] tracking-[-.035em] text-[#512301] max-[600px]:text-[53px]">Respetuosamente<br />no niños</h3>
                 <span class="my-[22px] mt-8 block h-px w-[45px] bg-folio-gold" aria-hidden="true"></span>
                 <p class="max-w-[330px] font-serif text-[19px] leading-[1.05] text-folio-muted">Agradecemos mucho tu comprensión para compartir esta celebración únicamente con adultos. La invitación es intransferible.</p>
-            <div class="mt-7 flex items-start gap-[13px] border-t border-folio-line pt-[18px]">
-              <span class="material-symbols-outlined text-[22px] text-folio-gold" aria-hidden="true">hotel</span>
-              <div><span class="font-sans text-[9px] tracking-[.16em] text-folio-overline uppercase">Hospedaje</span><strong class="mt-1 block font-serif text-[22px] font-medium text-[#512301]">Opciones para invitados</strong><p class="mt-[3px] font-sans text-[10px] tracking-[.11em] text-folio-muted">LISTA DE OPCIONES</p></div>
-            </div>
           </article>
         </div>
       </section>
